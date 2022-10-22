@@ -67,3 +67,48 @@ ggplot(accidents_2021, aes(x = month)) +
 
 ```
 
+```{r}
+str(accidents_2021)
+
+accidents_2021 %>% 
+  summarise(across(everything(), ~ (sum(is.na(.))/nrow(accidents_2021)) *100  )) %>% pivot_longer(cols = everything(), names_to = "columns", values_to = "NA proportion") %>% arrange(desc(NA)) %>% filter(NA > 0) -> na_percentage
+na_percentage # to check the NA values 
+
+
+
+```
+
+
+```{r}
+accidents_2021  %>%
+  summarise_all(list(~is.na(.)))%>%
+  pivot_longer(everything(),
+               names_to = "variables", values_to="missing") %>%
+  count(variables, missing) %>%
+  ggplot(aes(y=variables,x=n,fill=missing))+
+  geom_col()
+```
+
+```{r}
+
+accidents_2021  %>%
+  summarise_all(list(~is.na(.)))%>%
+  pivot_longer(everything(),
+               names_to = "variables", values_to="missing") %>%
+  count(variables, missing) %>%
+  ggplot(aes(y=variables,x=n,fill=missing))+
+  geom_col()
+
+```
+```{r}
+clean_acc22 <- drop_na(accidents_2021)
+str(clean_acc22)
+clean_acc22  %>%
+  summarise_all(list(~is.na(.)))%>%
+  pivot_longer(everything(),
+               names_to = "variables", values_to="missing") %>%
+  count(variables, missing) %>%
+  ggplot(aes(y=variables,x=n,fill=missing))+
+  geom_col()
+```
+
