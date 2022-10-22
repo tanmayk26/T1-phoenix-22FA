@@ -10,10 +10,60 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r Libraries Used}
-
+library(tidyverse)
+library(dplyr)
 ```
 
 ```{r intro}
 df_us_acc <- data.frame(read.csv('../us_accidents_dataset/US_Accidents_Dec21_updated.csv'))
 str(df_us_acc)
 ```
+
+```{r}
+df_us_acc  %>%
+  summarise_all(list(~is.na(.)))
+```
+
+
+
+
+```{r}
+df_us_acc$year<-format(as.Date(df_us_acc$Start_Time, format="%Y-%m-%d"),"%Y")
+
+```
+
+```{r}
+head(df_us_acc)
+
+```
+
+```{r}
+head(df_us_acc$year)
+
+```
+```{r}
+library(ggplot2)
+# Most basic bar chart
+ggplot(df_us_acc, aes(x = year)) +
+    geom_bar()
+
+```
+
+
+
+```{r}
+
+accidents_2021 <- subset(df_us_acc, year="2021")
+head(accidents_2021)
+```
+```{r}
+
+accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d"),"%m")
+head(df_us_acc)
+```
+```{r}
+ggplot(accidents_2021, aes(x = month)) +
+    geom_bar()
+
+```
+
