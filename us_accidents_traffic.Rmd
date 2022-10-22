@@ -14,6 +14,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r intro}
-df_us_acc <- data.frame(read.csv('US_Accidents_Dec21_updated.csv'))
+df_us_acc <- data.frame(read.csv('../us_accidents_dataset/US_Accidents_Dec21_updated.csv'))
 str(df_us_acc)
 ```
