@@ -1,0 +1,19 @@
+---
+authors: 
+title: "us_accidents_traffic"
+output: html_document
+date: "2022-10-22"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Libraries Used}
+
+```
+
+```{r intro}
+df_us_acc <- data.frame(read.csv('US_Accidents_Dec21_updated.csv'))
+str(df_us_acc)
+```
