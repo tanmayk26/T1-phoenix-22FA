@@ -112,6 +112,10 @@ clean_acc22  %>%
   ggplot(aes(y=variables,x=n,fill=missing))+
   geom_col()
 ```
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 ```{r}
 us_time<- accidents_2021$Start_Time
 us_time_formatted<-hour(us_time)
