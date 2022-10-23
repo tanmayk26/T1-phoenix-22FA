@@ -112,3 +112,8 @@ clean_acc22  %>%
   geom_col()
 ```
 
+```{r}
+us_time<- accidents_2021$Start_Time
+us_time_formatted<-hour(us_time)
+hist(us_time_formatted)
+```
