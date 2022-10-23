@@ -68,18 +68,6 @@ ggplot(accidents_2021, aes(x = month)) +
 ```
 
 ```{r}
-str(accidents_2021)
-
-accidents_2021 %>% 
-  summarise(across(everything(), ~ (sum(is.na(.))/nrow(accidents_2021)) *100  )) %>% pivot_longer(cols = everything(), names_to = "columns", values_to = "NA proportion") %>% arrange(desc(NA)) %>% filter(NA > 0) -> na_percentage
-na_percentage # to check the NA values 
-
-
-
-```
-
-
-```{r}
 accidents_2021  %>%
   summarise_all(list(~is.na(.)))%>%
   pivot_longer(everything(),
@@ -117,3 +105,109 @@ us_time<- accidents_2021$Start_Time
 us_time_formatted<-hour(us_time)
 hist(us_time_formatted)
 ```
+
+```{r Correlations for numerical values}
+# subsetting numerical columns only to check the corelationship between numerical variables
+loadPkg("corrplot")
+num_clean_acc22 <- select_if(clean_acc22, is.numeric)
+str(num_clean_acc22)
+cor_num_clean_acc22 <- cor(num_clean_acc22)
+cor_num_clean_acc22
+corrplot(cor_num_clean_acc22, method = "number")
+```
+
+```{r Histograms for Weather Conditions}
+
+tempHist <- ggplot(clean_acc22, aes(x=Temperature.F.)) + geom_histogram(color="black", fill = "red")+
+  ggtitle("Histogram of Temperature(F) for accidents")
+tempHist
+
+windcHist <- ggplot(clean_acc22, aes(x=Wind_Chill.F.)) + geom_histogram(color="black", fill = "orange")+
+  ggtitle("Histogram of Wind chill for accidents")
+windcHist
+
+humidHist <- ggplot(clean_acc22, aes(x=Humidity...)) + geom_histogram(color="black", fill = "yellow")+
+  ggtitle("Histogram of Humidity for accidents")
+humidHist
+
+windsHist <- ggplot(clean_acc22, aes(x=Wind_Speed.mph.)) + geom_histogram(color="black", fill = "navy")+
+  ggtitle("Histogram of Wind Speed for accidents")
+windsHist
+
+pressHist <- ggplot(clean_acc22, aes(x=Pressure.in.)) + geom_histogram(color="black", fill = "green")+
+  ggtitle("Histogram of Pressure for accidents")
+pressHist
+
+visibHist <- ggplot(clean_acc22, aes(x=Visibility.mi.)) + geom_histogram(color="black", fill = "blue")+
+  ggtitle("Histogram of Visibility for accidents")
+visibHist
+
+precipHist <- ggplot(clean_acc22, aes(x=Precipitation.in.)) + geom_histogram(color="black", fill = "purple")+
+  ggtitle("Histogram of Precipitation for accidents")
+precipHist
+
+## the first three histograms can be useful
+
+```
+
+```{r boxplots between Severity and wind conditions elements }
+box_clean <- clean_acc22 
+box_clean$Severity <- as.factor(box_clean$Severity) #set severity as factor to see the distributions of variables by severity levels
+
+ggplot(box_clean, aes(x = Severity, y=Temperature.F.)) + 
+  geom_boxplot() +
+  labs(title="Temperature by Severity", x="Severity", y = "Temperature(F)")
+
+ggplot(box_clean, aes(x = Severity, y=Wind_Chill.F.)) + 
+  geom_boxplot() +
+  labs(title="Wind Chill by Severity", x="Severity", y = "Wind Chill")
+
+ggplot(box_clean, aes(x = Severity, y=Wind_Speed.mph.)) + 
+  geom_boxplot() +
+  labs(title="Wind Speed by Severity", x="Severity", y = "Wind Speed")
+
+ggplot(box_clean, aes(x = Severity, y=Humidity...)) + 
+  geom_boxplot() +
+  labs(title="Humidity by Severity", x="Severity", y = "Humidity")
+
+ggplot(box_clean, aes(x = Severity, y=Pressure.in.)) + 
+  geom_boxplot() +
+  labs(title="Pressure by Severity", x="Severity", y = "Pressure")
+
+ggplot(box_clean, aes(x = Severity, y=Visibility.mi.)) + 
+  geom_boxplot() +
+  labs(title="Visibility by Severity", x="Severity", y = "Visibility")
+
+ggplot(box_clean, aes(x = Severity, y=Precipitation.in.)) + 
+  geom_boxplot() +
+  labs(title="Precipitation by Severity", x="Severity", y = "Precipitation")
+
+## The same variables(Temp, wind chill, humidity) have pretty plots
+
+```
+
+```{r ANOVA tests for weather condition elements}
+# Do ANOVA test to those three variables
+anovaTemp = aov(Temperature.F. ~ Severity, data=box_clean)
+summary(anovaTemp)
+print("----------------------------------------------------------")
+anovaWindC = aov(Wind_Chill.F. ~ Severity, data=box_clean)
+summary(anovaWindC)
+print("----------------------------------------------------------")
+anovaHumid = aov(Humidity... ~ Severity, data=box_clean)
+summary(anovaHumid)
+print("----------------------------------------------------------")
+anovaPress = aov(Pressure.in. ~ Severity, data=box_clean)
+summary(anovaPress)
+print("----------------------------------------------------------")
+anovaVisib = aov(Visibility.mi. ~ Severity, data=box_clean)
+summary(anovaVisib)
+print("----------------------------------------------------------")
+anovaWindS = aov(Wind_Speed.mph. ~ Severity, data=box_clean)
+summary(anovaWindS)
+print("----------------------------------------------------------")
+anovaPrecip = aov(Precipitation.in. ~ Severity, data=box_clean)
+summary(anovaPrecip)
+```
+
+
