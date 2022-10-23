@@ -1,0 +1,119 @@
+---
+authors: 
+title: "us_accidents_traffic"
+output: html_document
+date: "2022-10-22"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Libraries Used}
+library(tidyverse)
+library(mapview)
+library(tigris)
+library(dplyr)
+library(sf)
+library(ggplot2)
+library(lubridate)
+```
+
+```{r intro}
+df_us_acc <- data.frame(read.csv('../us_accidents_dataset/US_Accidents_Dec21_updated.csv'))
+str(df_us_acc)
+```
+
+```{r}
+df_us_acc  %>%
+  summarise_all(list(~is.na(.)))
+```
+
+
+
+
+```{r}
+df_us_acc$year<-format(as.Date(df_us_acc$Start_Time, format="%Y-%m-%d"),"%Y")
+
+```
+
+```{r}
+head(df_us_acc)
+
+```
+
+```{r}
+head(df_us_acc$year)
+
+```
+```{r}
+library(ggplot2)
+# Most basic bar chart
+ggplot(df_us_acc, aes(x = year)) +
+    geom_bar()
+
+```
+
+
+
+```{r}
+
+accidents_2021 <- subset(df_us_acc, year="2021")
+head(accidents_2021)
+```
+```{r}
+accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d"),"%m")
+head(df_us_acc)
+```
+```{r}
+accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d"),"%m")
+ggplot(accidents_2021, aes(x = month)) +
+    geom_bar() 
+```
+
+```{r}
+str(accidents_2021)
+
+accidents_2021 %>% 
+  summarise(across(everything(), ~ (sum(is.na(.))/nrow(accidents_2021)) *100  )) %>% pivot_longer(cols = everything(), names_to = "columns", values_to = "NA proportion") %>% arrange(desc(NA)) %>% filter(NA > 0) -> na_percentage
+na_percentage # to check the NA values 
+```
+
+
+```{r}
+accidents_2021  %>%
+  summarise_all(list(~is.na(.)))%>%
+  pivot_longer(everything(),
+               names_to = "variables", values_to="missing") %>%
+  count(variables, missing) %>%
+  ggplot(aes(y=variables,x=n,fill=missing))+
+  geom_col()
+```
+
+```{r}
+
+accidents_2021  %>%
+  summarise_all(list(~is.na(.)))%>%
+  pivot_longer(everything(),
+               names_to = "variables", values_to="missing") %>%
+  count(variables, missing) %>%
+  ggplot(aes(y=variables,x=n,fill=missing))+
+  geom_col()
+
+```
+```{r}
+clean_acc22 <- drop_na(accidents_2021)
+str(clean_acc22)
+clean_acc22  %>%
+  summarise_all(list(~is.na(.)))%>%
+  pivot_longer(everything(),
+               names_to = "variables", values_to="missing") %>%
+  count(variables, missing) %>%
+  ggplot(aes(y=variables,x=n,fill=missing))+
+  geom_col()
+```
+```{r}
+us_time<- accidents_2021$Start_Time
+us_time_formatted<-hour(us_time)
+hist(us_time_formatted)
+```
