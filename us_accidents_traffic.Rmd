@@ -50,11 +50,13 @@ ggplot(df_us_acc, aes(x = year)) +
 accidents_2021 <- subset(df_us_acc, year==2021)
 head(accidents_2021)
 ```
+
 ```{r}
 
 accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d"),"%m")
 head(df_us_acc)
 ```
+
 ```{r}
 ggplot(accidents_2021, aes(x = month)) +
     geom_bar()
@@ -62,6 +64,13 @@ ggplot(accidents_2021, aes(x = month)) +
 ```
 
 ```{r}
+
+accidents_2021 <- accidents_2021 %>% 
+  mutate(Is_severe = if_else(Severity == 1 | Severity ==2 , "Not Severe", "Severe"))
+```
+
+
+```{r}
 accidents_2021  %>%
   summarise_all(list(~is.na(.)))%>%
   pivot_longer(everything(),
@@ -82,6 +91,7 @@ accidents_2021  %>%
   geom_col()
 
 ```
+
 ```{r}
 clean_acc22 <- drop_na(accidents_2021)
 str(clean_acc22)
@@ -245,3 +255,123 @@ Took a Chi-Squared test to see the severity and weather conditions are independe
 H0 : Severity and weather conditions are independent
 H1 : Severity and weather conditions are NOT independent
 We can reject the H0. 
+
+
+```{r}
+
+
+clean_acc22 %>% 
+      group_by(Amenity, Bump, Crossing, Give_Way, Junction, No_Exit, Railway, Roundabout, Station, Stop, Traffic_Calming, Traffic_Signal, Turning_Loop)%>%
+    summarise(percentage = n()/nrow(clean_acc22) *100 )%>%
+    arrange(-percentage) %>%
+    filter(percentage > 1) -> accidents_per_roadelement
+
+head(accidents_per_roadelement)
+ 
+  
+  
+
+```
+
+
+
+```{r}
+
+
+acc_road_element_per <- tibble(c("None", "Crossing", "Traffic signal", "Crossing and traffic signal", "Station", "Stop" ), pull(accidents_per_roadelement, percentage), .name_repair = ~ c("road_elements", "percentage"))
+acc_road_element_per
+       
+```
+
+
+```{r}
+options(repr.plot.width = 20, repr.plot.height = 8)
+acc_road_element_per %>%
+    ggplot() +
+    geom_col(mapping = aes(x=reorder(road_elements, -percentage), y=percentage, fill = road_elements)) +
+    labs(x = "Road element", y="%", title ="Accidents by nearby road element") +
+    theme(text = element_text(size=8))
+```
+
+```{r}
+
+
+accidents_per_roadelement<-accidents_2021 %>% 
+      select(Is_severe,Junction,Crossing,Stop,Station,Traffic_Signal)
+
+
+head(accidents_per_roadelement)
+
+  
+  
+
+```
+
+```{r}
+accidents_per_roadelement[is.na(accidents_per_roadelement) | accidents_per_roadelement=="Inf"] = NA
+```
+
+
+```{r}
+Junction_data<- subset(accidents_per_roadelement, Junction=="True",
+select=c(Is_severe,Junction))
+head(Junction_data)
+```
+
+
+
+```{r}
+
+ggplot(data=Junction_data, aes(x=Is_severe, y=Junction)) +
+  geom_bar(stat="identity")
+```
+
+
+```{r}
+Crossing_data<- subset(accidents_per_roadelement, Crossing=="True",
+select=c(Is_severe,Crossing))
+head(Crossing_data)
+```
+```{r}
+ggplot(data=Crossing_data, aes(x=Is_severe, y=Crossing)) +
+  geom_bar(stat="identity")
+```
+
+
+```{r}
+Stop_data<- subset(accidents_per_roadelement, Stop=="True",
+select=c(Is_severe,Stop))
+head(Stop_data)
+```
+```{r}
+ggplot(data=Stop_data, aes(x=Is_severe, y=Stop)) +
+  geom_bar(stat="identity")
+```
+
+```{r}
+Station_data<- subset(accidents_per_roadelement, Station=="True",
+select=c(Is_severe,Station))
+head(Station_data)
+```
+```{r}
+ggplot(data=Station_data, aes(x=Is_severe, y=Station)) +
+  geom_bar(stat="identity")
+```
+
+```{r}
+Traffic_Signal_data<- subset(accidents_per_roadelement, Traffic_Signal=="True",
+select=c(Is_severe,Traffic_Signal))
+head(Traffic_Signal_data)
+```
+```{r}
+ggplot(data=Traffic_Signal_data, aes(x=Is_severe, y=Traffic_Signal)) +
+  geom_bar(stat="identity")
+```
+
+
+
+
+
+
+
+
