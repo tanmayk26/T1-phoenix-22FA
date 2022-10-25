@@ -111,9 +111,9 @@ clean_acc22  %>%
 ```
 
 ```{r}
-us_time<- accidents_2021$Start_Time
-us_time_formatted<-hour(us_time)
-hist(us_time_formatted)
+#us_time<- accidents_2021$Start_Time
+#us_time_formatted<-hour(us_time)
+#hist(us_time_formatted)
 ```
 
 ```{r Correlations for numerical values}
@@ -302,8 +302,8 @@ acc_road_element_per %>%
 ```{r}
 
 
-accidents_per_roadelement<-accidents_2021 %>% 
-      select(Is_severe,Junction,Crossing,Stop,Station,Traffic_Signal)
+accidents_per_roadelement<-clean_acc22 %>% 
+      select(Is_severe,Crossing,Stop,Station,Traffic_Signal)
 
 
 head(accidents_per_roadelement)
@@ -313,24 +313,9 @@ head(accidents_per_roadelement)
 
 ```
 
-```{r}
-accidents_per_roadelement[is.na(accidents_per_roadelement) | accidents_per_roadelement=="Inf"] = NA
-```
-
-
-```{r}
-Junction_data<- subset(accidents_per_roadelement, Junction=="True",
-select=c(Is_severe,Junction))
-head(Junction_data)
-```
 
 
 
-```{r}
-
-ggplot(data=Junction_data, aes(x=Is_severe, y=Junction)) +
-  geom_bar(stat="identity")
-```
 
 
 ```{r}
@@ -376,8 +361,40 @@ ggplot(data=Traffic_Signal_data, aes(x=Is_severe, y=Traffic_Signal)) +
 
 
 
+```{r}
+
+accidents_per_roadelement <- accidents_per_roadelement %>% 
+  mutate(severe_num = if_else(Is_severe== "Severe", 1, 0))
+accidents_per_roadelement <- accidents_per_roadelement %>% 
+  mutate(Crossing_num = if_else(Crossing== "True", 1, 0))
+accidents_per_roadelement <- accidents_per_roadelement %>% 
+  mutate(Stop_num = if_else(Stop== "True", 1, 0))
+accidents_per_roadelement <- accidents_per_roadelement %>% 
+  mutate(Station_num = if_else(Station== "True", 1, 0))
+accidents_per_roadelement <- accidents_per_roadelement %>% 
+  mutate(Traffic_Signal_num = if_else(Traffic_Signal== "True", 1, 0))
+
+
+```
 
 
 
 
+```{r}
+Crossing_anova = aov(Crossing_num~severe_num, data=accidents_per_roadelement)
+summary(Crossing_anova)
+```
 
+
+```{r}
+Stop_anova = aov(Stop_num~severe_num, data=accidents_per_roadelement)
+summary(Stop_anova)
+```
+```{r}
+Station_anova = aov(Station_num~severe_num, data=accidents_per_roadelement)
+summary(Station_anova)
+```
+```{r}
+Traffic_signal_anova = aov(Traffic_Signal_num~severe_num, data=accidents_per_roadelement)
+summary(Traffic_signal_anova)
+```
