@@ -10,7 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r Libraries Used}
-
+library(tidyverse)
+library(dplyr)
+library(corrplot)
 ```
 
 ```{r intro}
@@ -33,7 +35,6 @@ df_us_acc$year<-format(as.Date(df_us_acc$Start_Time, format="%Y-%m-%d"),"%Y")
 head(df_us_acc)
 
 ```
-
 
 ```{r}
 library(ggplot2)
