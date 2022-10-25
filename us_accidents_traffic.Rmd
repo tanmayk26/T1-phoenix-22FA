@@ -13,6 +13,12 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(dplyr)
 library(corrplot)
+library(mapview)
+library(tigris)
+library(sf)
+library(ggplot2)
+library(lubridate)
+library(ezids)
 ```
 
 ```{r intro}
@@ -54,7 +60,7 @@ head(accidents_2021)
 ```{r}
 
 accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d"),"%m")
-head(df_us_acc)
+head(accidents_2021)
 ```
 
 ```{r}
