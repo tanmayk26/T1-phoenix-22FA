@@ -13,6 +13,12 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(dplyr)
 library(corrplot)
+library(mapview)
+library(tigris)
+library(sf)
+library(ggplot2)
+library(lubridate)
+library(ezids)
 ```
 
 ```{r intro}
@@ -32,7 +38,6 @@ head(df_us_acc)
 ```{r}
 ggplot(df_us_acc, aes(x = year, fill=year)) +
     geom_bar()
-
 ```
 
 
@@ -40,16 +45,13 @@ ggplot(df_us_acc, aes(x = year, fill=year)) +
 accidents_2021 <- subset(df_us_acc, year==2021)
 head(accidents_2021)
 ```
+
 ```{r}
 accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d"),"%m")
-head(df_us_acc)
+head(accidents_2021)
 ```
-<<<<<<< Updated upstream
 ```{r}
-ggplot(accidents_2021, aes(x = month)) +
-    geom_bar()
 
-=======
 ```{r}
 accidents_2021<-subset(accidents_2021, select = -c(Number, ID, Description))
 ```
@@ -61,8 +63,7 @@ accidents_2021<-subset(accidents_2021, select = -c(Number, ID, Description))
 ```{r}
 accidents_2021 <- accidents_2021 %>% 
   mutate(Is_severe = if_else(Severity == 1 | Severity ==2 , "Not Severe", "Severe"))
->>>>>>> Stashed changes
-```
+
 
 ```{r}
 accidents_2021  %>%
@@ -74,11 +75,8 @@ accidents_2021  %>%
   geom_col()
 ```
 
-```{r}
 
-<<<<<<< Updated upstream
-accidents_2021  %>%
-=======
+
 ```{r Drop NA, Factorize severity}
 clean_acc21 <- drop_na(accidents_2021)
 
@@ -91,15 +89,12 @@ str(clean_acc21)
 
 ```{r}
 clean_acc21  %>%
->>>>>>> Stashed changes
   summarise_all(list(~is.na(.)))%>%
   pivot_longer(everything(),
                names_to = "variables", values_to="missing") %>%
   count(variables, missing) %>%
   ggplot(aes(y=variables,x=n,fill=missing))+
   geom_col()
-<<<<<<< Updated upstream
-=======
 ```
 
 ```{r}
@@ -107,100 +102,120 @@ us_date<-clean_acc21$Start_Time
 us_date_formatted<- as.Date(us_date,format="%Y-%m-%d")
 clean_acc21$Month<-as.numeric(format(us_date_formatted, "%m"))
 ```
->>>>>>> Stashed changes
 
-```
 ```{r}
-clean_acc22 <- drop_na(accidents_2021)
-str(clean_acc22)
-clean_acc22  %>%
-  summarise_all(list(~is.na(.)))%>%
-  pivot_longer(everything(),
-               names_to = "variables", values_to="missing") %>%
-  count(variables, missing) %>%
-  ggplot(aes(y=variables,x=n,fill=missing))+
-  geom_col()
+us_time<- clean_acc21$Start_Time
+clean_acc21$Hour<-hour(us_time)
 ```
 
+```{r}
+ggplot(clean_acc21, aes(x = month, fill=month)) +
+    geom_bar()
+ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) +
+    geom_bar()
+```
 ```{r}
 us_time<- accidents_2021$Start_Time
 us_time_formatted<-hour(us_time)
 hist(us_time_formatted)
 ```
 
+```{r}
+df_map<-select(clean_acc21, ID, State, Start_Lat, Start_Lng)
+head(df_map)
+```
+
+```{r}
+df_map_DC <- df_map %>% filter(State == "DC")
+
+df_map_DC %>% glimpse()
+```
+
+```{r}
+df_map_DC_sf <- st_as_sf(df_map_DC, coords = c("Start_Lng", "Start_Lat"), crs = 4326)
+```
+
+```{r}
+mapview(df_map_DC_sf, xcol = "Start_Lng", ycol = "Start_Lat", grid = FALSE)
+```
+
+```{r}
+mapview(df_map_DC_sf, map.types = "Stamen.Toner")
+```
+
 ```{r Correlations for numerical values}
 # subsetting numerical columns only to check the corelationship between numerical variables
 loadPkg("corrplot")
-num_clean_acc22 <- select_if(clean_acc22, is.numeric)
-str(num_clean_acc22)
-cor_num_clean_acc22 <- cor(num_clean_acc22)
-cor_num_clean_acc22
-corrplot(cor_num_clean_acc22, method = "number")
+num_clean_acc21 <- select_if(clean_acc21, is.numeric)
+str(num_clean_acc21)
+cor_num_clean_acc21 <- cor(num_clean_acc21)
+cor_num_clean_acc21
+corrplot(cor_num_clean_acc21, method = "number")
 ```
 
 ```{r Histograms for Weather Conditions}
 
-tempHist <- ggplot(clean_acc22, aes(x=Temperature.F.)) + geom_histogram(color="black", fill = "red")+
+tempHist <- ggplot(clean_acc21, aes(x=Temperature.F.)) + geom_histogram(color="black", fill = "red")+
   ggtitle("Histogram of Temperature(F) for accidents")
 tempHist
 
-windcHist <- ggplot(clean_acc22, aes(x=Wind_Chill.F.)) + geom_histogram(color="black", fill = "orange")+
+windcHist <- ggplot(clean_acc21, aes(x=Wind_Chill.F.)) + geom_histogram(color="black", fill = "orange")+
   ggtitle("Histogram of Wind chill for accidents")
 windcHist
 
-humidHist <- ggplot(clean_acc22, aes(x=Humidity...)) + geom_histogram(color="black", fill = "yellow")+
+humidHist <- ggplot(clean_acc21, aes(x=Humidity...)) + geom_histogram(color="black", fill = "yellow")+
   ggtitle("Histogram of Humidity for accidents")
 humidHist
 
-windsHist <- ggplot(clean_acc22, aes(x=Wind_Speed.mph.)) + geom_histogram(color="black", fill = "navy")+
+windsHist <- ggplot(clean_acc21, aes(x=Wind_Speed.mph.)) + geom_histogram(color="black", fill = "navy")+
   ggtitle("Histogram of Wind Speed for accidents")
 windsHist
 
-pressHist <- ggplot(clean_acc22, aes(x=Pressure.in.)) + geom_histogram(color="black", fill = "green")+
+pressHist <- ggplot(clean_acc21, aes(x=Pressure.in.)) + geom_histogram(color="black", fill = "green")+
   ggtitle("Histogram of Pressure for accidents")
 pressHist
 
-visibHist <- ggplot(clean_acc22, aes(x=Visibility.mi.)) + geom_histogram(color="black", fill = "blue")+
+visibHist <- ggplot(clean_acc21, aes(x=Visibility.mi.)) + geom_histogram(color="black", fill = "blue")+
   ggtitle("Histogram of Visibility for accidents")
 visibHist
 
-precipHist <- ggplot(clean_acc22, aes(x=Precipitation.in.)) + geom_histogram(color="black", fill = "purple")+
+precipHist <- ggplot(clean_acc21, aes(x=Precipitation.in.)) + geom_histogram(color="black", fill = "purple")+
   ggtitle("Histogram of Precipitation for accidents")
 precipHist
 
-## the first three histograms can be useful
-
 ```
 
-```{r boxplots between Severity and wind conditions elements }
-box_clean <- clean_acc22 
-box_clean$Severity <- as.factor(box_clean$Severity) #set severity as factor to see the distributions of variables by severity levels
+First, we looked at the histogram between numbers of accidents and weather condition elements to check distribution of data.
+For Temperature, Wind chill, and Humanity, each of distributions is left-skewed. 
+For the rest of element, they have quite close mean and median and a few outliers. But we decided to keep the outliers because it is natural to have outliers in the weather condition elements as it covers a whole year. Also the outliers does not affect the result of T-test. 
 
-ggplot(box_clean, aes(x = Severity, y=Temperature.F.)) + 
+```{r boxplots between Severity and wind conditions elements }
+
+ggplot(clean_acc21, aes(x = Is_severe, y=Temperature.F.)) + 
   geom_boxplot() +
   labs(title="Temperature by Severity", x="Severity", y = "Temperature(F)")
 
-ggplot(box_clean, aes(x = Severity, y=Wind_Chill.F.)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Wind_Chill.F.)) + 
   geom_boxplot() +
   labs(title="Wind Chill by Severity", x="Severity", y = "Wind Chill")
 
-ggplot(box_clean, aes(x = Severity, y=Wind_Speed.mph.)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Wind_Speed.mph.)) + 
   geom_boxplot() +
   labs(title="Wind Speed by Severity", x="Severity", y = "Wind Speed")
 
-ggplot(box_clean, aes(x = Severity, y=Humidity...)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Humidity...)) + 
   geom_boxplot() +
   labs(title="Humidity by Severity", x="Severity", y = "Humidity")
 
-ggplot(box_clean, aes(x = Severity, y=Pressure.in.)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Pressure.in.)) + 
   geom_boxplot() +
   labs(title="Pressure by Severity", x="Severity", y = "Pressure")
 
-ggplot(box_clean, aes(x = Severity, y=Visibility.mi.)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Visibility.mi.)) + 
   geom_boxplot() +
   labs(title="Visibility by Severity", x="Severity", y = "Visibility")
 
-ggplot(box_clean, aes(x = Severity, y=Precipitation.in.)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Precipitation.in.)) + 
   geom_boxplot() +
   labs(title="Precipitation by Severity", x="Severity", y = "Precipitation")
 
@@ -208,48 +223,42 @@ ggplot(box_clean, aes(x = Severity, y=Precipitation.in.)) +
 
 ```
 
-```{r ANOVA tests for weather condition elements}
-# Do ANOVA test to those three variables
-anovaTemp = aov(Temperature.F. ~ Severity, data=box_clean)
-summary(anovaTemp)
-print("----------------------------------------------------------")
-anovaWindC = aov(Wind_Chill.F. ~ Severity, data=box_clean)
-summary(anovaWindC)
-print("----------------------------------------------------------")
-anovaHumid = aov(Humidity... ~ Severity, data=box_clean)
-summary(anovaHumid)
-print("----------------------------------------------------------")
-anovaPress = aov(Pressure.in. ~ Severity, data=box_clean)
-summary(anovaPress)
-print("----------------------------------------------------------")
-anovaVisib = aov(Visibility.mi. ~ Severity, data=box_clean)
-summary(anovaVisib)
-print("----------------------------------------------------------")
-anovaWindS = aov(Wind_Speed.mph. ~ Severity, data=box_clean)
-summary(anovaWindS)
-print("----------------------------------------------------------")
-anovaPrecip = aov(Precipitation.in. ~ Severity, data=box_clean)
-summary(anovaPrecip)
+```{r T-test on Severity and weather condition elements}
+box_clean2_severe = subset(clean_acc21, Is_severe == 'Severe')
+box_clean2_notsevere = subset(clean_acc21, Is_severe == 'Not Severe')
+print("Temperature.F")
+t.test(box_clean2_severe$Temperature.F., box_clean2_notsevere$Temperature.F.)
+print("Wind_Chill.F.")
+t.test(box_clean2_severe$Wind_Chill.F., box_clean2_notsevere$Wind_Chill.F.)
+print("Humidity...")
+t.test(box_clean2_severe$Humidity..., box_clean2_notsevere$Humidity...)
+print("Wind_Speed.mph.")
+t.test(box_clean2_severe$Wind_Speed.mph., box_clean2_notsevere$Wind_Speed.mph.)
+print("Visibility.mi.")
+t.test(box_clean2_severe$Visibility.mi., box_clean2_notsevere$Visibility.mi.)
+print("Pressure.in.")
+t.test(box_clean2_severe$Pressure.in., box_clean2_notsevere$Pressure.in.)
+print("Precipitation.in.")
+t.test(box_clean2_severe$Precipitation.in., box_clean2_notsevere$Precipitation.in.)
 ```
-H0: The means of Temperature/WindChill/Humidity will be same among different Severity levels.
-H1: The means of Temperature/WindChill/Humidity will NOT be same among different Severity levels.
-The P-value for the all are lower than 0.05 for those all so we can reject the H0.
+H0: The means of Temperature/WindChill/Humidity/Wind Speed/Pressure/Visibility/Precipitation will be same between different Severity levels.
+H1: The means of Temperature/WindChill/Humidity/Wind Speed/Pressure/Visibility/Precipitation will NOT be same between different Severity levels.
+The P-value for the all are lower than 0.05 for those all so we can reject the H0 except for Precipitation.
 ```{r Wind_Direction}
 # wind direction with severity
-ggplot(clean_acc22, aes(Wind_Direction, ..prop.., group = Severity)) +
-  geom_bar(aes(fill = Severity)) +
+ggplot(clean_acc21, aes(Wind_Direction, ..prop.., group = Is_severe)) +
+  geom_bar(aes(fill = Is_severe)) +
   #scale_y_continuous(labels = percent) +
   labs(x = "Wind Direction",
        y = "Proportion",
        title = "Wind direction by Severity") +
-  theme(text = element_text(size=8))
+  theme(text = element_text(size=8)) 
 ```
-Wind Direction does not have much impact on the severity of accidents.
-
+As the bar plot between Severity and Wind direction here shows the similar distribution for each severity levels on most of wind direction, we can conclude that wind direction does not affect much on the severity of traffic.
 ```{r Weather_Condition variables}
 # Weather Condition percentage
-unique(clean_acc22$Weather_Condition)
-WC <- clean_acc22 %>%
+unique(clean_acc21$Weather_Condition)
+WC <- clean_acc21 %>%
   group_by(Weather_Condition) %>%
   summarise(cnt = n()) %>%
   mutate(freq = (round(cnt/sum(cnt), 3))*100 )%>%
@@ -262,9 +271,10 @@ WC %>%
     labs(x = "Weather Condition", y="%", title ="Top 8 Weather Conditions with accidents") +
     theme(text = element_text(size=7))
 ```
+
 ```{r}
 # Try the Chi-Squared Test on all Weather_Conditions and Severity
-WCtable <- table(clean_acc22$Weather_Condition , clean_acc22$Severity)
+WCtable <- table(clean_acc21$Weather_Condition , clean_acc21$Severity)
 xkabledply(WCtable, title = "Severity by Weather Conditions")
 chitest = chisq.test(WCtable)
 chitest
@@ -273,12 +283,9 @@ Took a Chi-Squared test to see the severity and weather conditions are independe
 H0 : Severity and weather conditions are independent
 H1 : Severity and weather conditions are NOT independent
 We can reject the H0. 
-<<<<<<< Updated upstream
-=======
+
 
 ```{r}
-
-
 clean_acc21 %>% 
       group_by(Amenity, Bump, Crossing, Give_Way, Junction, No_Exit, Railway, Roundabout, Station, Stop, Traffic_Calming, Traffic_Signal, Turning_Loop)%>%
     summarise(percentage = n()/nrow(clean_acc21) *100 )%>%
@@ -419,6 +426,3 @@ cor(clean_acc21$Severity, clean_acc21$Month)
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Hour)
 ```
-
-
->>>>>>> Stashed changes
