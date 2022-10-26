@@ -47,7 +47,6 @@ library(ggplot2)
 # Most basic bar chart
 ggplot(df_us_acc, aes(x = year)) +
     geom_bar()
-
 ```
 
 
@@ -63,11 +62,6 @@ accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d
 head(accidents_2021)
 ```
 
-```{r}
-ggplot(accidents_2021, aes(x = month)) +
-    geom_bar()
-
-```
 
 ```{r}
 
@@ -99,7 +93,23 @@ clean_acc21  %>%
   ggplot(aes(y=variables,x=n,fill=missing))+
   geom_col()
 ```
+```{r}
+us_date<-clean_acc21$Start_Time 
+us_date_formatted<- as.Date(us_date,format="%Y-%m-%d")
+clean_acc21$Month<-as.numeric(format(us_date_formatted, "%m"))
+```
 
+```{r}
+us_time<- clean_acc21$Start_Time
+clean_acc21$Hour<-hour(us_time)
+```
+
+```{r}
+ggplot(clean_acc21, aes(x = month, fill=month)) +
+    geom_bar()
+ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) +
+    geom_bar()
+```
 ```{r}
 us_time<- accidents_2021$Start_Time
 us_time_formatted<-hour(us_time)
@@ -280,10 +290,6 @@ clean_acc21 %>%
     filter(percentage > 1) -> accidents_per_roadelement
 
 head(accidents_per_roadelement)
- 
-  
-  
-
 ```
 
 
@@ -314,9 +320,6 @@ accidents_per_roadelement<-clean_acc21 %>%
 
 
 head(accidents_per_roadelement)
-
-  
-  
 
 ```
 
@@ -380,10 +383,7 @@ accidents_per_roadelement <- accidents_per_roadelement %>%
   mutate(Station_num = if_else(Station== "True", 1, 0))
 accidents_per_roadelement <- accidents_per_roadelement %>% 
   mutate(Traffic_Signal_num = if_else(Traffic_Signal== "True", 1, 0))
-
-
 ```
-
 
 
 
@@ -405,3 +405,23 @@ summary(Station_anova)
 Traffic_signal_anova = aov(Traffic_Signal_num~severe_num, data=accidents_per_roadelement)
 summary(Traffic_signal_anova)
 ```
+
+```{r}
+test_Hour <- chisq.test(table(clean_acc21$Severity, clean_acc21$Hour))
+test_Hour
+```
+
+```{r}
+test_Month <- chisq.test(table(clean_acc21$Severity, clean_acc21$Month))
+test_Month
+```
+
+```{r}
+cor(clean_acc21$Severity, clean_acc21$Month)
+```
+
+```{r}
+cor(clean_acc21$Severity, clean_acc21$Hour)
+```
+
+
