@@ -86,17 +86,6 @@ accidents_2021  %>%
   geom_col()
 ```
 
-```{r}
-
-accidents_2021  %>%
-  summarise_all(list(~is.na(.)))%>%
-  pivot_longer(everything(),
-               names_to = "variables", values_to="missing") %>%
-  count(variables, missing) %>%
-  ggplot(aes(y=variables,x=n,fill=missing))+
-  geom_col()
-
-```
 
 ```{r}
 clean_acc22 <- drop_na(accidents_2021)
@@ -114,6 +103,29 @@ clean_acc22  %>%
 us_time<- accidents_2021$Start_Time
 us_time_formatted<-hour(us_time)
 hist(us_time_formatted)
+```
+
+```{r}
+df_map<-select(clean_acc21, ID, State, Start_Lat, Start_Lng)
+head(df_map)
+```
+
+```{r}
+df_map_DC <- df_map %>% filter(State == "DC")
+
+df_map_DC %>% glimpse()
+```
+
+```{r}
+df_map_DC_sf <- st_as_sf(df_map_DC, coords = c("Start_Lng", "Start_Lat"), crs = 4326)
+```
+
+```{r}
+mapview(df_map_DC_sf, xcol = "Start_Lng", ycol = "Start_Lat", grid = FALSE)
+```
+
+```{r}
+mapview(df_map_DC_sf, map.types = "Stamen.Toner")
 ```
 
 ```{r Correlations for numerical values}
