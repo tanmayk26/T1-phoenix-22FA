@@ -122,7 +122,7 @@ hist(us_time_formatted)
 ```
 
 ```{r}
-df_map<-select(clean_acc21, ID, State, Start_Lat, Start_Lng)
+df_map<-dplyr::select(clean_acc21, State, Start_Lat, Start_Lng)
 head(df_map)
 ```
 
@@ -137,11 +137,11 @@ df_map_DC_sf <- st_as_sf(df_map_DC, coords = c("Start_Lng", "Start_Lat"), crs = 
 ```
 
 ```{r}
-mapview(df_map_DC_sf, xcol = "Start_Lng", ycol = "Start_Lat", grid = FALSE)
+mapview(df_map_DC_sf, xcol = "Start_Lng", ycol = "Start_Lat", grid = FALSE,col.regions=("red"))
 ```
 
 ```{r}
-mapview(df_map_DC_sf, map.types = "Stamen.Toner")
+mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
 ```
 
 ```{r Correlations for numerical values}
