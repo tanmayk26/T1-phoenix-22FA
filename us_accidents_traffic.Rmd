@@ -334,7 +334,7 @@ select=c(Is_severe,Crossing))
 head(Crossing_data)
 ```
 ```{r}
-ggplot(data=Crossing_data, aes(x=Is_severe, y=Crossing)) +
+ggplot(data=Crossing_data, aes(x=Is_severe, y=Crossing, fill=Is_severe)) +
   geom_bar(stat="identity")
 ```
 
@@ -345,7 +345,7 @@ select=c(Is_severe,Stop))
 head(Stop_data)
 ```
 ```{r}
-ggplot(data=Stop_data, aes(x=Is_severe, y=Stop)) +
+ggplot(data=Stop_data, aes(x=Is_severe, y=Stop, fill=Is_severe)) +
   geom_bar(stat="identity")
 ```
 
@@ -355,7 +355,7 @@ select=c(Is_severe,Station))
 head(Station_data)
 ```
 ```{r}
-ggplot(data=Station_data, aes(x=Is_severe, y=Station)) +
+ggplot(data=Station_data, aes(x=Is_severe, y=Station, fill=Is_severe)) +
   geom_bar(stat="identity")
 ```
 
@@ -365,7 +365,7 @@ select=c(Is_severe,Traffic_Signal))
 head(Traffic_Signal_data)
 ```
 ```{r}
-ggplot(data=Traffic_Signal_data, aes(x=Is_severe, y=Traffic_Signal)) +
+ggplot(data=Traffic_Signal_data, aes(x=Is_severe, y=Traffic_Signal, fill=Is_severe)) +
   geom_bar(stat="identity")
 ```
 
