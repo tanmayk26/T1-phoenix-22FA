@@ -25,49 +25,44 @@ library(ezids)
 df_us_acc <- data.frame(read.csv('../us_accidents_dataset/US_Accidents_Dec21_updated.csv'))
 str(df_us_acc)
 ```
-
 ```{r}
-df_us_acc  %>%
-  summarise_all(list(~is.na(.)))
+(colMeans(is.na(df_us_acc)))*100
 ```
 
 
 ```{r}
 df_us_acc$year<-format(as.Date(df_us_acc$Start_Time, format="%Y-%m-%d"),"%Y")
-
-```
-
-```{r}
 head(df_us_acc)
-
 ```
 
 ```{r}
-library(ggplot2)
-# Most basic bar chart
-ggplot(df_us_acc, aes(x = year)) +
+ggplot(df_us_acc, aes(x = year, fill=year)) +
     geom_bar()
 ```
 
 
 ```{r}
-
 accidents_2021 <- subset(df_us_acc, year==2021)
 head(accidents_2021)
 ```
 
 ```{r}
-
 accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d"),"%m")
 head(accidents_2021)
 ```
-
-
 ```{r}
 
+```{r}
+accidents_2021<-subset(accidents_2021, select = -c(Number, ID, Description))
+```
+
+```{r}
+(colMeans(is.na(accidents_2021)))*100
+```
+
+```{r}
 accidents_2021 <- accidents_2021 %>% 
   mutate(Is_severe = if_else(Severity == 1 | Severity ==2 , "Not Severe", "Severe"))
-```
 
 
 ```{r}
@@ -81,10 +76,18 @@ accidents_2021  %>%
 ```
 
 
+
 ```{r Drop NA, Factorize severity}
 clean_acc21 <- drop_na(accidents_2021)
+
+```
+
+```{r}
 clean_acc21$Is_severe <- as.factor(clean_acc21$Is_severe) # make Is_severe as factor
 str(clean_acc21)
+```
+
+```{r}
 clean_acc21  %>%
   summarise_all(list(~is.na(.)))%>%
   pivot_longer(everything(),
@@ -93,6 +96,7 @@ clean_acc21  %>%
   ggplot(aes(y=variables,x=n,fill=missing))+
   geom_col()
 ```
+
 ```{r}
 us_date<-clean_acc21$Start_Time 
 us_date_formatted<- as.Date(us_date,format="%Y-%m-%d")
@@ -280,9 +284,8 @@ H0 : Severity and weather conditions are independent
 H1 : Severity and weather conditions are NOT independent
 We can reject the H0. 
 
+
 ```{r}
-
-
 clean_acc21 %>% 
       group_by(Amenity, Bump, Crossing, Give_Way, Junction, No_Exit, Railway, Roundabout, Station, Stop, Traffic_Calming, Traffic_Signal, Turning_Loop)%>%
     summarise(percentage = n()/nrow(clean_acc21) *100 )%>%
@@ -297,7 +300,7 @@ head(accidents_per_roadelement)
 ```{r}
 
 
-acc_road_element_per <- tibble(c("None", "Crossing", "Traffic signal", "Crossing and traffic signal", "Station", "Stop" ), pull(accidents_per_roadelement, percentage), .name_repair = ~ c("road_elements", "percentage"))
+acc_road_element_per <- tibble(c("None", "Junction","Crossing", "Traffic signal", "Crossing and traffic signal", "Station", "Stop" ), pull(accidents_per_roadelement, percentage), .name_repair = ~ c("road_elements", "percentage"))
 acc_road_element_per
        
 ```
@@ -423,5 +426,3 @@ cor(clean_acc21$Severity, clean_acc21$Month)
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Hour)
 ```
-
-
