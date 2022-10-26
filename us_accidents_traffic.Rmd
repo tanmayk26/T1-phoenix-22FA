@@ -25,6 +25,7 @@ library(ezids)
 df_us_acc <- data.frame(read.csv('../us_accidents_dataset/US_Accidents_Dec21_updated.csv'))
 str(df_us_acc)
 ```
+
 ```{r}
 (colMeans(is.na(df_us_acc)))*100
 ```
@@ -50,7 +51,6 @@ head(accidents_2021)
 accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d"),"%m")
 head(accidents_2021)
 ```
-```{r}
 
 ```{r}
 accidents_2021<-subset(accidents_2021, select = -c(Number, ID, Description))
@@ -63,7 +63,7 @@ accidents_2021<-subset(accidents_2021, select = -c(Number, ID, Description))
 ```{r}
 accidents_2021 <- accidents_2021 %>% 
   mutate(Is_severe = if_else(Severity == 1 | Severity ==2 , "Not Severe", "Severe"))
-
+```
 
 ```{r}
 accidents_2021  %>%
@@ -114,6 +114,7 @@ ggplot(clean_acc21, aes(x = month, fill=month)) +
 ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) +
     geom_bar()
 ```
+
 ```{r}
 us_time<- accidents_2021$Start_Time
 us_time_formatted<-hour(us_time)
