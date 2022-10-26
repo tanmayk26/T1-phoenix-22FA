@@ -327,7 +327,15 @@ head(accidents_per_roadelement)
 
 ```
 
-
+```{r}
+Junction_data<- subset(accidents_per_roadelement, Junction=="True",
+select=c(Is_severe,Junction))
+head(Junction_data)
+```
+```{r}
+ggplot(data=Junction_data, aes(x=Is_severe, y=Junction, fill=Is_severe)) +
+  geom_bar(stat="identity")
+```
 
 
 
