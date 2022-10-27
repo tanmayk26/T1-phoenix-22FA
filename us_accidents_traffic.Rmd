@@ -50,7 +50,7 @@ head(accidents_2021)
 accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d"),"%m")
 head(accidents_2021)
 ```
-```{r}
+
 
 ```{r}
 accidents_2021<-subset(accidents_2021, select = -c(Number, ID, Description))
@@ -63,7 +63,7 @@ accidents_2021<-subset(accidents_2021, select = -c(Number, ID, Description))
 ```{r}
 accidents_2021 <- accidents_2021 %>% 
   mutate(Is_severe = if_else(Severity == 1 | Severity ==2 , "Not Severe", "Severe"))
-
+```
 
 ```{r}
 accidents_2021  %>%
@@ -147,40 +147,38 @@ mapview(df_map_DC_sf, map.types = "Stamen.Toner")
 # subsetting numerical columns only to check the corelationship between numerical variables
 loadPkg("corrplot")
 num_clean_acc21 <- select_if(clean_acc21, is.numeric)
-str(num_clean_acc21)
-cor_num_clean_acc21 <- cor(num_clean_acc21)
-cor_num_clean_acc21
-corrplot(cor_num_clean_acc21, method = "number")
+num_weather <- subset(num_clean_acc21, select = -c(Start_Lat,Start_Lng,End_Lat,End_Lng,Distance.mi.))
+corrplot(cor(num_weather), method = "number")
 ```
 
 ```{r Histograms for Weather Conditions}
 
 tempHist <- ggplot(clean_acc21, aes(x=Temperature.F.)) + geom_histogram(color="black", fill = "red")+
-  ggtitle("Histogram of Temperature(F) for accidents")
+  ggtitle("Histogram of Temperature(F) for accidents") + labs(x = "Temperature", y = "Count")
 tempHist
 
 windcHist <- ggplot(clean_acc21, aes(x=Wind_Chill.F.)) + geom_histogram(color="black", fill = "orange")+
-  ggtitle("Histogram of Wind chill for accidents")
+  ggtitle("Histogram of Wind chill for accidents") + labs(x = "Wind Chill", y = "Count")
 windcHist
 
 humidHist <- ggplot(clean_acc21, aes(x=Humidity...)) + geom_histogram(color="black", fill = "yellow")+
-  ggtitle("Histogram of Humidity for accidents")
+  ggtitle("Histogram of Humidity for accidents") + labs(x = "Humidity", y = "Count")
 humidHist
 
 windsHist <- ggplot(clean_acc21, aes(x=Wind_Speed.mph.)) + geom_histogram(color="black", fill = "navy")+
-  ggtitle("Histogram of Wind Speed for accidents")
+  ggtitle("Histogram of Wind Speed for accidents") + labs(x = "Wind Speed", y = "Count")
 windsHist
 
 pressHist <- ggplot(clean_acc21, aes(x=Pressure.in.)) + geom_histogram(color="black", fill = "green")+
-  ggtitle("Histogram of Pressure for accidents")
+  ggtitle("Histogram of Pressure for accidents") + labs(x = "Pressure", y = "Count")
 pressHist
 
 visibHist <- ggplot(clean_acc21, aes(x=Visibility.mi.)) + geom_histogram(color="black", fill = "blue")+
-  ggtitle("Histogram of Visibility for accidents")
+  ggtitle("Histogram of Visibility for accidents") + labs(x = "Visibility", y = "Count")
 visibHist
 
 precipHist <- ggplot(clean_acc21, aes(x=Precipitation.in.)) + geom_histogram(color="black", fill = "purple")+
-  ggtitle("Histogram of Precipitation for accidents")
+  ggtitle("Histogram of Precipitation for accidents") + labs(x = "Precipitation", y = "Count")
 precipHist
 
 ```
@@ -191,35 +189,33 @@ For the rest of element, they have quite close mean and median and a few outlier
 
 ```{r boxplots between Severity and wind conditions elements }
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Temperature.F.)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Temperature.F., fill = Is_severe)) + 
   geom_boxplot() +
   labs(title="Temperature by Severity", x="Severity", y = "Temperature(F)")
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Wind_Chill.F.)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Wind_Chill.F., fill = Is_severe)) + 
   geom_boxplot() +
   labs(title="Wind Chill by Severity", x="Severity", y = "Wind Chill")
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Wind_Speed.mph.)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Wind_Speed.mph., fill = Is_severe)) + 
   geom_boxplot() +
   labs(title="Wind Speed by Severity", x="Severity", y = "Wind Speed")
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Humidity...)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Humidity..., fill = Is_severe)) + 
   geom_boxplot() +
   labs(title="Humidity by Severity", x="Severity", y = "Humidity")
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Pressure.in.)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Pressure.in., fill = Is_severe)) + 
   geom_boxplot() +
   labs(title="Pressure by Severity", x="Severity", y = "Pressure")
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Visibility.mi.)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Visibility.mi., fill = Is_severe)) + 
   geom_boxplot() +
   labs(title="Visibility by Severity", x="Severity", y = "Visibility")
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Precipitation.in.)) + 
+ggplot(clean_acc21, aes(x = Is_severe, y=Precipitation.in., fill = Is_severe)) + 
   geom_boxplot() +
   labs(title="Precipitation by Severity", x="Severity", y = "Precipitation")
-
-## The same variables(Temp, wind chill, humidity) have pretty plots
 
 ```
 
@@ -241,9 +237,11 @@ t.test(box_clean2_severe$Pressure.in., box_clean2_notsevere$Pressure.in.)
 print("Precipitation.in.")
 t.test(box_clean2_severe$Precipitation.in., box_clean2_notsevere$Precipitation.in.)
 ```
+I took t-test on Severity and Numerical weather variables because 
 H0: The means of Temperature/WindChill/Humidity/Wind Speed/Pressure/Visibility/Precipitation will be same between different Severity levels.
 H1: The means of Temperature/WindChill/Humidity/Wind Speed/Pressure/Visibility/Precipitation will NOT be same between different Severity levels.
 The P-value for the all are lower than 0.05 for those all so we can reject the H0 except for Precipitation.
+
 ```{r Wind_Direction}
 # wind direction with severity
 ggplot(clean_acc21, aes(Wind_Direction, ..prop.., group = Is_severe)) +
@@ -336,6 +334,7 @@ Crossing_data<- subset(accidents_per_roadelement, Crossing=="True",
 select=c(Is_severe,Crossing))
 head(Crossing_data)
 ```
+
 ```{r}
 ggplot(data=Crossing_data, aes(x=Is_severe, y=Crossing, fill=Is_severe)) +
   geom_bar(stat="identity")
