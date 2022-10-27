@@ -307,27 +307,41 @@ acc_road_element_per
 ```
 
 
-```{r}
-options(repr.plot.width = 20, repr.plot.height = 8)
+
+
+```{r fig.align="center", echo = FALSE,fig.width = 12}
+options(repr.plot.width = 30, repr.plot.height = 8)
 acc_road_element_per %>%
     ggplot() +
     geom_col(mapping = aes(x=reorder(road_elements, -percentage), y=percentage, fill = road_elements)) +
-    labs(x = "Road element", y="%", title ="Accidents by nearby road element") +
-    theme(text = element_text(size=8))
+    
+  labs(title="Accidents By Nearby road elements", x="Road Elements", y = "Percentage")+
+  theme(plot.title = element_text(hjust = 0.5))
+
 ```
 
 ```{r}
 
 
 accidents_per_roadelement<-clean_acc21 %>% 
-      select(Is_severe,Crossing,Stop,Station,Traffic_Signal)
+      select(Is_severe,Junction,Crossing,Stop,Station,Traffic_Signal)
 
 
 head(accidents_per_roadelement)
 
 ```
 
-
+```{r}
+Junction_data<- subset(accidents_per_roadelement, Junction=="True",
+select=c(Is_severe,Junction))
+head(Junction_data)
+```
+```{r}
+ggplot(data=Junction_data, aes(x=Is_severe, y=Junction, fill=Is_severe)) +
+  geom_bar(stat="identity")+
+  labs(title="Accidents By Junction", x="Severity", y = "Junction")+
+  theme(plot.title = element_text(hjust = 0.5))
+```
 
 
 
@@ -339,7 +353,9 @@ head(Crossing_data)
 ```
 ```{r}
 ggplot(data=Crossing_data, aes(x=Is_severe, y=Crossing, fill=Is_severe)) +
-  geom_bar(stat="identity")
+  geom_bar(stat="identity")+
+  labs(title="Accidents By Crossing", x="Severity", y = "Crossing")+
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 
@@ -350,7 +366,9 @@ head(Stop_data)
 ```
 ```{r}
 ggplot(data=Stop_data, aes(x=Is_severe, y=Stop, fill=Is_severe)) +
-  geom_bar(stat="identity")
+  geom_bar(stat="identity")+
+  labs(title="Accidents By Stop", x="Severity", y = "Stop")+
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ```{r}
@@ -360,7 +378,9 @@ head(Station_data)
 ```
 ```{r}
 ggplot(data=Station_data, aes(x=Is_severe, y=Station, fill=Is_severe)) +
-  geom_bar(stat="identity")
+  geom_bar(stat="identity")+
+  labs(title="Accidents By Station", x="Severity", y = "Station")+
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ```{r}
@@ -370,7 +390,9 @@ head(Traffic_Signal_data)
 ```
 ```{r}
 ggplot(data=Traffic_Signal_data, aes(x=Is_severe, y=Traffic_Signal, fill=Is_severe)) +
-  geom_bar(stat="identity")
+  geom_bar(stat="identity")+
+  labs(title="Accidents By Traffic Signal", x="Severity", y = "Traffic Sisgnal")+
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 
@@ -387,8 +409,15 @@ accidents_per_roadelement <- accidents_per_roadelement %>%
   mutate(Station_num = if_else(Station== "True", 1, 0))
 accidents_per_roadelement <- accidents_per_roadelement %>% 
   mutate(Traffic_Signal_num = if_else(Traffic_Signal== "True", 1, 0))
+accidents_per_roadelement <- accidents_per_roadelement %>% 
+  mutate(Junction_num = if_else(Junction== "True", 1, 0))
+
 ```
 
+```{r}
+Junction_anova = aov(Junction_num~severe_num, data=accidents_per_roadelement)
+summary(Junction_anova)
+```
 
 
 ```{r}
