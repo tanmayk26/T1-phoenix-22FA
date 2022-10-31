@@ -109,16 +109,15 @@ clean_acc21$Hour<-hour(us_time)
 ```
 
 ```{r}
-ggplot(clean_acc21, aes(x = month, fill=month)) +
-    geom_bar()
-ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) +
-    geom_bar()
+ggplot(clean_acc21, aes(x = month, fill=month,)) +geom_bar()+labs(title="Accident Distribution over the Months in 2021", x="Months", y = "count")+
+  theme(plot.title = element_text(hjust = 0.5))
+ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) + geom_bar()+
+  labs(title="Accident Distribution in Hours ", x="Hours", y = "count")+
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ```{r}
-us_time<- accidents_2021$Start_Time
-us_time_formatted<-hour(us_time)
-hist(us_time_formatted)
+hist(clean_acc21$Hour,main="Histogram for Hours",xlab = "Hours")
 ```
 
 ```{r}
@@ -137,7 +136,7 @@ df_map_DC_sf <- st_as_sf(df_map_DC, coords = c("Start_Lng", "Start_Lat"), crs = 
 ```
 
 ```{r}
-mapview(df_map_DC_sf, xcol = "Start_Lng", ycol = "Start_Lat", grid = FALSE,col.regions=("red"))
+mapview(df_map_DC_sf, main="Map for Accidents in DC(2021)" ,xcol = "Start_Lng", ycol = "Start_Lat", grid = FALSE,col.regions=("red"))
 ```
 
 ```{r}
