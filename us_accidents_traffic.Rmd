@@ -144,13 +144,11 @@ mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
 ```
 
 ```{r Correlations for numerical values}
-# subsetting numerical columns only to check the corelationship between numerical variables
+# subsetting numerical columns only to check the corelationship between numerical weather variables
 loadPkg("corrplot")
 num_clean_acc21 <- select_if(clean_acc21, is.numeric)
-str(num_clean_acc21)
-cor_num_clean_acc21 <- cor(num_clean_acc21)
-cor_num_clean_acc21
-corrplot(cor_num_clean_acc21, method = "number")
+num_weather <- subset(num_clean_acc21, select = -c(Start_Lat,Start_Lng,End_Lat,End_Lng,Distance.mi.))
+corrplot(cor(num_weather), method = "number")
 ```
 
 ```{r Histograms for Weather Conditions}
@@ -187,7 +185,13 @@ precipHist
 
 First, we looked at the histogram between numbers of accidents and weather condition elements to check distribution of data.
 For Temperature, Wind chill, and Humanity, each of distributions is left-skewed. 
-For the rest of element, they have quite close mean and median and a few outliers. But we decided to keep the outliers because it is natural to have outliers in the weather condition elements as it covers a whole year. Also the outliers does not affect the result of T-test. 
+For the rest of element, they have quite close mean and median and a few outliers.  
+
+```{r}
+wooutlier_winds <- outlierKD2(clean_acc21, Wind_Speed.mph., rm=TRUE, boxplt=TRUE, histogram=TRUE, qqplt=TRUE)
+clean_acc21_woo <- outlierKD2(wooutlier_winds, Pressure.in., rm=TRUE, boxplt=TRUE, histogram=TRUE, qqplt=TRUE)
+```
+But we decided to keep the outliers because it is natural to have outliers in the weather  variables as it covers a whole year. Also the outliers does not affect the result of T-test.
 
 ```{r boxplots between Severity and wind conditions elements }
 
@@ -220,7 +224,6 @@ ggplot(clean_acc21, aes(x = Is_severe, y=Precipitation.in.)) +
   labs(title="Precipitation by Severity", x="Severity", y = "Precipitation")
 
 ## The same variables(Temp, wind chill, humidity) have pretty plots
-
 ```
 
 ```{r T-test on Severity and weather condition elements}
