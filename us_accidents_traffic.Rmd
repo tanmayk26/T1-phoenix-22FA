@@ -294,8 +294,7 @@ clean_acc21 %>%
 
 head(accidents_per_roadelement)
 ```
-
-
+Here, we've compiled a list of incidents where surrounding road features like an amenity, a bump, a crossing, a give-way, a junction, a no-exit, a railroad, a roundabout, a station, a stop, a traffic signal, or a turning loop contributed to the accident.
 
 ```{r}
 
@@ -305,8 +304,7 @@ acc_road_element_per
        
 ```
 
-
-
+The tibble above illustrates accidents that happened as a result of local road elements in areas where there are more than 1% of road accidents.
 
 ```{r fig.align="center", echo = FALSE,fig.width = 12}
 options(repr.plot.width = 30, repr.plot.height = 8)
@@ -318,6 +316,7 @@ acc_road_element_per %>%
   theme(plot.title = element_text(hjust = 0.5))
 
 ```
+The graph above shows the accidents that happened as a result of surrounding road features.
 
 ```{r}
 
@@ -330,71 +329,60 @@ head(accidents_per_roadelement)
 
 ```
 
+Here, we've created a data frame with columns for junction, crossing, stop, station, and traffic signal, as well as a severity rating.
+
 ```{r}
 Junction_data<- subset(accidents_per_roadelement, Junction=="True",
 select=c(Is_severe,Junction))
 head(Junction_data)
+
+Crossing_data<- subset(accidents_per_roadelement, Crossing=="True",
+select=c(Is_severe,Crossing))
+head(Crossing_data)
+
+Stop_data<- subset(accidents_per_roadelement, Stop=="True",
+select=c(Is_severe,Stop))
+head(Stop_data)
+
+Station_data<- subset(accidents_per_roadelement, Station=="True",
+select=c(Is_severe,Station))
+head(Station_data)
+
+Traffic_Signal_data<- subset(accidents_per_roadelement, Traffic_Signal=="True",
+select=c(Is_severe,Traffic_Signal))
+head(Traffic_Signal_data)
 ```
+
+Here, the data frame is divided based on the accident's severity level and the surrounding road element that caused it.
+
 ```{r}
 ggplot(data=Junction_data, aes(x=Is_severe, y=Junction, fill=Is_severe)) +
   geom_bar(stat="identity")+
   labs(title="Accidents By Junction", x="Severity", y = "Junction")+
   theme(plot.title = element_text(hjust = 0.5))
-```
 
-
-
-
-```{r}
-Crossing_data<- subset(accidents_per_roadelement, Crossing=="True",
-select=c(Is_severe,Crossing))
-head(Crossing_data)
-```
-```{r}
 ggplot(data=Crossing_data, aes(x=Is_severe, y=Crossing, fill=Is_severe)) +
   geom_bar(stat="identity")+
   labs(title="Accidents By Crossing", x="Severity", y = "Crossing")+
   theme(plot.title = element_text(hjust = 0.5))
-```
 
-
-```{r}
-Stop_data<- subset(accidents_per_roadelement, Stop=="True",
-select=c(Is_severe,Stop))
-head(Stop_data)
-```
-```{r}
 ggplot(data=Stop_data, aes(x=Is_severe, y=Stop, fill=Is_severe)) +
   geom_bar(stat="identity")+
   labs(title="Accidents By Stop", x="Severity", y = "Stop")+
   theme(plot.title = element_text(hjust = 0.5))
-```
 
-```{r}
-Station_data<- subset(accidents_per_roadelement, Station=="True",
-select=c(Is_severe,Station))
-head(Station_data)
-```
-```{r}
 ggplot(data=Station_data, aes(x=Is_severe, y=Station, fill=Is_severe)) +
   geom_bar(stat="identity")+
   labs(title="Accidents By Station", x="Severity", y = "Station")+
   theme(plot.title = element_text(hjust = 0.5))
-```
 
-```{r}
-Traffic_Signal_data<- subset(accidents_per_roadelement, Traffic_Signal=="True",
-select=c(Is_severe,Traffic_Signal))
-head(Traffic_Signal_data)
-```
-```{r}
 ggplot(data=Traffic_Signal_data, aes(x=Is_severe, y=Traffic_Signal, fill=Is_severe)) +
   geom_bar(stat="identity")+
   labs(title="Accidents By Traffic Signal", x="Severity", y = "Traffic Sisgnal")+
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-
+The aforementioned graphs show the degree of severity caused by neighboring road elements such junctions, crossings, stops, stations, and traffic signals.
 
 ```{r}
 
@@ -413,30 +401,31 @@ accidents_per_roadelement <- accidents_per_roadelement %>%
 
 ```
 
+In order to run the anova test, we are turning the category data presented here into numerical data.
+
 ```{r}
 Junction_anova = aov(Junction_num~severe_num, data=accidents_per_roadelement)
 summary(Junction_anova)
-```
 
-
-```{r}
 Crossing_anova = aov(Crossing_num~severe_num, data=accidents_per_roadelement)
 summary(Crossing_anova)
-```
 
-
-```{r}
 Stop_anova = aov(Stop_num~severe_num, data=accidents_per_roadelement)
 summary(Stop_anova)
-```
-```{r}
+
 Station_anova = aov(Station_num~severe_num, data=accidents_per_roadelement)
 summary(Station_anova)
-```
-```{r}
+
 Traffic_signal_anova = aov(Traffic_Signal_num~severe_num, data=accidents_per_roadelement)
 summary(Traffic_signal_anova)
 ```
+
+Since the outcome variable is quantitative and the predictor variable is categorical, we are doing an anova test.
+H0 : The Severity of traffic and Nearby Road Elements are independent
+H1 : The Severity of traffic and  Nearby Road Elements are NOT independent
+The P-value from Anova test is lower than 0.05 for all the Nearby Road Elements variable so we can reject the H0.
+→ Nearby Road Elements Junction,Crossing, Stop, Station and Traffic Signal affects the Severity of Traffic.
+
 
 ```{r}
 test_Hour <- chisq.test(table(clean_acc21$Severity, clean_acc21$Hour))
