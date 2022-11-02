@@ -1,7 +1,16 @@
 ---
 authors: "T1 - Phoenix"
-title: "ACCIDENTS IN THE US: HOW THEY AFFECT TRAFFIC"
-output: html_document
+title: "Accidents in the US: How they affect traffic"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: false
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
 ---
 
 ```{r setup, include=FALSE}
@@ -129,7 +138,7 @@ ggplot(df_us_acc, aes(x = year, fill=year)) +
 
 Next, we looked at the yearly distribution graph. As the dataset has been updated with multiple data sources over the years, we decided that the year 2021 will be the optimal subset of the data.
 
-```{r Selecting Year=2021, include=FALSE}
+```{r Selecting Year 2021, include=FALSE}
 clean_acc21 <- subset(df_us_acc, year==2021)
 ```
 
@@ -164,7 +173,7 @@ mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
 
 Our main objective of the analysis was: What factors affect the severity of traffic due to accidents in the US?
 
-# 3.1. Does weather affect the severity of traffic?
+## 3.1. Does weather affect the severity of traffic?
 
 ```{r Correlations for numerical values}
 # subsetting numerical columns only to check the corelationship between numerical weather variables
@@ -345,7 +354,7 @@ However, the wind direction does not affect much the severity of traffic because
 For the weather conditions variables, we can observe that weather conditions at the time accidents happened affect the severity of traffic.
 
 
-# 3.2. SMART Question 2: Do Nearby Road Elements affect the severity of traffic?
+## 3.2. SMART Question 2: Do Nearby Road Elements affect the severity of traffic?
 
 To determine whether nearby road components have an impact on the severity of the traffic, we have conducted the exploratory data analysis listed below.
 
@@ -496,7 +505,7 @@ Traffic_signal_anova = aov(Traffic_Signal_num~severe_num, data=accidents_per_roa
 summary(Traffic_signal_anova)
 ```
 
-# 3.3. SMART Question 3: Does the occurrence of the accident during a particular time of day or year affect the severity of the accident?
+## 3.3. SMART Question 3: Does the occurrence of the accident during a particular time of day or year affect the severity of the accident?
 
 First, let's look at some grapghs to get a better idea.
 
@@ -555,7 +564,7 @@ Correlation test performed to test strength of relationship between severity and
 The resulting value indicates that the relationship is weak.
 
 
-# 4. Conclusion:
+# 4. Conclusion
 
 As mentioned earlier, our dataset represents real world scenarios. And there aren't many accidents that affect the traffic severely. But in the small amount of cases that it does happen, it will be due to the following factors.
 Does weather affect the severity of traffic?
@@ -566,3 +575,13 @@ Do Nearby Road Elements affect the severity of traffic?
 	• Nearby Road Elements Junction, Crossing, Stop, Station and Traffic Signal affects the Severity of Traffic.
 Does the occurrence of the accident during a particular time of day or year affect the severity of the accident?
 	• Both Hour and Month affect the Severity but with a weak relationship.
+
+
+# 5 Bibliography
+
+Dataset available: https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents
+
+Moosavi, Sobhan, Mohammad Hossein Samavatian, Srinivasan Parthasarathy, and Rajiv Ramnath. “A Countrywide Traffic Accident Dataset.”, 2019.
+
+Moosavi, Sobhan, Mohammad Hossein Samavatian, Srinivasan Parthasarathy, Radu Teodorescu, and Rajiv Ramnath. "Accident Risk Prediction based on Heterogeneous Sparse Data: New Dataset and Insights." In proceedings of the 27th ACM SIGSPATIAL International Conference on Advances in Geographic Information Systems, ACM, 2019.
+

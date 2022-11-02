@@ -1,6 +1,6 @@
 ---
 authors: "T1 - Phoenix"
-title: "US Accidents Traffic"
+title: "Accidents in the US: How they affect traffic"
 output:
   html_document:
     code_folding: hide
@@ -67,7 +67,7 @@ ggplot(df_us_acc, aes(x = year, fill=year)) +
 
 As we can see in the yearly distribution graph, the dataset has been updated with multiple data sources. Thus, we decided that the year 2021 will be the optimal subset of the data.
 
-```{r Selecting Year=2021}
+```{r Selecting Year 2021}
 clean_acc21 <- subset(df_us_acc, year==2021)
 ```
 
@@ -141,7 +141,7 @@ We created histograms between numbers of accidents and weather condition element
 From those histograms, we found that Temperature, Wind chill, and Humidity have left-skewed distributions.  
 For the rest of element, which are Wind Speed, Pressure, Visibility, and Precipitation, they have quite close mean and median with a few outliers.  
 
-```{r}
+```{r Removing Outliers}
 wooutlier_winds <- outlierKD2(clean_acc21, Wind_Speed.mph., rm=TRUE, boxplt=TRUE, histogram=TRUE, qqplt=TRUE)
 clean_acc21_woo <- outlierKD2(wooutlier_winds, Pressure.in., rm=TRUE, boxplt=TRUE, histogram=TRUE, qqplt=TRUE)
 ```
@@ -273,7 +273,7 @@ Do Nearby Road Elements affect the severity of traffic?
 
 To determine whether nearby road components have an impact on the severity of the traffic, we have conducted the exploratory data analysis listed below.
 
-```{r}
+```{r Nearby Road Elements Factor Weightage}
 clean_acc21 %>% 
       group_by(Amenity, Bump, Crossing, Give_Way, Junction, No_Exit, Railway, Roundabout, Station, Stop, Traffic_Calming, Traffic_Signal, Turning_Loop)%>%
     summarise(percentage = n()/nrow(clean_acc21) *100 )%>%
@@ -285,11 +285,8 @@ head(accidents_per_roadelement)
 Here, we've compiled a list of incidents where surrounding road features like an amenity, a bump, a crossing, a give-way, a junction, a no-exit, a railroad, a roundabout, a station, a stop, a traffic signal, or a turning loop contributed to the accident.
 
 ```{r}
-
-
 acc_road_element_per <- tibble(c("None", "Junction","Crossing", "Traffic signal", "Crossing and traffic signal", "Station", "Stop" ), pull(accidents_per_roadelement, percentage), .name_repair = ~ c("road_elements", "percentage"))
 acc_road_element_per
-       
 ```
 
 The tibble above illustrates accidents that happened as a result of local road elements in areas where there are more than 1% of road accidents.
