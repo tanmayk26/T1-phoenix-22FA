@@ -257,7 +257,7 @@ To identify if the severity of traffic dependent on Weather Condition, we took a
 
 H0 : Severity and weather conditions are independent.
 H1 : Severity and weather conditions are NOT independent.  
-As we can see here, the the P-value from Chi-squared test is lower than 0.05 for Weather Conditions variable so we can reject the H0. Which means the Severity of traffic and weather conditions are Dependent. 
+As we can see here, the the P-value from Chi-squared test is lower than 0.05 for Weather Conditions variable so we can reject the H0. Which means the Severity of traffic and weather conditions are Dependent.  
 
 From these analysis on numerical and categorical weather variables, we can answer our SMART question about the impact for weather on the severity of traffic.
 We concluded that the numerical weather condition elements except for visibility affect the severity of traffic.
