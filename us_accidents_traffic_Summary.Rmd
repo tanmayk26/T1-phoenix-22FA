@@ -531,3 +531,14 @@ cor(clean_acc21$Severity, clean_acc21$Hour)
 Correlation test performed to test strength of relationship between severity and Hour.
 The resulting value indicates that the relationship is weak.
 
+
+# Conclusion:
+As mentioned earlier, our dataset represents real world scenarios. And there aren't many accidents that affect the traffic severely. But in the small amount of cases that it does happen, it will be due to the following factors.
+Does weather affect the severity of traffic?
+	• Temperature/Wind Chill/Wind Speed/Humidity/Pressure/Precipitation affect the severity of traffic.
+	• Wind Direction does not affect the severity of traffic much.
+	• Weather Conditions affect the severity of traffic.
+Do Nearby Road Elements affect the severity of traffic?
+	• Nearby Road Elements Junction, Crossing, Stop, Station and Traffic Signal affects the Severity of Traffic.
+Does the occurrence of the accident during a particular time of day or year affect the severity of the accident?
+	• Both Hour and Month affect the Severity but with a weak relationship.
