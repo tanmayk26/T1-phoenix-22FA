@@ -242,7 +242,7 @@ WC %>%
     theme(text = element_text(size=7))
 ```
 Secondly, we took a look at the Weather Condition variable.  
-There are so many weather conditions in our dataset, so I tried to make a barplot with the top 8 weather conditions when accidents happened. The major weather conditions when car accidents happened were 'Fair', 'Cloudy', 'Mostly Cloudy', 'Partly Cloudy', 'Light Rain', 'Fog', 'Light Snow', and 'Haze'.  
+There are so many weather conditions in our dataset, so I tried to make a barplot with the top 8 weather conditions when accidents happened. The major weather conditions when car accidents happened were 'Fair', 'Cloudy', 'Mostly Cloudy', 'Partly Cloudy', 'Light Rain', 'Fog', 'Light Snow', and 'Haze'.   
 
 Now we can see that the most frequent weather was 'Fair', but since the Weather Conditions variable is divided into detailed conditions as you can see here with cloudy, mostly cloudy, and partly cloudy, so we decided to take a chi-squared test on all weather conditions and severity. 
 
