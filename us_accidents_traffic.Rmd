@@ -152,7 +152,7 @@ mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
 The map above shows the accidents that took place in 2021 in the DC area.
 
 ```{r Correlations for numerical values}
-# subsetting numerical columns only to check the corelationship between numerical variables
+# sub-setting numerical columns only to check the corelation between numerical variables
 loadPkg("corrplot")
 num_clean_acc21 <- select_if(clean_acc21, is.numeric)
 str(num_clean_acc21)
@@ -422,6 +422,7 @@ test_Hour <- chisq.test(table(clean_acc21$Severity, clean_acc21$Hour))
 test_Hour
 ```
 Took a Chi-Squared test to see if the severity and Hour of day are independent.
+We have performed Chi-Squared test because both variables are categorical.
 H0 : Severity and Hour are independent
 H1 : Severity and Hour are NOT independent
 We can reject the H0. 
@@ -432,6 +433,7 @@ test_Month <- chisq.test(table(clean_acc21$Severity, clean_acc21$Month))
 test_Month
 ```
 Took a Chi-Squared test to see the severity and weather Months are independent.
+We have performed Chi-Squared test because both variables are categorical.
 H0 : Severity and Month are independent
 H1 : Severity and Month are NOT independent
 We can reject the H0. 
