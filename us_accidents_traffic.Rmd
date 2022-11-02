@@ -456,14 +456,15 @@ test_Month
 We can reject the H0 because the p value is less than 0.05.
 
 
-
+Correlation test performed to test strength of relationship between severity and Month.
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Month)
 ```
-Correlation test performed to test strength of relationship between severity and Month.
+Since the value is so small, we can conclude that the the relationship is weak.
 
+Correlation test performed to test strength of relationship between severity and Hour.
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Hour)
 ```
-Correlation test performed to test strength of relationship between severity and Hour.
+Since the value is so small, we can conclude that the the relationship is weak.
 
