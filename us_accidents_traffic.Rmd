@@ -34,20 +34,20 @@ library(lattice)
 
 Let us pull the dataset from the file `US_Accidents_Dec21_updated.csv` into a dataframe `df_us_acc`. As this file is huge in size, we cannot upload it on GitHub. Thus, we are storing the file in a folder called `us_accidents_dataset` that is located in one folder above the project folder.
 
-```{r intro}
+```{r Pulling the Data}
 df_us_acc <- data.frame(read.csv('../us_accidents_dataset/US_Accidents_Dec21_updated.csv'))
 str(df_us_acc)
 ```
 
 First, let's check the percentage of NA's present in each columns of the dataset.
 
-```{r}
+```{r Checking NAs}
 (colMeans(is.na(df_us_acc)))*100
 ```
 
 Here, the highest number of NAs is present in the column `Number`, followed by `Precipitation.in.`, `Wind_Chill.F.` and some other columns. As we don't require the column `Number`, we will drop the column. We have decided to keep the rest of the columns as they are part of our analysis. We are also dropping `Description` column for faster code execution.
 
-```{r}
+```{r Dropping redundant columns}
 df_us_acc <- subset(df_us_acc, select = -c(Number, Description))
 ```
 
@@ -59,7 +59,7 @@ df_us_acc <- drop_na(df_us_acc)
 
 Next, we will extract the year out of the `Start_Time` column to check the data distribution over the year.
 
-```{r}
+```{r Extracting Year}
 df_us_acc$year<-format(as.Date(df_us_acc$Start_Time, format="%Y-%m-%d"),"%Y")
 ggplot(df_us_acc, aes(x = year, fill=year)) +
     geom_bar()
@@ -67,35 +67,35 @@ ggplot(df_us_acc, aes(x = year, fill=year)) +
 
 As we can see in the yearly distribution graph, the dataset has been updated with multiple data sources. Thus, we decided that the year 2021 will be the optimal subset of the data.
 
-```{r}
+```{r Selecting Year=2021}
 clean_acc21 <- subset(df_us_acc, year==2021)
 ```
 
 Let's extract the month from the `Start_Time` and check the monthly distribution.
 
-```{r}
+```{r Extracting Month, Hour}
 clean_acc21$Month<-as.numeric(format(as.Date(clean_acc21$Start_Time, format="%Y-%m-%d"),"%m"))
 clean_acc21$Hour<-hour(clean_acc21$Start_Time)
 ```
 
 Now, we will check the Severity distribution in the data.
 
-```{r}
+```{r Severity Distribution Graph}
 ggplot(df_us_acc, aes(x = Severity, fill=Severity)) +
     geom_bar()
 ```
 
 As we have seen in the graph, the severity levels are imbalanced. We don't have a higher number of severe impacts on the traffic due to accidents as compared to the less severe. This is also true in regards to the real world. Thus, we have decided to merge level 1 & 2 into "Not Severe" & 3 & 4 into "Severe" to make our analysis more specific.
 
-```{r}
+```{r Grouping Severity Levels}
 clean_acc21 <- clean_acc21 %>% 
   mutate(Is_severe = if_else(Severity == 1 | Severity ==2 , "Not Severe", "Severe"))
-clean_acc21$Is_severe <- as.factor(clean_acc21$Is_severe) # make Is_severe as factor
+clean_acc21$Is_severe <- as.factor(clean_acc21$Is_severe)
 ```
 
 For some initial EDA, we were curious to see how the data looks on a map, particularly the DC area as we currently live here. Thus, the map below shows the accidents that took place in 2021 in the DC area.
 
-```{r}
+```{r Map DC}
 df_map<-dplyr::select(clean_acc21, State, Start_Lat, Start_Lng)
 df_map_DC <- df_map %>% filter(State == "DC")
 df_map_DC_sf <- st_as_sf(df_map_DC, coords = c("Start_Lng", "Start_Lat"), crs = 4326)
