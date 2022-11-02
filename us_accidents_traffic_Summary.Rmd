@@ -21,6 +21,23 @@ library(lubridate)
 library(ezids)
 ```
 
+# 1. Introduction
+
+In the USA, there are several traffic accidents every day. Communities around the nation incur social and financial costs as a result of the traffic accidents occur. The Factors such as the weather, the location, and the timing all have an impact on accident occurrence, which in turn influences how serious traffic is. Our project aims to determine how these factors affect the severity of the traffic so we can contribute solving the social problems regarding car accidents.  
+
+The data we worked is a national car accidents dataset from every state in the Unites States. The data is gathered from several APIs which provide streaming traffic data including the US Department of Transportation, each of state transportation departments, law enforcement organizations, traffic cameras, and traffic sensors from the road networks. There are around 2.8 million accidents records in the dataset from February 2016.  
+
+As we aimed to identify which factors affect the severity of traffic, we divided the smart questions into 3 categories. Weather factors, Road elements and Time factors. Based on this categorization we chose our questions.   
+
+The summary paper will include these:
+	1. Description of the dataset
+	2. Geographic visualization
+	3. Exploratory Data Analysis
+		a. Weather Variables EDA
+		b. Road Variables EDA
+		c. Time Variables EDA
+	4. Conclusion
+
 ```{r intro}
 df_us_acc <- data.frame(read.csv('../us_accidents_dataset/US_Accidents_Dec21_updated.csv'))
 str(df_us_acc)
