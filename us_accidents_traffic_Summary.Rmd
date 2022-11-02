@@ -468,16 +468,33 @@ The P-value from Anova test is lower than 0.05 for all the Nearby Road Elements 
 test_Hour <- chisq.test(table(clean_acc21$Severity, clean_acc21$Hour))
 test_Hour
 ```
-
+Took a Chi-Squared test to see if the severity and Hour of day are independent.
+We have performed Chi-Squared test because both variables are categorical.
+H0 : Severity and Hour are independent
+H1 : Severity and Hour are NOT independent
+We can reject the H0. 
+This means that there is a relationship between Severity and Hour.
 ```{r}
 test_Month <- chisq.test(table(clean_acc21$Severity, clean_acc21$Month))
 test_Month
 ```
+Took a Chi-Squared test to see the severity and weather Months are independent.
+We have performed Chi-Squared test because both variables are categorical.
+H0 : Severity and Month are independent
+H1 : Severity and Month are NOT independent
+We can reject the H0. 
+This means that there is a relationship between Severity and Hour.
 
+Now let's check how strong these relationships are.
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Month)
 ```
+Correlation test performed to test strength of relationship between severity and Month.
+The resulting value indicates that the relationship is weak.
 
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Hour)
 ```
+Correlation test performed to test strength of relationship between severity and Hour.
+The resulting value indicates that the relationship is weak.
+
