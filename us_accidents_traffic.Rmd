@@ -100,7 +100,7 @@ mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
 ```
 
 
-
+To answer the first SMART question we have, which is "Does weather affect the severity of traffic?", we wanted to check the distribution of data for numerical weather variables first.
 
 ```{r Histograms for Weather Conditions}
 
@@ -134,7 +134,6 @@ precipHist
 
 ```
 
-To answer the first SMART question we have, which is "Does weather affect the severity of traffic?", we wanted to check the distribution of data for numerical weather variables first.
 We created histograms between numbers of accidents and weather condition elements.
 From those histograms, we found that Temperature, Wind chill, and Humidity have left-skewed distributions.  
 For the rest of element, which are Wind Speed, Pressure, Visibility, and Precipitation, they have quite close mean and median with a few outliers.  
@@ -246,7 +245,7 @@ There are so many weather conditions in our dataset, so I tried to make a barplo
 
 Now we can see that the most frequent weather was 'Fair', but since the Weather Conditions variable is divided into detailed conditions as you can see here with cloudy, mostly cloudy, and partly cloudy, so we decided to take a chi-squared test on all weather conditions and severity. 
 
-```{r}
+```{r chisq on wc and severity}
 # Try the Chi-Squared Test on all Weather_Conditions and Severity
 WCtable <- table(clean_acc21$Weather_Condition , clean_acc21$Severity)
 xkabledply(WCtable, title = "Severity by Weather Conditions")
