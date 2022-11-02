@@ -9,7 +9,7 @@ date: "2022-10-22"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r Libraries Used}
+```{r Libraries Used, warning=FALSE}
 library(tidyverse)
 library(dplyr)
 library(corrplot)
@@ -21,22 +21,29 @@ library(lubridate)
 library(ezids)
 ```
 
+Let us pull the dataset from the file `US_Accidents_Dec21_updated.csv` into a dataframe `df_us_acc`. As this file is huge in size, we cannot upload it on GitHub. Thus, we are storing the file in a folder called `us_accidents_dataset` that is located in one folder above the project folder.
+
 ```{r intro}
 df_us_acc <- data.frame(read.csv('../us_accidents_dataset/US_Accidents_Dec21_updated.csv'))
 str(df_us_acc)
 ```
 
+First, let's check the percentage of NA's present in each columns of the dataset.
+
 ```{r}
 (colMeans(is.na(df_us_acc)))*100
 ```
 
+Here, the highest number of NAs is present in the column `Number`, followed by `Precipitation.in.`, `Wind_Chill.F.` and some other columns. As we don't require the column `Number`, we will drop the column. We have decided to keep the rest of the columns as they are part of our analysis. We are also dropping `Description` column for faster code execution.
+
+```{r}
+df_us_acc <- subset(df_us_acc, select = -c(Number, Description))
+```
+
+Next, we will extract the year out of the `Start_Time` column to check the data distribution over the year.
 
 ```{r}
 df_us_acc$year<-format(as.Date(df_us_acc$Start_Time, format="%Y-%m-%d"),"%Y")
-head(df_us_acc)
-```
-
-```{r}
 ggplot(df_us_acc, aes(x = year, fill=year)) +
     geom_bar()
 ```
@@ -50,10 +57,6 @@ head(accidents_2021)
 ```{r}
 accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d"),"%m")
 head(accidents_2021)
-```
-
-```{r}
-accidents_2021<-subset(accidents_2021, select = -c(Number, ID, Description))
 ```
 
 ```{r}
