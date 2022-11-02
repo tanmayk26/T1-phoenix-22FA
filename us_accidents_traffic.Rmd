@@ -53,7 +53,7 @@ df_us_acc <- subset(df_us_acc, select = -c(Number, Description))
 
 As we have low number of NA data for other columns, we can just drop those records.
 
-```{r Drop NA, Factorize severity}
+```{r Drop NA}
 df_us_acc <- drop_na(df_us_acc)
 ```
 
@@ -85,7 +85,7 @@ ggplot(df_us_acc, aes(x = Severity, fill=Severity)) +
     geom_bar()
 ```
 
-As we have seen in the graph, the severity levels are imbalanced. We don't have a higher number of severe impacts on the traffic due to accidents as compared to the less severe. This is also true in regards to the real world. Thus, we have decided to merge level 1 & 2 into "Not Severe" & 3 & 4 into "Severe" to make our analysis more specific.
+As we can see in the graph, the severity levels are imbalanced. We don't have a higher number of severe impacts on the traffic due to accidents as compared to the less severe. This is also true in regards to the real world. Thus, we have decided to merge level 1 & 2 into "Not Severe" & 3 & 4 into "Severe" to make our analysis more specific.
 
 ```{r Grouping Severity Levels}
 clean_acc21 <- clean_acc21 %>% 
@@ -419,17 +419,21 @@ The P-value from Anova test is lower than 0.05 for all the Nearby Road Elements 
 Does the occurrence of the accident during a particular time of day or year affect the severity of the accident?
 
 First, let's look at some grapghs to get a better idea.
-```{r}
+
+```{r Monthly Distribution, echo=F}
 ggplot(clean_acc21, aes(x = Month, fill=Month,)) +geom_bar()+labs(title="Accident Distribution over the Months in 2021", x="Months", y = "count")+
   theme(plot.title = element_text(hjust = 0.5))
 ```
+
 The Graph above shows frequency of accidents in 2021 during different Months.
 We can see that there is an increase in number of accidents during the end of the year.
-```{r}
+
+```{r Hourly Distribution, echo=F}
 ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) + geom_bar()+
   labs(title="Accident Distribution in Hours ", x="Hours", y = "count")+
   theme(plot.title = element_text(hjust = 0.5))
 ```
+
 The Graph above shows the frequency of accidents in 2021 during different hours of the day.
 It can be observed that there is spike in frequency of accidents during afternoon to evening, probably because it is the peak hours.
 

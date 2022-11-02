@@ -1,15 +1,14 @@
 ---
-authors: 
-title: "us_accidents_traffic"
+authors: "T1 - Phoenix"
+title: "ACCIDENTS IN THE US: HOW THEY AFFECT TRAFFIC"
 output: html_document
-date: "2022-10-22"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r Libraries Used}
+```{r Libraries Used, warning=FALSE, include=FALSE}
 library(tidyverse)
 library(dplyr)
 library(corrplot)
@@ -41,127 +40,131 @@ The summary paper will include these:
 		c. Time Variables EDA
 	4. Conclusion
 
-```{r intro}
+# 2. Description of the Data
+
+## 2.1 Source Data
+
+The dataset is a USA wide traffic accident dataset, which covers 49 states of the United States, between 2016 and 2021. There are approx. 2.8M (2,845,342) observations and 47 columns. The sructure of the dataset is as below:
+
+```{r Pulling the Data, echo=F}
 df_us_acc <- data.frame(read.csv('../us_accidents_dataset/US_Accidents_Dec21_updated.csv'))
 str(df_us_acc)
 ```
 
-```{r}
+The column description can be found below:-
+
+1	`ID`	This is a unique identifier of the accident record.
+2	`Severity`	Shows the severity of the accident, a number between 1 and 4, where 1 indicates the least impact on traffic (i.e., short delay as a result of the accident) and 4 indicates a significant impact on traffic (i.e., long delay).
+3	`Start_Time`	Shows start time of the accident in local time zone.
+4	`End_Time`	Shows end time of the accident in local time zone. End time here refers to when the impact of accident on traffic flow was dismissed.
+5	`Start_Lat`	Shows latitude in GPS coordinate of the start point.
+6	`Start_Lng`	Shows longitude in GPS coordinate of the start point.
+7	`End_Lat`	Shows latitude in GPS coordinate of the end point.
+8	`End_Lng`	Shows longitude in GPS coordinate of the end point.
+9	`Distance(mi)`	The length of the road extent affected by the accident.
+10	`Description`	Shows natural language description of the accident.
+11	`Number`	Shows the street number in address field.
+12	`Street`	Shows the street name in address field.
+13	`Side`	Shows the relative side of the street (Right/Left) in address field.
+14	`City`	Shows the city in address field.
+15	`County`	Shows the county in address field.
+16	`State`	Shows the state in address field.
+17	`Zipcode`	Shows the zipcode in address field.
+18	`Country`	Shows the country in address field.
+19	`Timezone`	Shows timezone based on the location of the accident (eastern, central, etc.).
+20	`Airport_Code`	Denotes an airport-based weather station which is the closest one to location of the accident.
+21	`Weather_Timestamp`	Shows the time-stamp of weather observation record (in local time).
+22	`Temperature(F)`	Shows the temperature (in Fahrenheit).
+23	`Wind_Chill(F)`	Shows the wind chill (in Fahrenheit).
+24	`Humidity(%)`	Shows the humidity (in percentage).
+25	`Pressure(in)`	Shows the air pressure (in inches).
+26	`Visibility(mi)`	Shows visibility (in miles).
+27	`Wind_Direction`	Shows wind direction.
+28	`Wind_Speed(mph)`	Shows wind speed (in miles per hour).
+29	`Precipitation(in)`	Shows precipitation amount in inches, if there is any.
+30	`Weather_Condition`	Shows the weather condition (rain, snow, thunderstorm, fog, etc.)
+31	`Amenity`	A POI annotation which indicates presence of amenity in a nearby location.
+32	`Bump`	A POI annotation which indicates presence of speed bump or hump in a nearby location.
+33	`Crossing`	A POI annotation which indicates presence of crossing in a nearby location.
+34	`Give_Way`	A POI annotation which indicates presence of give_way in a nearby location.
+35	`Junction`	A POI annotation which indicates presence of junction in a nearby location.
+36	`No_Exit`	A POI annotation which indicates presence of no_exit in a nearby location.
+37	`Railway`	A POI annotation which indicates presence of railway in a nearby location.
+38	`Roundabout`	A POI annotation which indicates presence of roundabout in a nearby location.
+39	`Station`	A POI annotation which indicates presence of station in a nearby location.
+40	`Stop`	A POI annotation which indicates presence of stop in a nearby location.
+41	`Traffic_Calming`	A POI annotation which indicates presence of traffic_calming in a nearby location.
+42	`Traffic_Signal`	A POI annotation which indicates presence of traffic_signal in a nearby loction.
+43	`Turning_Loop`	A POI annotation which indicates presence of turning_loop in a nearby location.
+44	`Sunrise_Sunset`	Shows the period of day (i.e. day or night) based on sunrise/sunset.
+45	`Civil_Twilight`	Shows the period of day (i.e. day or night) based on civil twilight.
+46	`Nautical_Twilight`	Shows the period of day (i.e. day or night) based on nautical twilight.
+47	`Astronomical_Twilight`	Shows the period of day (i.e. day or night) based on astronomical twilight.
+
+  
+For our exploratory data analysis, we started with finding the NAs present in our data.
+
+```{r Checking NAs, echo=F}
 (colMeans(is.na(df_us_acc)))*100
 ```
 
+Here, the highest number of NAs is present in the column `Number`, followed by `Precipitation.in.`, `Wind_Chill.F.` and some other columns. As we don't require the column `Number`, we dropped the column. We also dropped the `Description` column for faster code execution. The other columns are required for our analysis. Thus, we dropped the records containing NA for these columns.
 
-```{r}
-df_us_acc$year<-format(as.Date(df_us_acc$Start_Time, format="%Y-%m-%d"),"%Y")
-head(df_us_acc)
+```{r Dropping redundant columns, include=FALSE}
+df_us_acc <- subset(df_us_acc, select = -c(Number, Description))
 ```
 
-```{r}
+As we have low number of NA data for other columns, we can just drop those records.
+
+```{r Drop NA, include=FALSE}
+df_us_acc <- drop_na(df_us_acc)
+```
+
+
+```{r Extracting Year, echo=FALSE}
+df_us_acc$year<-format(as.Date(df_us_acc$Start_Time, format="%Y-%m-%d"),"%Y")
 ggplot(df_us_acc, aes(x = year, fill=year)) +
     geom_bar()
 ```
 
+Next, we looked at the yearly distribution graph. As the dataset has been updated with multiple data sources over the years, we decided that the year 2021 will be the optimal subset of the data.
 
-```{r}
-accidents_2021 <- subset(df_us_acc, year==2021)
-head(accidents_2021)
+```{r Selecting Year=2021, include=FALSE}
+clean_acc21 <- subset(df_us_acc, year==2021)
 ```
 
-```{r}
-accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d"),"%m")
-head(accidents_2021)
+```{r Extracting Month, Hour, include=FALSE}
+clean_acc21$Month<-as.numeric(format(as.Date(clean_acc21$Start_Time, format="%Y-%m-%d"),"%m"))
+clean_acc21$Hour<-hour(clean_acc21$Start_Time)
 ```
 
-```{r}
-accidents_2021<-subset(accidents_2021, select = -c(Number, ID, Description))
+Now, we checked the Severity distribution in the data.
+
+```{r Severity Distribution Graph, echo=FALSE}
+ggplot(df_us_acc, aes(x = Severity, fill=Severity)) +
+    geom_bar()
 ```
 
-```{r}
-(colMeans(is.na(accidents_2021)))*100
-```
+As we can see in the graph, the severity levels are imbalanced. We don't have a higher number of severe impacts on the traffic due to accidents as compared to the less severe. This is also true in regards to the real world. Thus, we decided to merge level 1 & 2 into "Not Severe" & 3 & 4 into "Severe" to make our analysis more specific.
 
-```{r}
-accidents_2021 <- accidents_2021 %>% 
+```{r Grouping Severity Levels, include=FALSE}
+clean_acc21 <- clean_acc21 %>% 
   mutate(Is_severe = if_else(Severity == 1 | Severity ==2 , "Not Severe", "Severe"))
+clean_acc21$Is_severe <- as.factor(clean_acc21$Is_severe)
 ```
 
-```{r}
-accidents_2021  %>%
-  summarise_all(list(~is.na(.)))%>%
-  pivot_longer(everything(),
-               names_to = "variables", values_to="missing") %>%
-  count(variables, missing) %>%
-  ggplot(aes(y=variables,x=n,fill=missing))+
-  geom_col()
-```
-
-
-
-```{r Drop NA, Factorize severity}
-clean_acc21 <- drop_na(accidents_2021)
-
-```
-
-```{r}
-clean_acc21$Is_severe <- as.factor(clean_acc21$Is_severe) # make Is_severe as factor
-str(clean_acc21)
-```
-
-```{r}
-clean_acc21  %>%
-  summarise_all(list(~is.na(.)))%>%
-  pivot_longer(everything(),
-               names_to = "variables", values_to="missing") %>%
-  count(variables, missing) %>%
-  ggplot(aes(y=variables,x=n,fill=missing))+
-  geom_col()
-```
-
-```{r}
-us_date<-clean_acc21$Start_Time 
-us_date_formatted<- as.Date(us_date,format="%Y-%m-%d")
-clean_acc21$Month<-as.numeric(format(us_date_formatted, "%m"))
-```
-
-```{r}
-us_time<- clean_acc21$Start_Time
-clean_acc21$Hour<-hour(us_time)
-```
-
-```{r}
-ggplot(clean_acc21, aes(x = month, fill=month,)) +geom_bar()+labs(title="Accident Distribution over the Months in 2021", x="Months", y = "count")+
-  theme(plot.title = element_text(hjust = 0.5))
-ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) + geom_bar()+
-  labs(title="Accident Distribution in Hours ", x="Hours", y = "count")+
-  theme(plot.title = element_text(hjust = 0.5))
-```
-
-```{r}
-hist(clean_acc21$Hour,main="Histogram for Hours",xlab = "Hours")
-```
-
-```{r}
+```{r Map DC, include=FALSE}
 df_map<-dplyr::select(clean_acc21, State, Start_Lat, Start_Lng)
-head(df_map)
-```
-
-```{r}
 df_map_DC <- df_map %>% filter(State == "DC")
-
-df_map_DC %>% glimpse()
-```
-
-```{r}
 df_map_DC_sf <- st_as_sf(df_map_DC, coords = c("Start_Lng", "Start_Lat"), crs = 4326)
-```
-
-```{r}
-mapview(df_map_DC_sf, main="Map for Accidents in DC(2021)" ,xcol = "Start_Lng", ycol = "Start_Lat", grid = FALSE,col.regions=("red"))
-```
-
-```{r}
 mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
 ```
+
+# 3. SMART Question: 
+
+Our main objective of the analysis was: What factors affect the severity of traffic due to accidents in the US?
+
+# 3.1. Does weather affect the severity of traffic?
 
 ```{r Correlations for numerical values}
 # subsetting numerical columns only to check the corelationship between numerical weather variables
@@ -342,9 +345,7 @@ However, the wind direction does not affect much the severity of traffic because
 For the weather conditions variables, we can observe that weather conditions at the time accidents happened affect the severity of traffic.
 
 
-SMART QUESTION: 
-
-Do Nearby Road Elements affect the severity of traffic?
+# 3.2. SMART Question 2: Do Nearby Road Elements affect the severity of traffic?
 
 To determine whether nearby road components have an impact on the severity of the traffic, we have conducted the exploratory data analysis listed below.
 
@@ -495,22 +496,44 @@ Traffic_signal_anova = aov(Traffic_Signal_num~severe_num, data=accidents_per_roa
 summary(Traffic_signal_anova)
 ```
 
+# 3.3. SMART Question 3: Does the occurrence of the accident during a particular time of day or year affect the severity of the accident?
 
+First, let's look at some grapghs to get a better idea.
 
-```{r}
+```{r Monthly Distribution, echo=F}
+ggplot(clean_acc21, aes(x = Month, fill=Month,)) +geom_bar()+labs(title="Accident Distribution over the Months in 2021", x="Months", y = "count")+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+The Graph above shows frequency of accidents in 2021 during different Months.
+We can see that there is an increase in number of accidents during the end of the year.
+
+```{r Hourly Distribution, echo=F}
+ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) + geom_bar()+
+  labs(title="Accident Distribution in Hours ", x="Hours", y = "count")+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+The Graph above shows the frequency of accidents in 2021 during different hours of the day.
+It can be observed that there is spike in frequency of accidents during afternoon to evening, probably because it is the peak hours.
+
+```{r Chisquare Test between Severity and Hour, echo=F}
 test_Hour <- chisq.test(table(clean_acc21$Severity, clean_acc21$Hour))
 test_Hour
 ```
+
 Took a Chi-Squared test to see if the severity and Hour of day are independent.
 We have performed Chi-Squared test because both variables are categorical.
 H0 : Severity and Hour are independent
 H1 : Severity and Hour are NOT independent
 We can reject the H0. 
 This means that there is a relationship between Severity and Hour.
-```{r}
+
+```{r Chisquare Test between Severity and Month, echo=F}
 test_Month <- chisq.test(table(clean_acc21$Severity, clean_acc21$Month))
 test_Month
 ```
+
 Took a Chi-Squared test to see the severity and weather Months are independent.
 We have performed Chi-Squared test because both variables are categorical.
 H0 : Severity and Month are independent
@@ -519,20 +542,21 @@ We can reject the H0.
 This means that there is a relationship between Severity and Hour.
 
 Now let's check how strong these relationships are.
-```{r}
+```{r Correlation Test between Severity and Hour, echo=F}
 cor(clean_acc21$Severity, clean_acc21$Month)
 ```
 Correlation test performed to test strength of relationship between severity and Month.
 The resulting value indicates that the relationship is weak.
 
-```{r}
+```{r Correlation Test between Severity and Month, echo=F}
 cor(clean_acc21$Severity, clean_acc21$Hour)
 ```
 Correlation test performed to test strength of relationship between severity and Hour.
 The resulting value indicates that the relationship is weak.
 
 
-# Conclusion:
+# 4. Conclusion:
+
 As mentioned earlier, our dataset represents real world scenarios. And there aren't many accidents that affect the traffic severely. But in the small amount of cases that it does happen, it will be due to the following factors.
 Does weather affect the severity of traffic?
 	• Temperature/Wind Chill/Wind Speed/Humidity/Pressure/Precipitation affect the severity of traffic.
