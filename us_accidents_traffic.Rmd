@@ -443,7 +443,10 @@ test_Month
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Month)
 ```
+Correlation test performed to test strength of relationship between severity and Month.
 
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Hour)
 ```
+Correlation test performed to test strength of relationship between severity and Hour.
+
