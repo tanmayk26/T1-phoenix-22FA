@@ -356,9 +356,11 @@ For the weather conditions variables, we can observe that weather conditions at 
 
 ## 3.2. SMART Question 2: Do Nearby Road Elements affect the severity of traffic?
 
+
+
 To determine whether nearby road components have an impact on the severity of the traffic, we have conducted the exploratory data analysis listed below.
 
-```{r include=FALSE }
+```{r accidents per road element include=FALSE}
 clean_acc21 %>% 
       group_by(Amenity, Bump, Crossing, Give_Way, Junction, No_Exit, Railway, Roundabout, Station, Stop, Traffic_Calming, Traffic_Signal, Turning_Loop)%>%
     summarise(percentage = n()/nrow(clean_acc21) *100 )%>%
@@ -373,7 +375,7 @@ We sought to determine the number of accidents that neighboring road elements ha
 To comprehend this, we are taking into account the mishaps 1% or more of the total data that were caused by neighboring elements.
 The data show that Junctions, Crossings, Traffic Signals, Stations, and Stop Boards were the biggest contributors to accidents.
 
-```{r}
+```{r percentages of road accidents due to road element echo=F}
 acc_road_element_per <- tibble(c("None", "Junction","Crossing", "Traffic signal", "Crossing and traffic signal", "Station", "Stop" ), pull(accidents_per_roadelement, percentage), .name_repair = ~ c("road_elements", "percentage"))
 acc_road_element_per
        
@@ -381,7 +383,7 @@ acc_road_element_per
 
 The bar plot makes it clear that only 23% of accidents happened near any of the road elements taken into account, and junctions are the location of the most accidents (6.52%), while stop boards are the location of the fewest incidents (1.37%).
 
-```{r fig.align="center", echo = FALSE,fig.width = 12}
+```{r barchart showing accidents by nearby road elements fig.align="center", echo = FALSE,fig.width = 12}
 options(repr.plot.width = 30, repr.plot.height = 8)
 acc_road_element_per %>%
     ggplot() +
@@ -393,7 +395,7 @@ acc_road_element_per %>%
 ```
 
 
-```{r include=FALSE}
+```{r accidents more than 1% due to nearby road elements include=FALSE}
 
 
 accidents_per_roadelement<-clean_acc21 %>% 
@@ -405,7 +407,7 @@ head(accidents_per_roadelement)
 ```
 
 
-```{r include= FALSE}
+```{r subsets of data based on different road elements include= FALSE}
 Junction_data<- subset(accidents_per_roadelement, Junction=="True",
 select=c(Is_severe,Junction))
 head(Junction_data)
@@ -431,7 +433,7 @@ Let's now examine how these five nearby road elements impact how severe the traf
 Since it is a real-world dataset, it is obvious from the bar chart that only a small percentage of traffic accidents that are caused by nearby road elements are severe, compared to the majority of traffic accidents that are not severe.
 
 
-```{r}
+```{r barchart showing severity of traffic and road elements echo=F}
 
 
 plot1<-ggplot(data=Junction_data, aes(x=Is_severe, y=Junction, fill=Is_severe)) +
@@ -464,7 +466,7 @@ grid.arrange(plot1, plot2, plot3, plot4, plot5, ncol=2)
 
 
 
-```{r include=FALSE}
+```{r categorical data into numerical data include=FALSE}
 
 accidents_per_roadelement <- accidents_per_roadelement %>% 
   mutate(severe_num = if_else(Is_severe== "Severe", 1, 0))
@@ -488,7 +490,7 @@ H1 : The mean of Severity of traffic are the not the same across Nearby Road Ele
 
 Since the p-value is lower than 0.05, we need to reject the null hypothesis.
 
-```{r include=FALSE}
+```{r anova test between severity of traffic and different road elements echo=F}
 Junction_anova = aov(Junction_num~severe_num, data=accidents_per_roadelement)
 summary(Junction_anova)
 
