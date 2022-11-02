@@ -1,8 +1,16 @@
 ---
-authors: 
-title: "us_accidents_traffic"
-output: html_document
-date: "2022-10-22"
+authors: "T1 - Phoenix"
+title: "US Accidents Traffic"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: false
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
 ---
 
 ```{r setup, include=FALSE}
@@ -40,6 +48,12 @@ Here, the highest number of NAs is present in the column `Number`, followed by `
 df_us_acc <- subset(df_us_acc, select = -c(Number, Description))
 ```
 
+As we have low number of NA data for other columns, we can just drop those records.
+
+```{r Drop NA, Factorize severity}
+df_us_acc <- drop_na(df_us_acc)
+```
+
 Next, we will extract the year out of the `Start_Time` column to check the data distribution over the year.
 
 ```{r}
@@ -48,58 +62,35 @@ ggplot(df_us_acc, aes(x = year, fill=year)) +
     geom_bar()
 ```
 
+As we can see in the yearly distribution graph, the dataset has been updated with multiple data sources. Thus, we decided that the year 2021 will be the optimal subset of the data.
 
 ```{r}
-accidents_2021 <- subset(df_us_acc, year==2021)
-head(accidents_2021)
+clean_acc21 <- subset(df_us_acc, year==2021)
 ```
 
-```{r}
-accidents_2021$month<-format(as.Date(accidents_2021$Start_Time, format="%Y-%m-%d"),"%m")
-head(accidents_2021)
-```
+Let's extract the month from the `Start_Time` and check the monthly distribution.
 
 ```{r}
-(colMeans(is.na(accidents_2021)))*100
+clean_acc21$Month<-as.numeric(format(as.Date(clean_acc21$Start_Time, format="%Y-%m-%d"),"%m"))
+clean_acc21$Hour<-hour(clean_acc21$Start_Time)
 ```
 
+Now, we will check the Severity distribution in the data.
+
 ```{r}
-accidents_2021 <- accidents_2021 %>% 
+ggplot(df_us_acc, aes(x = Severity, fill=Severity)) +
+    geom_bar()
+```
+
+As we have seen in the graph, the severity levels are imbalanced. We don't have a higher number of severe impacts on the traffic due to accidents as compared to the less severe. This is also true in regards to the real world. Thus, we have decided to merge level 1 & 2 into "Not Severe" & 3 & 4 into "Severe" to make our analysis more specific.
+
+```{r}
+clean_acc21 <- clean_acc21 %>% 
   mutate(Is_severe = if_else(Severity == 1 | Severity ==2 , "Not Severe", "Severe"))
-```
-
-```{r}
-accidents_2021  %>%
-  summarise_all(list(~is.na(.)))%>%
-  pivot_longer(everything(),
-               names_to = "variables", values_to="missing") %>%
-  count(variables, missing) %>%
-  ggplot(aes(y=variables,x=n,fill=missing))+
-  geom_col()
-```
-
-
-
-```{r Drop NA, Factorize severity}
-clean_acc21 <- drop_na(accidents_2021)
-
-```
-
-```{r}
 clean_acc21$Is_severe <- as.factor(clean_acc21$Is_severe) # make Is_severe as factor
-str(clean_acc21)
 ```
 
-```{r}
-clean_acc21  %>%
-  summarise_all(list(~is.na(.)))%>%
-  pivot_longer(everything(),
-               names_to = "variables", values_to="missing") %>%
-  count(variables, missing) %>%
-  ggplot(aes(y=variables,x=n,fill=missing))+
-  geom_col()
-```
-
+<<<<<<< Updated upstream
 ```{r}
 us_date<-clean_acc21$Start_Time 
 us_date_formatted<- as.Date(us_date,format="%Y-%m-%d")
@@ -130,13 +121,15 @@ head(df_map)
 ```
 
 ```{r}
-df_map_DC <- df_map %>% filter(State == "DC")
-
-df_map_DC %>% glimpse()
-```
+=======
+For some initial EDA, we were curious to see how the data looks on a map, particularly the DC area as we currently live here. Thus, the map below shows the accidents that took place in 2021 in the DC area.
 
 ```{r}
+df_map<-dplyr::select(clean_acc21, State, Start_Lat, Start_Lng)
+>>>>>>> Stashed changes
+df_map_DC <- df_map %>% filter(State == "DC")
 df_map_DC_sf <- st_as_sf(df_map_DC, coords = c("Start_Lng", "Start_Lat"), crs = 4326)
+<<<<<<< Updated upstream
 ```
 
 ```{r}
@@ -156,6 +149,13 @@ cor_num_clean_acc21 <- cor(num_clean_acc21)
 cor_num_clean_acc21
 corrplot(cor_num_clean_acc21, method = "number")
 ```
+=======
+mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
+```
+
+
+
+>>>>>>> Stashed changes
 
 ```{r Histograms for Weather Conditions}
 
@@ -413,6 +413,36 @@ Traffic_signal_anova = aov(Traffic_Signal_num~severe_num, data=accidents_per_roa
 summary(Traffic_signal_anova)
 ```
 
+<<<<<<< Updated upstream
+=======
+Since the outcome variable is quantitative and the predictor variable is categorical, we are doing an anova test.
+H0 : The Severity of traffic and Nearby Road Elements are independent
+H1 : The Severity of traffic and  Nearby Road Elements are NOT independent
+The P-value from Anova test is lower than 0.05 for all the Nearby Road Elements variable so we can reject the H0.
+→ Nearby Road Elements Junction,Crossing, Stop, Station and Traffic Signal affects the Severity of Traffic.
+
+
+
+########### ADD SOME COMMENTS HERE TO START THE 3RD QUESTION
+
+
+```{r}
+ggplot(clean_acc21, aes(x = Month, fill=Month,)) +geom_bar()+labs(title="Accident Distribution over the Months in 2021", x="Months", y = "count")+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+The Graph above shows frequency of accidents in 2021 during different Months.
+```{r}
+ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) + geom_bar()+
+  labs(title="Accident Distribution in Hours ", x="Hours", y = "count")+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+The Graph above shows the frequency of accidents in 2021 during different hours of the day.
+
+```{r}
+hist(clean_acc21$Hour,main="Histogram for Hours",xlab = "Hours")
+```
+
+>>>>>>> Stashed changes
 ```{r}
 test_Hour <- chisq.test(table(clean_acc21$Severity, clean_acc21$Hour))
 test_Hour
@@ -422,6 +452,7 @@ test_Hour
 test_Month <- chisq.test(table(clean_acc21$Severity, clean_acc21$Month))
 test_Month
 ```
+
 
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Month)
