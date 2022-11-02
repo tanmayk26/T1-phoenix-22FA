@@ -290,6 +290,11 @@ H0 : Severity and weather conditions are independent
 H1 : Severity and weather conditions are NOT independent
 We can reject the H0. 
 
+SMART QUESTION: 
+
+Do Nearby Road Elements affect the severity of traffic?
+
+To determine whether nearby road components have an impact on the severity of the traffic, we have conducted the exploratory data analysis listed below.
 
 ```{r}
 clean_acc21 %>% 
