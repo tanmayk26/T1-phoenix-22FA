@@ -137,17 +137,21 @@ df_map_DC <- df_map %>% filter(State == "DC")
 
 df_map_DC %>% glimpse()
 ```
+The map above shows the accidents that took place in 2021 in the DC area.  
 
 ```{r}
 df_map_DC_sf <- st_as_sf(df_map_DC, coords = c("Start_Lng", "Start_Lat"), crs = 4326)
 ```
 
+<<<<<<< Updated upstream
 ```{r}
 mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
 ```
 The map above shows the accidents that took place in 2021 in the DC area.  
 
 
+=======
+>>>>>>> Stashed changes
 To answer the first SMART question we have, which is "Does weather affect the severity of traffic?", we wanted to check the distribution of data for numerical weather variables first.
 ```{r Histograms for Weather Conditions}
 
@@ -467,23 +471,46 @@ Took a Chi-Squared test to see if the severity and Hour of day are independent.
 We have performed Chi-Squared test because both variables are categorical.
 H0 : Severity and Hour are independent
 H1 : Severity and Hour are NOT independent
+<<<<<<< Updated upstream
 We can reject the H0. 
 ```{r chisq on month, severity}
 test_Month <- chisq.test(table(clean_acc21$Severity, clean_acc21$Month))
 test_Month
+=======
+```{r chisq on hr and severity}
+test_Hour <- chisq.test(table(clean_acc21$Severity, clean_acc21$Hour))
+test_Hour
+>>>>>>> Stashed changes
 ```
 Took a Chi-Squared test to see the severity and weather Months are independent.
 We have performed Chi-Squared test because both variables are categorical.
 H0 : Severity and Month are independent
 H1 : Severity and Month are NOT independent
+<<<<<<< Updated upstream
 We can reject the H0. 
 
 ```{r cor between month, severity}
+=======
+```{r chisq on month and severity}
+test_Month <- chisq.test(table(clean_acc21$Severity, clean_acc21$Month))
+test_Month
+```
+We can reject the H0 because the p value is less than 0.05.
+
+
+Correlation test performed to test strength of relationship between severity and Month.
+```{r cor severity and month}
+>>>>>>> Stashed changes
 cor(clean_acc21$Severity, clean_acc21$Month)
 ```
 Correlation test performed to test strength of relationship between severity and Month.
 
+<<<<<<< Updated upstream
 ```{r cor between hour, severity}
+=======
+Correlation test performed to test strength of relationship between severity and Hour.
+```{r cor severity and hour}
+>>>>>>> Stashed changes
 cor(clean_acc21$Severity, clean_acc21$Hour)
 ```
 Correlation test performed to test strength of relationship between severity and Hour.
