@@ -147,14 +147,6 @@ mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
 ```
 The map above shows the accidents that took place in 2021 in the DC area.
 
-```{r Correlations for numerical values}
-# subsetting numerical columns only to check the corelationship between numerical weather variables
-loadPkg("corrplot")
-num_clean_acc21 <- select_if(clean_acc21, is.numeric)
-num_weather <- subset(num_clean_acc21, select = -c(Start_Lat,Start_Lng,End_Lat,End_Lng,Distance.mi.))
-corrplot(cor(num_weather), method = "number")
-```
-
 ```{r Histograms for Weather Conditions}
 
 tempHist <- ggplot(clean_acc21, aes(x=Temperature.F.)) + geom_histogram(color="black", fill = "red")+
@@ -187,15 +179,17 @@ precipHist
 
 ```
 
-First, we looked at the histogram between numbers of accidents and weather condition elements to check distribution of data.
-For Temperature, Wind chill, and Humanity, each of distributions is left-skewed. 
-For the rest of element, they have quite close mean and median and a few outliers.  
+To answer the first SMART question we have, which is "Does weather affect the severity of traffic?", we wanted to check the distribution of data for numerical weather variables first.
+We created histograms between numbers of accidents and weather condition elements.
+From those histograms, we found that Temperature, Wind chill, and Humidity have left-skewed distributions.  
+For the rest of element, which are Wind Speed, Pressure, Visibility, and Precipitation, they have quite close mean and median with a few outliers.  
 
 ```{r}
 wooutlier_winds <- outlierKD2(clean_acc21, Wind_Speed.mph., rm=TRUE, boxplt=TRUE, histogram=TRUE, qqplt=TRUE)
 clean_acc21_woo <- outlierKD2(wooutlier_winds, Pressure.in., rm=TRUE, boxplt=TRUE, histogram=TRUE, qqplt=TRUE)
 ```
-But we decided to keep the outliers because it is natural to have outliers in the weather  variables as it covers a whole year. Also the outliers does not affect the result of T-test.
+So we tried to remove the outliers from Wind Speed and Pressure and without outliers, and from the generated plots we can see they are more normally distributed than the original data.
+But we decided to keep the outliers because it is natural to have outliers in the weather variables as the data covers a whole year. Also the outliers does not affect the result of T-test.
 
 ```{r boxplots between Severity and wind conditions elements }
 
@@ -229,7 +223,11 @@ ggplot(clean_acc21, aes(x = Is_severe, y=Precipitation.in.)) +
 
 ## The same variables(Temp, wind chill, humidity) have pretty plots
 ```
+We tried to see the distribution of weather elements by two different severity levels which are 'Severe' and 'Not Severe'. 
 
+For Temperature, Wind chill, and Humanity, we can see the difference on range of data distribution and outliers by severity levels.
+
+For the rest of element such as wind speed, pressure, visibility and precipitation, they still do not have a wide range of data but we can see the distribution by two severity levels more conveniently with boxplots.
 ```{r T-test on Severity and weather condition elements}
 box_clean2_severe = subset(clean_acc21, Is_severe == 'Severe')
 box_clean2_notsevere = subset(clean_acc21, Is_severe == 'Not Severe')
@@ -248,9 +246,18 @@ t.test(box_clean2_severe$Pressure.in., box_clean2_notsevere$Pressure.in.)
 print("Precipitation.in.")
 t.test(box_clean2_severe$Precipitation.in., box_clean2_notsevere$Precipitation.in.)
 ```
+First, I divided the data into two different data by subsetting by the severity to check the means of Weather elements between two different severity levels will be same or not. 
+Then we performed the two-sample t-test on Severity and weather elements since the weather numerical variables are quantitative and we have two samples based on the severity levels. 
+
 H0: The means of Temperature/WindChill/Humidity/Wind Speed/Pressure/Visibility/Precipitation will be same between different Severity levels.
 H1: The means of Temperature/WindChill/Humidity/Wind Speed/Pressure/Visibility/Precipitation will NOT be same between different Severity levels.
-The P-value for the all are lower than 0.05 for those all so we can reject the H0 except for Precipitation.
+
+The p-value from all tests except for Visibility are lower than 0.05 so we can reject the H0 for every weather variables but Visibility, which means that means from weather variables except for Visibility were different by its severity level of traffic. 
+
+From these t-tests, we can conclude that numerical weather variables such as Temperature, WindChill, Humidity, Pressure, Wind Speed and Precipitation affect the severity of traffic.
+
+However, numerical weather variables are not only variables from weather conditions.
+There are categorical weather variables in our dataset, such as Wind Directions and Weather Conditions. 
 ```{r Wind_Direction}
 # wind direction with severity
 ggplot(clean_acc21, aes(Wind_Direction, ..prop.., group = Is_severe)) +
@@ -261,7 +268,8 @@ ggplot(clean_acc21, aes(Wind_Direction, ..prop.., group = Is_severe)) +
        title = "Wind direction by Severity") +
   theme(text = element_text(size=8)) 
 ```
-As the bar plot between Severity and Wind direction here shows the similar distribution for each severity levels on most of wind direction, we can conclude that wind direction does not affect much on the severity of traffic.
+We made a bar plot to see the distribution of the Severity by wind directions.
+As the bar plot between Severity and Wind direction here shows the similar distribution for each severity levels on most of wind direction. So we can infer that wind direction does not affect much on the severity of traffic and decided not to perform any statistical analysis on the Wind Direction variable.
 ```{r Weather_Condition variables}
 # Weather Condition percentage
 unique(clean_acc21$Weather_Condition)
@@ -278,6 +286,10 @@ WC %>%
     labs(x = "Weather Condition", y="%", title ="Top 8 Weather Conditions with accidents") +
     theme(text = element_text(size=7))
 ```
+Secondly, we took a look at the Weather Condition variable.  
+There are so many weather conditions in our dataset, so I tried to make a barplot with the top 8 weather conditions when accidents happened. The major weather conditions when car accidents happened were 'Fair', 'Cloudy', 'Mostly Cloudy', 'Partly Cloudy', 'Light Rain', 'Fog', 'Light Snow', and 'Haze'.  
+
+Now we can see that the most frequent weather was 'Fair', but since the Weather Conditions variable is divided into detailed conditions as you can see here with cloudy, mostly cloudy, and partly cloudy, so we decided to take a chi-squared test on all weather conditions and severity. 
 
 ```{r}
 # Try the Chi-Squared Test on all Weather_Conditions and Severity
@@ -286,10 +298,17 @@ xkabledply(WCtable, title = "Severity by Weather Conditions")
 chitest = chisq.test(WCtable)
 chitest
 ```
-Took a Chi-Squared test to see the severity and weather conditions are independent.
-H0 : Severity and weather conditions are independent
-H1 : Severity and weather conditions are NOT independent
-We can reject the H0. 
+To identify if the severity of traffic dependent on Weather Condition, we took a Chi-Squared test. As Weather Condition is a categorical variables, and we treated the severity in an original form which is numerical so we can see the dependency between weather conditions and the severity using a chi-squared test.  
+
+H0 : Severity and weather conditions are independent.
+H1 : Severity and weather conditions are NOT independent.  
+As we can see here, the the P-value from Chi-squared test is lower than 0.05 for Weather Conditions variable so we can reject the H0. Which means the Severity of traffic and weather conditions are Dependent. 
+
+From these analysis on numerical and categorical weather variables, we can answer our SMART question about the impact for weather on the severity of traffic.
+We concluded that the numerical weather condition elements except for visibility affect the severity of traffic.
+However, the wind direction does not affect much the severity of traffic because it does not show differences on severity by each of directions. 
+For the weather conditions variables, we can observe that weather conditions at the time accidents happened affect the severity of traffic.  
+
 
 SMART QUESTION: 
 
