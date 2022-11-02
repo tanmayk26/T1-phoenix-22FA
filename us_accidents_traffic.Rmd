@@ -27,6 +27,9 @@ library(sf)
 library(ggplot2)
 library(lubridate)
 library(ezids)
+library(gridExtra)
+library(grid)
+library(lattice)
 ```
 
 Let us pull the dataset from the file `US_Accidents_Dec21_updated.csv` into a dataframe `df_us_acc`. As this file is huge in size, we cannot upload it on GitHub. Thus, we are storing the file in a folder called `us_accidents_dataset` that is located in one folder above the project folder.
