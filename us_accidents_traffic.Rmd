@@ -145,8 +145,10 @@ df_map_DC_sf <- st_as_sf(df_map_DC, coords = c("Start_Lng", "Start_Lat"), crs = 
 ```{r}
 mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
 ```
-The map above shows the accidents that took place in 2021 in the DC area.
+The map above shows the accidents that took place in 2021 in the DC area.  
 
+
+To answer the first SMART question we have, which is "Does weather affect the severity of traffic?", we wanted to check the distribution of data for numerical weather variables first.
 ```{r Histograms for Weather Conditions}
 
 tempHist <- ggplot(clean_acc21, aes(x=Temperature.F.)) + geom_histogram(color="black", fill = "red")+
@@ -179,7 +181,6 @@ precipHist
 
 ```
 
-To answer the first SMART question we have, which is "Does weather affect the severity of traffic?", we wanted to check the distribution of data for numerical weather variables first.
 We created histograms between numbers of accidents and weather condition elements.
 From those histograms, we found that Temperature, Wind chill, and Humidity have left-skewed distributions.  
 For the rest of element, which are Wind Speed, Pressure, Visibility, and Precipitation, they have quite close mean and median with a few outliers.  
@@ -291,14 +292,14 @@ There are so many weather conditions in our dataset, so I tried to make a barplo
 
 Now we can see that the most frequent weather was 'Fair', but since the Weather Conditions variable is divided into detailed conditions as you can see here with cloudy, mostly cloudy, and partly cloudy, so we decided to take a chi-squared test on all weather conditions and severity. 
 
-```{r}
+```{r chisq on wc, severity}
 # Try the Chi-Squared Test on all Weather_Conditions and Severity
 WCtable <- table(clean_acc21$Weather_Condition , clean_acc21$Severity)
 xkabledply(WCtable, title = "Severity by Weather Conditions")
 chitest = chisq.test(WCtable)
 chitest
 ```
-To identify if the severity of traffic dependent on Weather Condition, we took a Chi-Squared test. As Weather Condition is a categorical variables, and we treated the severity in an original form which is numerical so we can see the dependency between weather conditions and the severity using a chi-squared test.  
+To identify if the severity of traffic is dependent on Weather Condition, we took a Chi-Squared test as Weather Condition and Severity are categorical variables.
 
 H0 : Severity and weather conditions are independent.
 H1 : Severity and weather conditions are NOT independent.  
@@ -458,7 +459,7 @@ The P-value from Anova test is lower than 0.05 for all the Nearby Road Elements 
 → Nearby Road Elements Junction,Crossing, Stop, Station and Traffic Signal affects the Severity of Traffic.
 
 
-```{r}
+```{r chisq on hr, severity}
 test_Hour <- chisq.test(table(clean_acc21$Severity, clean_acc21$Hour))
 test_Hour
 ```
@@ -467,7 +468,7 @@ We have performed Chi-Squared test because both variables are categorical.
 H0 : Severity and Hour are independent
 H1 : Severity and Hour are NOT independent
 We can reject the H0. 
-```{r}
+```{r chisq on month, severity}
 test_Month <- chisq.test(table(clean_acc21$Severity, clean_acc21$Month))
 test_Month
 ```
@@ -477,12 +478,12 @@ H0 : Severity and Month are independent
 H1 : Severity and Month are NOT independent
 We can reject the H0. 
 
-```{r}
+```{r cor between month, severity}
 cor(clean_acc21$Severity, clean_acc21$Month)
 ```
 Correlation test performed to test strength of relationship between severity and Month.
 
-```{r}
+```{r cor between hour, severity}
 cor(clean_acc21$Severity, clean_acc21$Hour)
 ```
 Correlation test performed to test strength of relationship between severity and Hour.
