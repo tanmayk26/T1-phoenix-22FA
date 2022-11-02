@@ -252,7 +252,7 @@ print("Precipitation.in.")
 t.test(box_clean2_severe$Precipitation.in., box_clean2_notsevere$Precipitation.in.)
 ```
 First, I divided the data into two different data by subsetting by the severity to check the means of Weather elements between two different severity levels will be same or not. 
-Then we performed the two-sample t-test on Severity and weather elements since the weather numerical variables are quantitative and we have two samples based on the severity levels. 
+Then we performed the two-sample t-test on Severity and weather elements since the weather numerical variables are quantitative and we have two samples based on the severity levels.  
 
 H0: The means of Temperature/WindChill/Humidity/Wind Speed/Pressure/Visibility/Precipitation will be same between different Severity levels.
 H1: The means of Temperature/WindChill/Humidity/Wind Speed/Pressure/Visibility/Precipitation will NOT be same between different Severity levels.
@@ -418,7 +418,7 @@ ggplot(data=Traffic_Signal_data, aes(x=Is_severe, y=Traffic_Signal, fill=Is_seve
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-The aforementioned graphs show the degree of severity caused by neighboring road elements such junctions, crossings, stops, stations, and traffic signals.
+The aforementioned graphs show the degree of severity caused by neighboring road elements such junctions, crossings, stops, stations, and traffic signals. 
 
 ```{r}
 
