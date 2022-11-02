@@ -109,12 +109,23 @@ clean_acc21$Hour<-hour(us_time)
 ```
 
 ```{r}
+<<<<<<< Updated upstream
 ggplot(clean_acc21, aes(x = month, fill=month)) +
     geom_bar()
 ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) +
     geom_bar()
+=======
+ggplot(clean_acc21, aes(x = month, fill=month,)) +geom_bar()+labs(title="Accident Distribution over the Months in 2021", x="Months", y = "count")+
+  theme(plot.title = element_text(hjust = 0.5))
 ```
-
+The Graph above shows frequency of Accidents in 2021 during different Months.
+```{r}
+ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) + geom_bar()+
+  labs(title="Accident Distribution in Hours ", x="Hours", y = "count")+
+  theme(plot.title = element_text(hjust = 0.5))
+>>>>>>> Stashed changes
+```
+The graph above shows the frequency of accidents in 2021 during different hours of the day.
 ```{r}
 us_time<- accidents_2021$Start_Time
 us_time_formatted<-hour(us_time)
@@ -139,10 +150,12 @@ df_map_DC_sf <- st_as_sf(df_map_DC, coords = c("Start_Lng", "Start_Lat"), crs = 
 ```{r}
 mapview(df_map_DC_sf, xcol = "Start_Lng", ycol = "Start_Lat", grid = FALSE,col.regions=("red"))
 ```
+The map above shows the accidents that took place in 2021 in the DC area.
 
 ```{r}
 mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
 ```
+The map above shows the accidents that took place in 2021 in the DC area.
 
 ```{r Correlations for numerical values}
 # subsetting numerical columns only to check the corelationship between numerical variables
@@ -414,11 +427,21 @@ summary(Traffic_signal_anova)
 test_Hour <- chisq.test(table(clean_acc21$Severity, clean_acc21$Hour))
 test_Hour
 ```
+Took a Chi-Squared test to see if the severity and Hour of day are independent.
+H0 : Severity and Hour are independent
+H1 : Severity and Hour are NOT independent
+We can reject the H0. 
+
 
 ```{r}
 test_Month <- chisq.test(table(clean_acc21$Severity, clean_acc21$Month))
 test_Month
 ```
+Took a Chi-Squared test to see the severity and weather Months are independent.
+H0 : Severity and Month are independent
+H1 : Severity and Month are NOT independent
+We can reject the H0. 
+
 
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Month)
