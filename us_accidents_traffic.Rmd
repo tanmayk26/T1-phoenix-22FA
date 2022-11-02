@@ -440,9 +440,9 @@ We can reject the H0.
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Month)
 ```
-Correlation test is performed to check the strength of relationship between severity and month.
+Correlation test is performed to check the strength of relationship between severity and months.
 
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Hour)
 ```
-Correlation test is performed to check the strength of relationship between severity and hour.
+Correlation test is performed to check the strength of relationship between severity and hours.
