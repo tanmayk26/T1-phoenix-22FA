@@ -108,18 +108,27 @@ us_time<- clean_acc21$Start_Time
 clean_acc21$Hour<-hour(us_time)
 ```
 
+
 ```{r}
 
 ggplot(clean_acc21, aes(x = month, fill=month,)) +geom_bar()+labs(title="Accident Distribution over the Months in 2021", x="Months", y = "count")+
   theme(plot.title = element_text(hjust = 0.5))
 ```
 The Graph above shows frequency of Accidents in 2021 during different Months.
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 ```{r}
 ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) + geom_bar()+
   labs(title="Accident Distribution in Hours ", x="Hours", y = "count")+
   theme(plot.title = element_text(hjust = 0.5))
 ```
 The graph above shows the frequency of accidents in 2021 during different hours of the day.
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 ```{r}
 us_time<- accidents_2021$Start_Time
 us_time_formatted<-hour(us_time)
@@ -141,10 +150,13 @@ df_map_DC %>% glimpse()
 df_map_DC_sf <- st_as_sf(df_map_DC, coords = c("Start_Lng", "Start_Lat"), crs = 4326)
 ```
 
+<<<<<<< Updated upstream
 ```{r}
 mapview(df_map_DC_sf, xcol = "Start_Lng", ycol = "Start_Lat", grid = FALSE,col.regions=("red"))
 ```
 The map above shows the accidents that took place in 2021 in the DC area.
+=======
+>>>>>>> Stashed changes
 
 ```{r}
 mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
@@ -422,22 +434,34 @@ test_Hour <- chisq.test(table(clean_acc21$Severity, clean_acc21$Hour))
 test_Hour
 ```
 Took a Chi-Squared test to see if the severity and Hour of day are independent.
+<<<<<<< Updated upstream
 We have performed Chi-Squared test because both variables are categorical.
 H0 : Severity and Hour are independent
 H1 : Severity and Hour are NOT independent
 We can reject the H0. 
 
+=======
+H0 : Severity and Hour are independent
+H1 : Severity and Hour are NOT independent
+We can reject the H0. 
+>>>>>>> Stashed changes
 
 ```{r}
 test_Month <- chisq.test(table(clean_acc21$Severity, clean_acc21$Month))
 test_Month
 ```
 Took a Chi-Squared test to see the severity and weather Months are independent.
+<<<<<<< Updated upstream
 We have performed Chi-Squared test because both variables are categorical.
 H0 : Severity and Month are independent
 H1 : Severity and Month are NOT independent
 We can reject the H0. 
 
+=======
+H0 : Severity and Month are independent
+H1 : Severity and Month are NOT independent
+We can reject the H0. 
+>>>>>>> Stashed changes
 
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Month)
