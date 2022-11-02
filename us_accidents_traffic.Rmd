@@ -109,12 +109,7 @@ clean_acc21$Hour<-hour(us_time)
 ```
 
 ```{r}
-<<<<<<< Updated upstream
-ggplot(clean_acc21, aes(x = month, fill=month)) +
-    geom_bar()
-ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) +
-    geom_bar()
-=======
+
 ggplot(clean_acc21, aes(x = month, fill=month,)) +geom_bar()+labs(title="Accident Distribution over the Months in 2021", x="Months", y = "count")+
   theme(plot.title = element_text(hjust = 0.5))
 ```
@@ -123,7 +118,6 @@ The Graph above shows frequency of Accidents in 2021 during different Months.
 ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) + geom_bar()+
   labs(title="Accident Distribution in Hours ", x="Hours", y = "count")+
   theme(plot.title = element_text(hjust = 0.5))
->>>>>>> Stashed changes
 ```
 The graph above shows the frequency of accidents in 2021 during different hours of the day.
 ```{r}
@@ -446,7 +440,9 @@ We can reject the H0.
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Month)
 ```
+Correlation test is performed to check the strength of relationship between severity and month.
 
 ```{r}
 cor(clean_acc21$Severity, clean_acc21$Hour)
 ```
+Correlation test is performed to check the strength of relationship between severity and hour.
