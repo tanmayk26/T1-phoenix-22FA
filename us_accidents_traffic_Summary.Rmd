@@ -454,6 +454,12 @@ accidents_per_roadelement <- accidents_per_roadelement %>%
 
 ```
 
+Next, we perfom an ANOVA test for the differences in mean values between different Road elements.
+
+H0 : The mean of Severity of traffic are the same across Nearby Road Elements( Junction,Crossing, Stop,Station, Traffic Signal).
+H1 : The mean of Severity of traffic are the not the same across Nearby Road Elements( Junction,Crossing, Stop,Station, Traffic Signal).
+
+Since the p-value is lower than 0.05, we need to reject the null hypothesis.
 
 ```{r include=FALSE}
 Junction_anova = aov(Junction_num~severe_num, data=accidents_per_roadelement)
@@ -472,12 +478,6 @@ Traffic_signal_anova = aov(Traffic_Signal_num~severe_num, data=accidents_per_roa
 summary(Traffic_signal_anova)
 ```
 
-Next, we perfom an ANOVA test for the differences in mean values between different Road elements.
-
-H0 : The mean of Severity of traffic are the same across Nearby Road Elements( Junction,Crossing, Stop,Station, Traffic Signal).
-H1 : The mean of Severity of traffic are the not the same across Nearby Road Elements( Junction,Crossing, Stop,Station, Traffic Signal).
-
-Since the p-value is lower than 0.05, we need to reject the null hypothesis.
 
 
 ```{r}
