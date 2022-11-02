@@ -414,43 +414,44 @@ The P-value from Anova test is lower than 0.05 for all the Nearby Road Elements 
 
 
 
-########### ADD SOME COMMENTS HERE TO START THE 3RD QUESTION
+Does the occurrence of the accident during a particular time of day or year affect the severity of the accident?
 
-
+First, let's look at some grapghs to get a better idea.
 ```{r}
 ggplot(clean_acc21, aes(x = Month, fill=Month,)) +geom_bar()+labs(title="Accident Distribution over the Months in 2021", x="Months", y = "count")+
   theme(plot.title = element_text(hjust = 0.5))
 ```
 The Graph above shows frequency of accidents in 2021 during different Months.
+We can see that there is an increase in number of accidents during the end of the year.
 ```{r}
 ggplot(clean_acc21, aes(x = Hour, fill=as.factor(Hour))) + geom_bar()+
   labs(title="Accident Distribution in Hours ", x="Hours", y = "count")+
   theme(plot.title = element_text(hjust = 0.5))
 ```
 The Graph above shows the frequency of accidents in 2021 during different hours of the day.
+It can be observed that there is spike in frequency of accidents during afternoon to evening, probably because it is the peak hours.
 
-```{r}
-hist(clean_acc21$Hour,main="Histogram for Hours",xlab = "Hours")
-```
-
-```{r}
-test_Hour <- chisq.test(table(clean_acc21$Severity, clean_acc21$Hour))
-test_Hour
-```
 Took a Chi-Squared test to see if the severity and Hour of day are independent.
 We have performed Chi-Squared test because both variables are categorical.
 H0 : Severity and Hour are independent
 H1 : Severity and Hour are NOT independent
-We can reject the H0. 
 ```{r}
-test_Month <- chisq.test(table(clean_acc21$Severity, clean_acc21$Month))
-test_Month
+test_Hour <- chisq.test(table(clean_acc21$Severity, clean_acc21$Hour))
+test_Hour
 ```
+We can reject the H0 because the p value is less than 0.05.
+
+
 Took a Chi-Squared test to see the severity and weather Months are independent.
 We have performed Chi-Squared test because both variables are categorical.
 H0 : Severity and Month are independent
 H1 : Severity and Month are NOT independent
-We can reject the H0. 
+```{r}
+test_Month <- chisq.test(table(clean_acc21$Severity, clean_acc21$Month))
+test_Month
+```
+We can reject the H0 because the p value is less than 0.05.
+
 
 
 ```{r}
