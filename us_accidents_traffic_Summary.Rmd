@@ -32,13 +32,19 @@ library(grid)
 library(lattice)
 ```
 
+### Team 1 Phoenix - Ji Woo Suh, Sanjana Godolkar, Shreyas Sunku Padmanabha, Tanmay Kshirsagar
+
 # 1. Introduction
 
-In the USA, there are several traffic accidents every day. Communities around the nation incur social and financial costs as a result of the traffic accidents occur. The Factors such as the weather, the location, and the timing all have an impact on accident occurrence, which in turn influences how serious traffic is. Our project aims to determine how these factors affect the severity of the traffic so we can contribute solving the social problems regarding car accidents.  
+In the USA, there are several traffic accidents every day. Communities around the nation incur social and financial costs as a result of the traffic accidents occur. The Factors such as the weather, the location, and the timing all have an impact on accident occurrence, which in turn influences how serious traffic is. Our project aims to determine how these factors affect the severity of the traffic so we can contribute solving the social problems regarding car accidents.<br/>
 
-The data we worked is a national car accidents dataset from every state in the United States. The data is gathered from several APIs which provide streaming traffic data including the US Department of Transportation, each of state transportation departments, law enforcement organizations, traffic cameras, and traffic sensors from the road networks. 
+Before the analysis, we tried to make the meaning of columns clear by searching the definition to know more about the topic. For example, we did not know what wind chill means before this project so we had to search the meaning on google. Like this, we identified variables to make more insightful analysis. These are prior researches that we did.<br/>
 
-As we aimed to identify which factors affect the severity of traffic, we divided the smart questions into 3 categories. Weather factors, Road elements and Time factors. Based on this categorization we chose our questions.   
+The data we worked is a national car accidents dataset from every state in the United States. The data is gathered from several APIs which provide streaming traffic data including the US Department of Transportation, each of state transportation departments, law enforcement organizations, traffic cameras, and traffic sensors from the road networks.<br/> 
+
+
+As we aimed to identify which factors affect the severity of traffic, we divided the smart questions into 3 categories. Weather factors, Road elements and Time factors. Based on this categorization we chose our questions.<br/>
+
 
 The summary paper will include these:<br/>
 	1. Description of the dataset<br/>
@@ -110,6 +116,7 @@ The column description can be found below:-
 46	`Nautical_Twilight`	Shows the period of day (i.e. day or night) based on nautical twilight.<br/>
 47	`Astronomical_Twilight`	Shows the period of day (i.e. day or night) based on astronomical twilight.<br/>
   
+
 For our exploratory data analysis, we started with finding the NAs present in our data.
 
 ```{r Checking NAs, echo=F}
@@ -151,7 +158,7 @@ ggplot(df_us_acc, aes(x = Severity, fill=Severity)) +
     geom_bar()
 ```
 
-As we can see in the graph, the severity levels are imbalanced. We don't have a higher number of severe impacts on the traffic due to accidents as compared to the less severe. This is also true in regards to the real world. Thus, we decided to merge level 1 & 2 into "Not Severe" & 3 & 4 into "Severe" to make our analysis more specific.
+As we can see in the graph, the severity levels are imbalanced. We consider this as a limitation of dataset. We don't have a higher number of severe impacts on the traffic due to accidents as compared to the less severe. This is also true in regards to the real world. Thus, we decided to merge level 1 & 2 into "Not Severe" & 3 & 4 into "Severe" to make our analysis more specific.
 
 ```{r Grouping Severity Levels, include=FALSE}
 clean_acc21 <- clean_acc21 %>% 
