@@ -212,7 +212,7 @@ We created histograms between numbers of accidents and weather condition element
 From those histograms, we found that Temperature, Wind chill, and Humidity have left-skewed distributions.  
 For the rest of element, which are Wind Speed, Pressure, Visibility, and Precipitation, they have quite close mean and median with a few outliers.  
 
-```{r, echo=F}
+```{r Removing Outliers, echo=F}
 wooutlier_winds <- outlierKD2(clean_acc21, Wind_Speed.mph., rm=TRUE, boxplt=TRUE, histogram=TRUE, qqplt=TRUE)
 clean_acc21_woo <- outlierKD2(wooutlier_winds, Pressure.in., rm=TRUE, boxplt=TRUE, histogram=TRUE, qqplt=TRUE)
 ```
