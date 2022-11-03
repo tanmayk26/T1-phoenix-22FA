@@ -14,7 +14,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 ```
 
 ```{r Libraries Used, warning=FALSE, include=FALSE}
@@ -36,18 +36,18 @@ library(lattice)
 
 In the USA, there are several traffic accidents every day. Communities around the nation incur social and financial costs as a result of the traffic accidents occur. The Factors such as the weather, the location, and the timing all have an impact on accident occurrence, which in turn influences how serious traffic is. Our project aims to determine how these factors affect the severity of the traffic so we can contribute solving the social problems regarding car accidents.  
 
-The data we worked is a national car accidents dataset from every state in the Unites States. The data is gathered from several APIs which provide streaming traffic data including the US Department of Transportation, each of state transportation departments, law enforcement organizations, traffic cameras, and traffic sensors from the road networks. There are around 2.8 million accidents records in the dataset from February 2016.  
+The data we worked is a national car accidents dataset from every state in the United States. The data is gathered from several APIs which provide streaming traffic data including the US Department of Transportation, each of state transportation departments, law enforcement organizations, traffic cameras, and traffic sensors from the road networks. 
 
 As we aimed to identify which factors affect the severity of traffic, we divided the smart questions into 3 categories. Weather factors, Road elements and Time factors. Based on this categorization we chose our questions.   
 
-The summary paper will include these:
-	1. Description of the dataset
-	2. Geographic visualization
-	3. Exploratory Data Analysis
-		a. Weather Variables EDA
-		b. Road Variables EDA
-		c. Time Variables EDA
-	4. Conclusion
+The summary paper will include these:<br/>
+	1. Description of the dataset<br/>
+	2. Geographic visualization<br/>
+	3. Exploratory Data Analysis<br/>
+---a. Weather Variables EDA<br/>
+---b. Road Variables EDA<br/>
+---c. Time Variables EDA<br/>
+  4. Conclusion<br/>
 
 # 2. Description of the Data
 
@@ -62,54 +62,53 @@ str(df_us_acc)
 
 The column description can be found below:-
 
-1	`ID`	This is a unique identifier of the accident record.
-2	`Severity`	Shows the severity of the accident, a number between 1 and 4, where 1 indicates the least impact on traffic (i.e., short delay as a result of the accident) and 4 indicates a significant impact on traffic (i.e., long delay).
-3	`Start_Time`	Shows start time of the accident in local time zone.
-4	`End_Time`	Shows end time of the accident in local time zone. End time here refers to when the impact of accident on traffic flow was dismissed.
-5	`Start_Lat`	Shows latitude in GPS coordinate of the start point.
-6	`Start_Lng`	Shows longitude in GPS coordinate of the start point.
-7	`End_Lat`	Shows latitude in GPS coordinate of the end point.
-8	`End_Lng`	Shows longitude in GPS coordinate of the end point.
-9	`Distance(mi)`	The length of the road extent affected by the accident.
-10	`Description`	Shows natural language description of the accident.
-11	`Number`	Shows the street number in address field.
-12	`Street`	Shows the street name in address field.
-13	`Side`	Shows the relative side of the street (Right/Left) in address field.
-14	`City`	Shows the city in address field.
-15	`County`	Shows the county in address field.
-16	`State`	Shows the state in address field.
-17	`Zipcode`	Shows the zipcode in address field.
-18	`Country`	Shows the country in address field.
-19	`Timezone`	Shows timezone based on the location of the accident (eastern, central, etc.).
-20	`Airport_Code`	Denotes an airport-based weather station which is the closest one to location of the accident.
-21	`Weather_Timestamp`	Shows the time-stamp of weather observation record (in local time).
-22	`Temperature(F)`	Shows the temperature (in Fahrenheit).
-23	`Wind_Chill(F)`	Shows the wind chill (in Fahrenheit).
-24	`Humidity(%)`	Shows the humidity (in percentage).
-25	`Pressure(in)`	Shows the air pressure (in inches).
-26	`Visibility(mi)`	Shows visibility (in miles).
-27	`Wind_Direction`	Shows wind direction.
-28	`Wind_Speed(mph)`	Shows wind speed (in miles per hour).
-29	`Precipitation(in)`	Shows precipitation amount in inches, if there is any.
-30	`Weather_Condition`	Shows the weather condition (rain, snow, thunderstorm, fog, etc.)
-31	`Amenity`	A POI annotation which indicates presence of amenity in a nearby location.
-32	`Bump`	A POI annotation which indicates presence of speed bump or hump in a nearby location.
-33	`Crossing`	A POI annotation which indicates presence of crossing in a nearby location.
-34	`Give_Way`	A POI annotation which indicates presence of give_way in a nearby location.
-35	`Junction`	A POI annotation which indicates presence of junction in a nearby location.
-36	`No_Exit`	A POI annotation which indicates presence of no_exit in a nearby location.
-37	`Railway`	A POI annotation which indicates presence of railway in a nearby location.
-38	`Roundabout`	A POI annotation which indicates presence of roundabout in a nearby location.
-39	`Station`	A POI annotation which indicates presence of station in a nearby location.
-40	`Stop`	A POI annotation which indicates presence of stop in a nearby location.
-41	`Traffic_Calming`	A POI annotation which indicates presence of traffic_calming in a nearby location.
-42	`Traffic_Signal`	A POI annotation which indicates presence of traffic_signal in a nearby loction.
-43	`Turning_Loop`	A POI annotation which indicates presence of turning_loop in a nearby location.
-44	`Sunrise_Sunset`	Shows the period of day (i.e. day or night) based on sunrise/sunset.
-45	`Civil_Twilight`	Shows the period of day (i.e. day or night) based on civil twilight.
-46	`Nautical_Twilight`	Shows the period of day (i.e. day or night) based on nautical twilight.
-47	`Astronomical_Twilight`	Shows the period of day (i.e. day or night) based on astronomical twilight.
-
+1 `ID`	This is a unique identifier of the accident record. <br/>
+2	`Severity`	Shows the severity of the accident, a number between 1 and 4, where 1 indicates the least impact on traffic (i.e., short delay as a result of the accident) and 4 indicates a significant impact on traffic (i.e., long delay). <br/>
+3	`Start_Time`	Shows start time of the accident in local time zone.<br/>
+4	`End_Time`	Shows end time of the accident in local time zone. End time here refers to when the impact of accident on traffic flow was dismissed.<br/>
+5	`Start_Lat`	Shows latitude in GPS coordinate of the start point.<br/>
+6	`Start_Lng`	Shows longitude in GPS coordinate of the start point.<br/>
+7	`End_Lat`	Shows latitude in GPS coordinate of the end point.<br/>
+8	`End_Lng`	Shows longitude in GPS coordinate of the end point.<br/>
+9	`Distance(mi)`	The length of the road extent affected by the accident.<br/>
+10	`Description`	Shows natural language description of the accident.<br/>
+11	`Number`	Shows the street number in address field.<br/>
+12	`Street`	Shows the street name in address field.<br/>
+13	`Side`	Shows the relative side of the street (Right/Left) in address field.<br/>
+14	`City`	Shows the city in address field.<br/>
+15	`County`	Shows the county in address field.<br/>
+16	`State`	Shows the state in address field.<br/>
+17	`Zipcode`	Shows the zipcode in address field.<br/>
+18	`Country`	Shows the country in address field.<br/>
+19	`Timezone`	Shows timezone based on the location of the accident (eastern, central, etc.).<br/>
+20	`Airport_Code`	Denotes an airport-based weather station which is the closest one to location of the accident.<br/>
+21	`Weather_Timestamp`	Shows the time-stamp of weather observation record (in local time).<br/>
+22	`Temperature(F)`	Shows the temperature (in Fahrenheit).<br/>
+23	`Wind_Chill(F)`	Shows the wind chill (in Fahrenheit).<br/>
+24	`Humidity(%)`	Shows the humidity (in percentage).<br/>
+25	`Pressure(in)`	Shows the air pressure (in inches).<br/>
+26	`Visibility(mi)`	Shows visibility (in miles).<br/>
+27	`Wind_Direction`	Shows wind direction.<br/>
+28	`Wind_Speed(mph)`	Shows wind speed (in miles per hour).<br/>
+29	`Precipitation(in)`	Shows precipitation amount in inches, if there is any.<br/>
+30	`Weather_Condition`	Shows the weather condition (rain, snow, thunderstorm, fog, etc.)<br/>
+31	`Amenity`	A POI annotation which indicates presence of amenity in a nearby location.<br/>
+32	`Bump`	A POI annotation which indicates presence of speed bump or hump in a nearby location.<br/>
+33	`Crossing`	A POI annotation which indicates presence of crossing in a nearby location.<br/>
+34	`Give_Way`	A POI annotation which indicates presence of give_way in a nearby location.<br/>
+35	`Junction`	A POI annotation which indicates presence of junction in a nearby location.<br/>
+36	`No_Exit`	A POI annotation which indicates presence of no_exit in a nearby location.<br/>
+37	`Railway`	A POI annotation which indicates presence of railway in a nearby location.<br/>
+38	`Roundabout`	A POI annotation which indicates presence of roundabout in a nearby location.<br/>
+39	`Station`	A POI annotation which indicates presence of station in a nearby location.<br/>
+40	`Stop`	A POI annotation which indicates presence of stop in a nearby location.<br/>
+41	`Traffic_Calming`	A POI annotation which indicates presence of traffic_calming in a nearby location.<br/>
+42	`Traffic_Signal`	A POI annotation which indicates presence of traffic_signal in a nearby loction.<br/>
+43	`Turning_Loop`	A POI annotation which indicates presence of turning_loop in a nearby location.<br/>
+44	`Sunrise_Sunset`	Shows the period of day (i.e. day or night) based on sunrise/sunset.<br/>
+45	`Civil_Twilight`	Shows the period of day (i.e. day or night) based on civil twilight.<br/>
+46	`Nautical_Twilight`	Shows the period of day (i.e. day or night) based on nautical twilight.<br/>
+47	`Astronomical_Twilight`	Shows the period of day (i.e. day or night) based on astronomical twilight.<br/>
   
 For our exploratory data analysis, we started with finding the NAs present in our data.
 
@@ -123,12 +122,11 @@ Here, the highest number of NAs is present in the column `Number`, followed by `
 df_us_acc <- subset(df_us_acc, select = -c(Number, Description))
 ```
 
-As we have low number of NA data for other columns, we can just drop those records.
-
 ```{r Drop NA, include=FALSE}
 df_us_acc <- drop_na(df_us_acc)
 ```
 
+Next, we looked at the yearly distribution graph. As the dataset has been updated with multiple data sources over the years, we decided that the year 2021 will be the optimal subset of the data.
 
 ```{r Extracting Year, echo=FALSE}
 df_us_acc$year<-format(as.Date(df_us_acc$Start_Time, format="%Y-%m-%d"),"%Y")
@@ -136,7 +134,6 @@ ggplot(df_us_acc, aes(x = year, fill=year)) +
     geom_bar()
 ```
 
-Next, we looked at the yearly distribution graph. As the dataset has been updated with multiple data sources over the years, we decided that the year 2021 will be the optimal subset of the data.
 
 ```{r Selecting Year 2021, include=FALSE}
 clean_acc21 <- subset(df_us_acc, year==2021)
@@ -173,149 +170,156 @@ mapview(df_map_DC_sf, map.types = "Stamen.Toner",col.regions=("red"))
 
 Our main objective of the analysis was: What factors affect the severity of traffic due to accidents in the US?
 
-## 3.1. Does weather affect the severity of traffic?
+## 3.1. SMART Question 1: Does weather affect the severity of traffic?
 
-```{r Correlations for numerical values}
-# subsetting numerical columns only to check the corelationship between numerical weather variables
-loadPkg("corrplot")
-num_clean_acc21 <- select_if(clean_acc21, is.numeric)
-num_weather <- subset(num_clean_acc21, select = -c(Start_Lat,Start_Lng,End_Lat,End_Lng,Distance.mi.))
-corrplot(cor(num_weather), method = "number")
-```
+To answer the first SMART question, we wanted to check the distribution of data for numerical weather variables first.
 
-We subsetted the numerical columns only to check the corelationship between numerical weather variables and the severity of traffic.
-As we can see from the plot, there is no strong corelationship between numerical weather variables and the severity of traffic. (*SHOUD I REMOVE THIS?)
-
-
-```{r Histograms for Weather Conditions}
+```{r Histograms for Weather Conditions, echo=F}
 
 tempHist <- ggplot(clean_acc21, aes(x=Temperature.F.)) + geom_histogram(color="black", fill = "red")+
   ggtitle("Histogram of Temperature(F) for accidents")
-tempHist
+
 
 windcHist <- ggplot(clean_acc21, aes(x=Wind_Chill.F.)) + geom_histogram(color="black", fill = "orange")+
   ggtitle("Histogram of Wind chill for accidents")
-windcHist
+
 
 humidHist <- ggplot(clean_acc21, aes(x=Humidity...)) + geom_histogram(color="black", fill = "yellow")+
   ggtitle("Histogram of Humidity for accidents")
-humidHist
+
 
 windsHist <- ggplot(clean_acc21, aes(x=Wind_Speed.mph.)) + geom_histogram(color="black", fill = "navy")+
   ggtitle("Histogram of Wind Speed for accidents")
-windsHist
+
 
 pressHist <- ggplot(clean_acc21, aes(x=Pressure.in.)) + geom_histogram(color="black", fill = "green")+
   ggtitle("Histogram of Pressure for accidents")
-pressHist
+
 
 visibHist <- ggplot(clean_acc21, aes(x=Visibility.mi.)) + geom_histogram(color="black", fill = "blue")+
   ggtitle("Histogram of Visibility for accidents")
-visibHist
+
 
 precipHist <- ggplot(clean_acc21, aes(x=Precipitation.in.)) + geom_histogram(color="black", fill = "purple")+
   ggtitle("Histogram of Precipitation for accidents")
-precipHist
 
+
+grid.arrange(tempHist, windcHist, humidHist, windsHist, pressHist, visibHist, precipHist, ncol=3)
 ```
 
-To answer the first SMART question we have, which is "Does weather affect the severity of traffic?", we wanted to check the distribution of data for numerical weather variables first.
+
 We created histograms between numbers of accidents and weather condition elements.
 From those histograms, we found that Temperature, Wind chill, and Humidity have left-skewed distributions.  
 For the rest of element, which are Wind Speed, Pressure, Visibility, and Precipitation, they have quite close mean and median with a few outliers.  
 
-```{r}
+```{r, echo=F}
 wooutlier_winds <- outlierKD2(clean_acc21, Wind_Speed.mph., rm=TRUE, boxplt=TRUE, histogram=TRUE, qqplt=TRUE)
 clean_acc21_woo <- outlierKD2(wooutlier_winds, Pressure.in., rm=TRUE, boxplt=TRUE, histogram=TRUE, qqplt=TRUE)
-#wooutlier_windsPressVi <- outlierKD2(wooutlier_windsPress, Visibility.mi., rm=TRUE, boxplt=TRUE, histogram=TRUE, qqplt=TRUE)
-#clean_acc21_woo <- outlierKD2(wooutlier_windsPressVi, Precipitation.in., rm=TRUE, boxplt=TRUE, histogram=TRUE, qqplt=TRUE) 
-# I failed to remove outliers from Wind Pressure, Visibility, and Precipitation
 ```
-So we tried to remove the outliers from Wind Speed and Pressure and without outliers, and from the generated plots we can see they are more normally distributed than the original data.
-But we decided to keep the outliers because it is natural to have outliers in the weather variables as the data covers a whole year. Also the outliers does not affect the result of T-test.
 
-```{r boxplots between Severity and wind conditions elements }
+So we tried to remove the outliers from Wind Speed and Pressure and without outliers, and from the generated plots we can see they are more normally distributed than the original data.<br/>
+But we decided to keep the outliers because it is natural to have outliers in the weather variables as the data covers a whole year. Also the outliers does not affect the result of T-test.<br/>
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Temperature.F.)) + 
+
+Next, we will check the distribution of weather elements by two different severity levels which are 'Severe' and 'Not Severe'.
+```{r boxplots between Severity and wind conditions elements, echo=F}
+
+plot1 <- ggplot(clean_acc21, aes(x = Is_severe, y=Temperature.F.)) + 
   geom_boxplot() +
   labs(title="Temperature by Severity", x="Severity", y = "Temperature(F)")
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Wind_Chill.F.)) + 
+plot2 <- ggplot(clean_acc21, aes(x = Is_severe, y=Wind_Chill.F.)) + 
   geom_boxplot() +
   labs(title="Wind Chill by Severity", x="Severity", y = "Wind Chill")
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Wind_Speed.mph.)) + 
+plot3 <- ggplot(clean_acc21, aes(x = Is_severe, y=Wind_Speed.mph.)) + 
   geom_boxplot() +
   labs(title="Wind Speed by Severity", x="Severity", y = "Wind Speed")
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Humidity...)) + 
+plot4 <- ggplot(clean_acc21, aes(x = Is_severe, y=Humidity...)) + 
   geom_boxplot() +
   labs(title="Humidity by Severity", x="Severity", y = "Humidity")
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Pressure.in.)) + 
+plot5 <- ggplot(clean_acc21, aes(x = Is_severe, y=Pressure.in.)) + 
   geom_boxplot() +
   labs(title="Pressure by Severity", x="Severity", y = "Pressure")
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Visibility.mi.)) + 
+plot6 <- ggplot(clean_acc21, aes(x = Is_severe, y=Visibility.mi.)) + 
   geom_boxplot() +
   labs(title="Visibility by Severity", x="Severity", y = "Visibility")
 
-ggplot(clean_acc21, aes(x = Is_severe, y=Precipitation.in.)) + 
+plot7 <- ggplot(clean_acc21, aes(x = Is_severe, y=Precipitation.in.)) + 
   geom_boxplot() +
   labs(title="Precipitation by Severity", x="Severity", y = "Precipitation")
 
-## The same variables(Temp, wind chill, humidity) have pretty plots
+grid.arrange(plot1, plot2, plot3, plot4, plot5, plot6, plot7, ncol=3)
 ```
-We tried to see the distribution of weather elements by two different severity levels which are 'Severe' and 'Not Severe'. 
-
-For Temperature, Wind chill, and Humanity, we can see the difference on range of data distribution and outliers by severity levels.
+ 
+For Temperature, Wind chill, and Humanity, we can see the difference on range of data distribution and outliers by severity levels.<br/>
 
 For the rest of element such as wind speed, pressure, visibility and precipitation, they still do not have a wide range of data but we can see the distribution by two severity levels more conveniently with boxplots.
 
-```{r T-test on Severity and weather condition elements}
+```{r T-test on Severity and weather condition elements, echo=F}
 box_clean2_severe = subset(clean_acc21, Is_severe == 'Severe')
 box_clean2_notsevere = subset(clean_acc21, Is_severe == 'Not Severe')
-print("Temperature.F")
+```
+Temperature.F
+```{r, echo=F}
 t.test(box_clean2_severe$Temperature.F., box_clean2_notsevere$Temperature.F.)
-print("Wind_Chill.F.")
+```
+Wind_Chill.F.
+```{r, echo=F}
 t.test(box_clean2_severe$Wind_Chill.F., box_clean2_notsevere$Wind_Chill.F.)
-print("Humidity...")
+```
+Humidity
+```{r, echo=F}
 t.test(box_clean2_severe$Humidity..., box_clean2_notsevere$Humidity...)
-print("Wind_Speed.mph.")
+```
+Wind_Speed.mph.
+```{r, echo=F}
 t.test(box_clean2_severe$Wind_Speed.mph., box_clean2_notsevere$Wind_Speed.mph.)
-print("Visibility.mi.")
+```
+Visibility.mi."
+```{r, echo=F}
 t.test(box_clean2_severe$Visibility.mi., box_clean2_notsevere$Visibility.mi.)
-print("Pressure.in.")
+```
+Pressure.in.
+```{r, echo=F}
 t.test(box_clean2_severe$Pressure.in., box_clean2_notsevere$Pressure.in.)
-print("Precipitation.in.")
+```
+Precipitation.in.
+```{r, echo=F}
 t.test(box_clean2_severe$Precipitation.in., box_clean2_notsevere$Precipitation.in.)
 ```
+
 We performed the two-sample t-test on Severity and weather elements. 
 
-First, I divided the data into two different data by subsetting by the severity to check the means of Weather elements between two different severity levels will be same or not. 
+First, WE divided the data into two different data by subsetting by the severity to check the means of Weather elements between two different severity levels will be same or not. 
+<br/>
+H0: The means of Temperature/WindChill/Humidity/Wind Speed/Pressure/Visibility/Precipitation will be same between different Severity levels.<br/>
+H1: The means of Temperature/WindChill/Humidity/Wind Speed/Pressure/Visibility/Precipitation will NOT be same between different Severity levels.<br/>
 
-H0: The means of Temperature/WindChill/Humidity/Wind Speed/Pressure/Visibility/Precipitation will be same between different Severity levels.
-H1: The means of Temperature/WindChill/Humidity/Wind Speed/Pressure/Visibility/Precipitation will NOT be same between different Severity levels.
+The p-value from all tests except for Visibility are lower than 0.05 so we can reject the H0 for every weather variables but Visibility, which means that means from weather variables except for Visibility were different by its severity level of traffic. <br/>
 
-The p-value from all tests except for Visibility are lower than 0.05 so we can reject the H0 for every weather variables but Visibility, which means that means from weather variables except for Visibility were different by its severity level of traffic. 
-
-From these t-tests, we can conclude that numerical weather variables such as Temperature, WindChill, Humidity, Pressure, Wind Speed and Precipitation affect the severity of traffic.
+From these t-tests, we can conclude that numerical weather variables such as Temperature, WindChill, Humidity, Pressure, Wind Speed and Precipitation affect the severity of traffic.<br/>
 
 However, numerical weather variables are not only variables from weather conditions.
 There are categorical weather variables in our dataset, such as Wind Directions and Weather Conditions. 
-```{r Wind_Direction}
+```{r Wind_Direction, echo=F}
 # wind direction with severity
 ggplot(clean_acc21, aes(Wind_Direction, ..prop.., group = Is_severe)) +
   geom_bar(aes(fill = Is_severe)) +
-  #scale_y_continuous(labels = percent) +
   labs(x = "Wind Direction",
        y = "Proportion",
        title = "Wind direction by Severity") +
   theme(text = element_text(size=8)) 
 ```
-We made a bar plot to see the distribution of the Severity by wind directions.
-As the bar plot between Severity and Wind direction here shows the similar distribution for each severity levels on most of wind direction. So we can infer that wind direction does not affect much on the severity of traffic and decided not to perform any statistical analysis on the Wind Direction variable.
-```{r Weather_Condition variables}
+
+<br/>
+We made a bar plot to see the distribution of the Severity by wind directions.<br/>
+As the bar plot between Severity and Wind direction here shows the similar distribution for each severity levels on most of wind direction. So we can infer that wind direction does not affect much on the severity of traffic and decided not to perform any statistical analysis on the Wind Direction variable.<br/>
+
+```{r Weather_Condition variables, include=F}
 # Weather Condition percentage
 unique(clean_acc21$Weather_Condition)
 WC <- clean_acc21 %>%
@@ -325,42 +329,45 @@ WC <- clean_acc21 %>%
   arrange(desc(freq)) %>%
   filter(freq > 1)
 WC
+```
+
+```{r Weather_Condition variables Plot, echo=F}
 WC %>%
     ggplot() +
     geom_col(mapping = aes(x=reorder(Weather_Condition, -freq), y=freq, fill = Weather_Condition)) +
     labs(x = "Weather Condition", y="%", title ="Top 8 Weather Conditions with accidents") +
     theme(text = element_text(size=7))
 ```
-Secondly, we took a look at the Weather Condition variable.  
+
+<br/>
+Secondly, we took a look at the Weather Condition variable.  <br/>
 There are so many weather conditions in our dataset, so I tried to make a barplot with the top 8 weather conditions when accidents happened. The major weather conditions when car accidents happened were 'Fair', 'Cloudy', 'Mostly Cloudy', 'Partly Cloudy', 'Light Rain', 'Fog', 'Light Snow', and 'Haze'.  
 
 Now we can see that the most frequent weather was 'Fair', but since the Weather Conditions variable is divided into detailed conditions as you can see here with cloudy, mostly cloudy, and partly cloudy, so we decided to take a chi-squared test on all weather conditions and severity. 
 
-```{r}
+```{r, echo=F}
 # Try the Chi-Squared Test on all Weather_Conditions and Severity
-WCtable <- table(clean_acc21$Weather_Condition , clean_acc21$Severity)
-xkabledply(WCtable, title = "Severity by Weather Conditions")
+WCtable <- table(clean_acc21$Weather_Condition , clean_acc21$Is_severe)
+#xkabledply(WCtable, title = "Severity by Weather Conditions")
 chitest = chisq.test(WCtable)
 chitest
 ```
-Took a Chi-Squared test to see the severity and weather conditions are independent.
-H0 : Severity and weather conditions are independent.
-H1 : Severity and weather conditions are NOT independent.  
-As we can see here, the the P-value from Chi-squared test is lower than 0.05 for Weather Conditions variable so we can reject the H0. Which means the Severity of traffic and weather conditions are Dependent. 
+We took a Chi-Squared test to see the severity and weather conditions are independent as they are both categorical variables.<br/>
+H0 : Severity and weather conditions are independent.<br/>
+H1 : Severity and weather conditions are NOT independent.  <br/>
+As we can see here, the the P-value from Chi-squared test is lower than 0.05 for Weather Conditions variable so we can reject the H0. Which means the Severity of traffic and weather conditions are Dependent. <br/>
 
-From these analysis on numerical and categorical weather variables, we can answer our SMART question about the impact for weather on the severity of traffic.
+From these analysis on numerical and categorical weather variables, we can answer our SMART question about the impact for weather on the severity of traffic.<br/>
 We concluded that the numerical weather condition elements except for visibility affect the severity of traffic.
-However, the wind direction does not affect much the severity of traffic because it does not show differences on severity by each of directions. 
-For the weather conditions variables, we can observe that weather conditions at the time accidents happened affect the severity of traffic.
+However, the wind direction does not affect much the severity of traffic because it does not show differences on severity by each of directions. <br/>
+For the weather conditions variables, we can observe that weather conditions at the time accidents happened affect the severity of traffic.<br/>
 
 
 ## 3.2. SMART Question 2: Do Nearby Road Elements affect the severity of traffic?
 
-
-
 To determine whether nearby road components have an impact on the severity of the traffic, we have conducted the exploratory data analysis listed below.
 
-```{r accidents per road element include=FALSE}
+```{r accidents per road element, include=FALSE}
 clean_acc21 %>% 
       group_by(Amenity, Bump, Crossing, Give_Way, Junction, No_Exit, Railway, Roundabout, Station, Stop, Traffic_Calming, Traffic_Signal, Turning_Loop)%>%
     summarise(percentage = n()/nrow(clean_acc21) *100 )%>%
@@ -370,12 +377,11 @@ clean_acc21 %>%
 head(accidents_per_roadelement)
 ```
 
-We sought to determine the number of accidents that neighboring road elements have contributed to in order to respond to our SMART question, "Does Nearby Road Elements Affect the Severity of Traffic?"
+We sought to determine the number of accidents that neighboring road elements have contributed to in order to respond to our SMART question.<br/>
+To comprehend this, we are taking into account the mishaps 1% or more of the total data that were caused by neighboring elements.<br/>
+The data show that Junctions, Crossings, Traffic Signals, Stations, and Stop Boards were the biggest contributors to accidents.<br/>
 
-To comprehend this, we are taking into account the mishaps 1% or more of the total data that were caused by neighboring elements.
-The data show that Junctions, Crossings, Traffic Signals, Stations, and Stop Boards were the biggest contributors to accidents.
-
-```{r percentages of road accidents due to road element echo=F}
+```{r percentages of road accidents due to road element, echo=F}
 acc_road_element_per <- tibble(c("None", "Junction","Crossing", "Traffic signal", "Crossing and traffic signal", "Station", "Stop" ), pull(accidents_per_roadelement, percentage), .name_repair = ~ c("road_elements", "percentage"))
 acc_road_element_per
        
@@ -383,7 +389,7 @@ acc_road_element_per
 
 The bar plot makes it clear that only 23% of accidents happened near any of the road elements taken into account, and junctions are the location of the most accidents (6.52%), while stop boards are the location of the fewest incidents (1.37%).
 
-```{r barchart showing accidents by nearby road elements fig.align="center", echo = FALSE,fig.width = 12}
+```{r barchart showing accidents by nearby road elements, fig.align="center", echo = FALSE,fig.width = 12}
 options(repr.plot.width = 30, repr.plot.height = 8)
 acc_road_element_per %>%
     ggplot() +
@@ -395,19 +401,18 @@ acc_road_element_per %>%
 ```
 
 
-```{r accidents more than 1% due to nearby road elements include=FALSE}
+```{r accidents more than 1% due to nearby road elements, include=FALSE}
 
 
 accidents_per_roadelement<-clean_acc21 %>% 
       select(Is_severe,Junction,Crossing,Stop,Station,Traffic_Signal)
-
 
 head(accidents_per_roadelement)
 
 ```
 
 
-```{r subsets of data based on different road elements include= FALSE}
+```{r subsets of data based on different road elements, include= FALSE}
 Junction_data<- subset(accidents_per_roadelement, Junction=="True",
 select=c(Is_severe,Junction))
 head(Junction_data)
@@ -433,9 +438,7 @@ Let's now examine how these five nearby road elements impact how severe the traf
 Since it is a real-world dataset, it is obvious from the bar chart that only a small percentage of traffic accidents that are caused by nearby road elements are severe, compared to the majority of traffic accidents that are not severe.
 
 
-```{r barchart showing severity of traffic and road elements echo=F}
-
-
+```{r barchart showing severity of traffic and road elements, echo=F}
 plot1<-ggplot(data=Junction_data, aes(x=Is_severe, y=Junction, fill=Is_severe)) +
   geom_bar(stat="identity")+
   labs(title="Accidents By Junction", x="Severity", y = "Junction")+
@@ -466,7 +469,7 @@ grid.arrange(plot1, plot2, plot3, plot4, plot5, ncol=2)
 
 
 
-```{r categorical data into numerical data include=FALSE}
+```{r categorical data into numerical data, include=FALSE}
 
 accidents_per_roadelement <- accidents_per_roadelement %>% 
   mutate(severe_num = if_else(Is_severe== "Severe", 1, 0))
@@ -484,13 +487,13 @@ accidents_per_roadelement <- accidents_per_roadelement %>%
 ```
 
 Next, we perfom an ANOVA test for the differences in mean values between different Road elements.
-
-H0 : The mean of Severity of traffic are the same across Nearby Road Elements( Junction,Crossing, Stop,Station, Traffic Signal).
-H1 : The mean of Severity of traffic are the not the same across Nearby Road Elements( Junction,Crossing, Stop,Station, Traffic Signal).
+<br/>
+H0 : The mean of Severity of traffic are the same across Nearby Road Elements (Junction, Crossing, Stop, Station, Traffic Signal).<br/>
+H1 : The mean of Severity of traffic are the not the same across Nearby Road Elements (Junction, Crossing, Stop, Station, Traffic Signal).<br/>
 
 Since the p-value is lower than 0.05, we need to reject the null hypothesis.
 
-```{r anova test between severity of traffic and different road elements echo=F}
+```{r anova test between severity of traffic and different road elements, echo=F}
 Junction_anova = aov(Junction_num~severe_num, data=accidents_per_roadelement)
 summary(Junction_anova)
 
@@ -507,16 +510,18 @@ Traffic_signal_anova = aov(Traffic_Signal_num~severe_num, data=accidents_per_roa
 summary(Traffic_signal_anova)
 ```
 
+Thus we can conclude from the Anova Test that the Severity of the traffic depends on the nearby road elements i.e. Junction, Crossing, Stop, Station, Traffic Signal.
+
 ## 3.3. SMART Question 3: Does the occurrence of the accident during a particular time of day or year affect the severity of the accident?
 
-First, let's look at some grapghs to get a better idea.
+First, let's look at some graphs to get a better idea.
 
 ```{r Monthly Distribution, echo=F}
 ggplot(clean_acc21, aes(x = Month, fill=Month,)) +geom_bar()+labs(title="Accident Distribution over the Months in 2021", x="Months", y = "count")+
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-The Graph above shows frequency of accidents in 2021 during different Months.
+The Graph above shows frequency of accidents in 2021 during different Months.<br/>
 We can see that there is an increase in number of accidents during the end of the year.
 
 ```{r Hourly Distribution, echo=F}
@@ -534,10 +539,10 @@ test_Hour
 ```
 
 Took a Chi-Squared test to see if the severity and Hour of day are independent.
-We have performed Chi-Squared test because both variables are categorical.
-H0 : Severity and Hour are independent
-H1 : Severity and Hour are NOT independent
-We can reject the H0. 
+We have performed Chi-Squared test because both variables are categorical.<br/>
+H0 : Severity and Hour are independent<br/>
+H1 : Severity and Hour are NOT independent<br/>
+We can reject the H0. <br/>
 This means that there is a relationship between Severity and Hour.
 
 ```{r Chisquare Test between Severity and Month, echo=F}
@@ -546,37 +551,40 @@ test_Month
 ```
 
 Took a Chi-Squared test to see the severity and weather Months are independent.
-We have performed Chi-Squared test because both variables are categorical.
-H0 : Severity and Month are independent
-H1 : Severity and Month are NOT independent
-We can reject the H0. 
+We have performed Chi-Squared test because both variables are categorical.<br/>
+H0 : Severity and Month are independent<br/>
+H1 : Severity and Month are NOT independent<br/>
+We can reject the H0. <br/>
 This means that there is a relationship between Severity and Hour.
 
-Now let's check how strong these relationships are.
-```{r Correlation Test between Severity and Hour, echo=F}
+Now let's check how strong these relationships are.<br/>
+
+Correlation test performed to test strength of relationship between severity and Month.
+```{r Correlation Test between Severity and Month, echo=F}
 cor(clean_acc21$Severity, clean_acc21$Month)
 ```
-Correlation test performed to test strength of relationship between severity and Month.
-The resulting value indicates that the relationship is weak.
 
-```{r Correlation Test between Severity and Month, echo=F}
+The resulting value indicates that the relationship is weak.<br/>
+
+Correlation test performed to test strength of relationship between severity and Hour.
+```{r Correlation Test between Severity and Hour, echo=F}
 cor(clean_acc21$Severity, clean_acc21$Hour)
 ```
-Correlation test performed to test strength of relationship between severity and Hour.
+
 The resulting value indicates that the relationship is weak.
 
 
 # 4. Conclusion
 
-As mentioned earlier, our dataset represents real world scenarios. And there aren't many accidents that affect the traffic severely. But in the small amount of cases that it does happen, it will be due to the following factors.
-Does weather affect the severity of traffic?
-	• Temperature/Wind Chill/Wind Speed/Humidity/Pressure/Precipitation affect the severity of traffic.
-	• Wind Direction does not affect the severity of traffic much.
-	• Weather Conditions affect the severity of traffic.
-Do Nearby Road Elements affect the severity of traffic?
+As mentioned earlier, our dataset represents real world scenarios. And there aren't many accidents that affect the traffic severely. But in the small amount of cases that it does happen, it will be due to the following factors.<br/>
+Does weather affect the severity of traffic?<br/>
+	• Temperature/Wind Chill/Wind Speed/Humidity/Pressure/Precipitation affect the severity of traffic.<br/>
+	• Wind Direction does not affect the severity of traffic much.<br/>
+	• Weather Conditions affect the severity of traffic.<br/>
+Do Nearby Road Elements affect the severity of traffic?<br/>
 	• Nearby Road Elements Junction, Crossing, Stop, Station and Traffic Signal affects the Severity of Traffic.
-Does the occurrence of the accident during a particular time of day or year affect the severity of the accident?
-	• Both Hour and Month affect the Severity but with a weak relationship.
+Does the occurrence of the accident during a particular time of day or year affect the severity of the accident?<br/>
+	• Both Hour and Month affect the Severity but with a weak relationship.<br/>
 
 
 # 5 Bibliography
