@@ -1,0 +1,86 @@
+---
+authors: "T1 - Phoenix"
+title: "Spotify Tracks Popularity Prediction"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: false
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Libraries Used, warning=FALSE, include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(corrplot)
+library(mapview)
+library(tigris)
+library(sf)
+library(ggplot2)
+library(lubridate)
+library(ezids)
+library(gridExtra)
+library(grid)
+library(lattice)
+```
+
+Let us pull the dataset from the file `spotify_dataset.csv` into a dataframe `df_spotify`. As this file is huge in size, we cannot upload it on GitHub. Thus, we are storing the file in a folder called `spotify_dataset` that is located in one folder above the project folder.
+
+```{r Pulling the Data}
+df_spotify <- data.frame(read.csv('spotify_dataset.csv'))
+str(df_spotify)
+```
+
+
+```{r}
+
+head(df_spotify)
+tail(df_spotify)
+```
+
+```{r}
+summary(df_spotify)
+
+```
+
+First, let's check the percentage of NA's present in each columns of the dataset.
+
+```{r Checking NAs}
+(colMeans(is.na(df_spotify)))*100
+```
+```{r}
+data_corr<-df_spotify %>% select_if(is.numeric)   
+data_corr = subset(data_corr, select = -c(X) )
+data_corr
+
+corrplot(cor(data_corr))
+
+
+
+
+```
+
+
+```{r Popularity Distribution Graph}
+ggplot(df_spotify, aes(x = popularity, fill=popularity)) +
+    geom_bar()
+```
+
+
+```{r Danceability Distribution Graph}
+ggplot(df_spotify, aes(x = danceability, fill=danceability)) +
+    geom_bar()
+```
+
+
+
+
+
