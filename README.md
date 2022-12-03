@@ -1,4 +1,4 @@
-# - by T1-phoenix-22FA (Ji Woo Suh, Sanjana Godolkar, Shreyas Sunku Padmanabha, Tanmay Kshirsagar)
+# Team T1-phoenix-22FA (Ji Woo Suh, Sanjana Godolkar, Shreyas Sunku Padmanabha, Tanmay Kshirsagar)
 
 This is a repository for Team 1 for 6101 Introduction to Data Science class Mid-Term Project. 
 
