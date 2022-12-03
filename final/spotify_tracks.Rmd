@@ -61,11 +61,7 @@ data_corr<-df_spotify %>% select_if(is.numeric)
 data_corr = subset(data_corr, select = -c(X) )
 data_corr
 
-corrplot(cor(data_corr))
-
-
-
-
+corrplot.mixed(cor(data_corr))
 ```
 
 
