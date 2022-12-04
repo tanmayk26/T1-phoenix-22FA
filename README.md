@@ -10,6 +10,7 @@ This is a repository for Team 1 for 6101 Introduction to Data Science class Mid-
 
 Description will be available here.
 
+---------------------
 =====================
 ## Mid-Term Project
 =====================
