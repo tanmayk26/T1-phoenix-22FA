@@ -53,15 +53,12 @@ First, let's check the percentage of NA's present in each columns of the dataset
 ```{r Checking NAs}
 (colMeans(is.na(df_spotify)))*100
 ```
-<<<<<<< Updated upstream
-=======
 
 ```{r}
 data_corr<-df_spotify %>% select_if(is.numeric)   
 data_corr = subset(data_corr, select = -c(X) )
 corrplot.mixed(cor(data_corr))
 ```
->>>>>>> Stashed changes
 
 
 ```{r Popularity Distribution Graph}
@@ -75,8 +72,6 @@ ggplot(df_spotify, aes(x = danceability, fill=danceability)) +
     geom_bar()
 ```
 
-<<<<<<< Updated upstream
-=======
 ```{r}
 acHist <- ggplot(df_spotify, aes(x=acousticness)) + geom_histogram(fill="#69b3a2", color="#e9ecef", alpha=0.9, bins = 75)+
   ggtitle("Histogram of Acousticness")
@@ -99,6 +94,7 @@ acV <- ggplot(df_spotify, aes(x=acousticness, y=popularity,fill="#69b3a2")) +
   ggtitle("Violinplot for Acousticness")
 acV
 ```
+
 
 ```{r}
 # made basic histogram & scatterplot for every other variables that we didn't include to our SMART Q
@@ -148,7 +144,4 @@ tempoSctr<- ggplot(df_spotify, aes(x=popularity, y= tempo, color="#e9ecef")) +
 tempoSctr
 ```
 
-
-
->>>>>>> Stashed changes
 
