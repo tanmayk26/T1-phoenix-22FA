@@ -2,13 +2,17 @@
 
 This is a repository for Team 1 for 6101 Introduction to Data Science class Mid-Term Project. 
 
+=====================
 ## Final Project
+=====================
 
 ### Song Popularity Prediction
 
 Description will be available here.
 
+=====================
 ## Mid-Term Project
+=====================
 
 ### Accidents in the USA: How they affect traffic 
 
