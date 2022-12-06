@@ -172,6 +172,7 @@ df_spotify<-df_spotify %>%
 df_spotify$duration_min <- round(df_spotify$duration_min ,digit=2)
 head(df_spotify)
 ```
+
 ```{r}
 df_spotify$artists[df_spotify$artists == '['] <- ''
 df_spotify$artists[df_spotify$artists == ']']<- ''
@@ -270,16 +271,11 @@ library(ggpubr)
 figure <- ggarrange(valence, tempo, acousticness,speechiness, danceability,mode,liveness,loudness,popularity,energy, key, ncol = 3, nrow = 5)
 figure
 ```
+
 ```{r}
 data_corr<-df_spotify %>% select_if(is.numeric)   
 data_corr = subset(data_corr, select = -c(X) )
-data_corr
-
 corrplot(cor(data_corr))
-
-
-
-
 ```
 
 #From the distribution plot, we can observe that, columns such as energy, and valence has high variability where as liveness, danceability, tempo and loudness has relatively lower variability and concentrated in some ranges.
@@ -288,11 +284,37 @@ corrplot(cor(data_corr))
 ```{r}
 ggplot(data_corr, aes(x=energy, y=popularity)) + geom_point(col = "deeppink1") 
 ```
+
 ```{r}
 ggplot(data_corr, aes(x=acousticness, y=popularity)) + geom_point(col = "deeppink1") 
 ```
-```{r}
 
+```{r}
 ggplot(data_corr, aes(x=loudness, y=popularity)) + geom_point(col = "deeppink1") 
+```
+
+
+# Feature Selection methods
+
+```{r}
+library("leaps")
+reg2.best <- regsubsets(popularity~. , data = data_corr, nvmax = 12, nbest = 3, method = "exhaustive") 
+plot(reg2.best, scale = "adjr2", main = "Adjusted R^2")
+plot(reg2.best, scale = "r2", main = "R^2")
+plot(reg2.best, scale = "bic", main = "BIC")
+plot(reg2.best, scale = "Cp", main = "Cp")
+summary(reg2.best)
+```
+
+# Linear Model
+
+```{r}
+model_lm <- lm(popularity~danceability+mode+mode+speechiness+instrumentalness+valence+tempo+time_signature,data=data_corr)
+summary(model_lm)
+```
+
+
+```{r}
+plot(model_lm)
 ```
 
