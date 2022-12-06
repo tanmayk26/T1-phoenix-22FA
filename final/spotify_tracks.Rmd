@@ -30,6 +30,7 @@ library(ezids)
 library(gridExtra)
 library(grid)
 library(lattice)
+library(caret)
 ```
 
 Let us pull the dataset from the file `spotify_dataset.csv` into a dataframe `df_spotify`. As this file is huge in size, we cannot upload it on GitHub. Thus, we are storing the file in a folder called `spotify_dataset` that is located in one folder above the project folder.
@@ -180,6 +181,8 @@ df_spotify$artists[df_spotify$artists == "'"]<- ''
 head(df_spotify)
 ```
 
+# removing columns track_id and X as they are not required.
+
 ```{r}
 data_corr = subset(df_spotify, select = -c(track_id,X) )
 ```
@@ -275,7 +278,13 @@ figure
 ```{r}
 data_corr<-df_spotify %>% select_if(is.numeric)   
 data_corr = subset(data_corr, select = -c(X) )
+data_corr
+
 corrplot(cor(data_corr))
+
+
+
+
 ```
 
 #From the distribution plot, we can observe that, columns such as energy, and valence has high variability where as liveness, danceability, tempo and loudness has relatively lower variability and concentrated in some ranges.
@@ -290,9 +299,9 @@ ggplot(data_corr, aes(x=acousticness, y=popularity)) + geom_point(col = "deeppin
 ```
 
 ```{r}
+
 ggplot(data_corr, aes(x=loudness, y=popularity)) + geom_point(col = "deeppink1") 
 ```
-
 
 # Feature Selection methods
 
@@ -308,13 +317,33 @@ summary(reg2.best)
 
 # Linear Model
 
+
 ```{r}
-model_lm <- lm(popularity~danceability+mode+mode+speechiness+instrumentalness+valence+tempo+time_signature,data=data_corr)
+set.seed(123)
+dat.d <- sample(1:nrow(data_corr),size=nrow(data_corr)*0.8,replace = FALSE) #random selection of 70% data.
+ 
+train <- data_corr[dat.d,] # 80% training data
+test <- data_corr[-dat.d,] # remaining 20% test data
+
+model_lm <- lm(popularity~danceability+mode+speechiness+instrumentalness+valence+tempo+time_signature,data=train)
 summary(model_lm)
+```
+
+```{r}
+pop_pred=predict(model_lm,newdata = test)
+pop_pred1=data.frame(pop_pred)
+head(pop_pred1)
+```
+
+```{r}
+compare <- cbind (actual=test$popularity, pop_pred)  # combine actual and predicted
+mean (apply(compare, 1, min)/apply(compare, 1, max))
 ```
 
 
 ```{r}
 plot(model_lm)
 ```
+
+
 
