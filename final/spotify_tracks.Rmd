@@ -180,8 +180,6 @@ df_spotify$artists[df_spotify$artists == "'"]<- ''
 head(df_spotify)
 ```
 
-# removing columns track_id and X as they are not required.
-
 ```{r}
 data_corr = subset(df_spotify, select = -c(track_id,X) )
 ```
@@ -277,13 +275,7 @@ figure
 ```{r}
 data_corr<-df_spotify %>% select_if(is.numeric)   
 data_corr = subset(data_corr, select = -c(X) )
-data_corr
-
 corrplot(cor(data_corr))
-
-
-
-
 ```
 
 #From the distribution plot, we can observe that, columns such as energy, and valence has high variability where as liveness, danceability, tempo and loudness has relatively lower variability and concentrated in some ranges.
@@ -298,9 +290,9 @@ ggplot(data_corr, aes(x=acousticness, y=popularity)) + geom_point(col = "deeppin
 ```
 
 ```{r}
-
 ggplot(data_corr, aes(x=loudness, y=popularity)) + geom_point(col = "deeppink1") 
 ```
+
 
 # Feature Selection methods
 
@@ -325,9 +317,4 @@ summary(model_lm)
 ```{r}
 plot(model_lm)
 ```
-
-
-
-
-
 
