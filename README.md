@@ -2,13 +2,25 @@
 
 This is a repository for Team 1 for 6101 Introduction to Data Science class Mid-Term Project. 
 
+=====================
 ## Final Project
+=====================
 
 ### Song Popularity Prediction
 
-Description will be available here.
+Our main focus question: What features affect Popularity of the song on Spotify?
 
+Our smart questions:
+1) How energy affects popularity?
+2) How does loudness affect popularity?
+3) How does acousticness affect popularity?
+
+For modeling, we will try to predict the popularity of the song based on the factors present in the dataset.
+
+---------------------
+=====================
 ## Mid-Term Project
+=====================
 
 ### Accidents in the USA: How they affect traffic 
 
