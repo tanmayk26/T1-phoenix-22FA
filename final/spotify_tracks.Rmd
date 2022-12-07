@@ -276,56 +276,31 @@ key <- ggplot(data_corr, aes(x=key)) +
 ```{r}
 library(ggpubr)
 figure <- ggarrange(valence, tempo, acousticness,speechiness, danceability,mode,liveness,loudness,popularity,energy, key, ncol = 3, nrow = 5)
-figure
+annotate_figure(figure, top = text_grob("Density Histogram for all variables", 
+               color = "black", face = "bold", size = 14))
 ```
 
 ```{r}
 data_corr<-df_spotify %>% select_if(is.numeric)   
 data_corr = subset(data_corr, select = -c(X) )
 data_corr
-
-corrplot(cor(data_corr))
+corrplot(cor(data_corr),
+         type = "upper",
+         col = colorRampPalette(c("white", "maroon1", "steelblue1"))(100),
+         is.corr = TRUE, 
+         tl.col = "black",
+         order = "hclust",
+         diag = TRUE)
 ```
 
 #From the distribution plot, we can observe that, columns such as energy, and valence has high variability where as liveness, danceability, tempo and loudness has relatively lower variability and concentrated in some ranges.
 
 
 ```{r}
-ggplot(data_corr, aes(x=energy, y=popularity)) + geom_point(col = "deeppink1") 
-ggplot(data_corr, aes(x=acousticness, y=popularity)) + geom_point(col = "deeppink1") 
-ggplot(data_corr, aes(x=loudness, y=popularity)) + geom_point(col = "deeppink1")
+ggplot(data_corr, aes(x=energy, y=popularity)) + geom_point(col = "steelblue1") 
+ggplot(data_corr, aes(x=acousticness, y=popularity)) + geom_point(col = "steelblue1") 
+ggplot(data_corr, aes(x=loudness, y=popularity)) + geom_point(col = "steelblue1")
 ```
-
-```{r}
-test_energy <- chisq.test(table(df_spotify$popularity, df_spotify$energy))
-test_energy
-
-test_loudness <- chisq.test(table(df_spotify$popularity, df_spotify$loudness))
-test_loudness
-
-test_acoustic <- chisq.test(table(df_spotify$popularity, df_spotify$acousticness))
-test_acoustic
-```
-
-```{r}
-cor(df_spotify$popularity, df_spotify$energy)
-
-cor(df_spotify$popularity, df_spotify$loudness)
-
-cor(df_spotify$popularity, df_spotify$acousticness)
-```
-
-```{r}
-energy_anova = aov(energy~popularity, data=df_spotify)
-summary(energy_anova)
-
-loudness_anova = aov(loudness~popularity, data=df_spotify)
-summary(loudness_anova)
-
-acoustic_anova = aov(acousticness~popularity, data=df_spotify)
-summary(acoustic_anova)
-```
-
 
 ```{r}
 data_corr <- data_corr %>% mutate(popularity_t = if_else(popularity > 50, 1, 0))
