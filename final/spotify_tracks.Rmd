@@ -346,4 +346,120 @@ plot(model_lm)
 ```
 
 
+```{r}
+plot(density(test$popularity - pop_pred),col = 'red',
+    xlab = 'Residual',
+    ylab = 'Density',
+    main = 'Density Plot of Residual')
+```
+
+```{r}
+plot(test$popularity,type='l',col='green',main = 'Line plot of Prediction and Test',
+    xlab = 'Index',ylab = 'popularity')
+lines(pop_pred,type = 'l',col='red')
+
+legend(80, 25000, legend=c("True", "Pred."),
+       col=c("red", "green"), lty=1:1, cex=1.6,box.lty = 0)
+```
+```{r}
+set.seed(123)
+dat.d <- sample(1:nrow(data_corr),size=nrow(data_corr)*0.8,replace = FALSE) #random selection of 70% data.
+ 
+train <- data_corr.a[dat.d,] # 80% training data
+test <- data_corr.a[-dat.d,] # remaining 20% test data
+```
+
+
+```{r}
+prc_train_labels <- train[,1]
+prc_test_labels <- test[,1]
+
+```
+
+```{r}
+library(class)
+```
+
+
+```{r}
+prc_test_pred <- knn(train = train, test = test,cl = prc_train_labels, k=3)
+
+```
+
+```{r}
+acc <- 100 * sum(prc_test_labels == prc_test_pred)/NROW(prc_test_labels)
+acc
+
+```
+
+```{r}
+data_corr <- data_corr %>% mutate(popularity_t = if_else(popularity > 56, 1, 0))
+```
+
+
+```{r}
+library(rpart)
+library(rpart.plot)
+
+fit <- rpart(popularity_t~., data = train, method = 'class')
+```
+
+```{r}
+
+
+summary(fit)
+```
+
+```{r}
+predict_unseen <-predict(fit, test, type = 'class')
+```
+
+
+```{r}
+table_mat <- table(test$popularity_t, predict_unseen)
+table_mat
+```
+
+```{r}
+accuracy_Test <- sum(diag(table_mat)) / sum(table_mat)
+print(paste('Accuracy for test', accuracy_Test))
+
+```
+
+```{r}
+library(randomForest)
+
+iris.rf <- randomForest(popularity_t~., 
+                        data = train, 
+                        importance = TRUE,
+                        proximity = TRUE)
+```
+```{r}
+head(data_corr)
+```
+
+
+```{r}
+data_corr.a = subset(data_corr, select = c(popularity_t,acousticness,danceability,duration_ms,energy,instrumentalness,key
+                                           ,liveness,mode,speechiness,tempo,time_signature,valence) )
+```
+
+```{r}
+model = glm(popularity_t~.,data=train )
+
+Predicr_value = predict(model,test)                          #predict test value purchased
+
+predict_test_value = ifelse((Predicr_value>0.5),1,0)
+
+                           #See predict value and actual
+Compare_values = cbind(predict_test_value,test[,1])
+Compare_values
+```
+
+```{r}
+Compare_values = data.frame(Compare_values)
+head(Compare_values)
+class(Compare_values)
+caret::confusionMatrix(as.factor(Compare_values[,1]),as.factor(Compare_values[,2]))
+```
 
