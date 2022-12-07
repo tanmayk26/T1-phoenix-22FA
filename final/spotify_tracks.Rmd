@@ -303,6 +303,21 @@ ggplot(data_corr, aes(x=acousticness, y=popularity)) + geom_point(col = "deeppin
 ggplot(data_corr, aes(x=loudness, y=popularity)) + geom_point(col = "deeppink1") 
 ```
 
+```{r}
+test_energy <- chisq.test(table(df_spotify$popularity, df_spotify$energy))
+test_energy
+
+test_loudness <- chisq.test(table(df_spotify$popularity, df_spotify$loudness))
+test_loudness
+
+test_acoustic <- chisq.test(table(df_spotify$popularity, df_spotify$acousticness))
+test_acoustic
+
+
+```
+
+
+
 # Feature Selection methods
 
 ```{r}
