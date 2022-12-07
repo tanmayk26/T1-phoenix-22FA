@@ -418,7 +418,7 @@ prc_test_pred <- knn(train = train, test = test,cl = prc_train_labels, k=3)
 ```
 
 ```{r}
-confusionMatrix(as.factor(prc_test_labels),as.factor(prc_test_pred))
+cm_knn<-confusionMatrix(as.factor(prc_test_labels),as.factor(prc_test_pred))
 
 ```
 
@@ -440,7 +440,7 @@ table_mat
 
 
 ```{r}
-confusionMatrix(as.factor(test$popularity_t),as.factor(predict_unseen))
+cm_dt<-confusionMatrix(as.factor(test$popularity_t),as.factor(predict_unseen))
 ```
 
 
@@ -455,7 +455,26 @@ predict_test_value = ifelse((Predicr_value>0.5),1,0)
                            #See predict value and actual
 Compare_values = cbind(predict_test_value,test[,1])
 Compare_values = data.frame(Compare_values)
-caret::confusionMatrix(as.factor(Compare_values[,1]),as.factor(Compare_values[,2]))
+cm_lg<-caret::confusionMatrix(as.factor(Compare_values[,1]),as.factor(Compare_values[,2]))
 
+```
+```{r}
+
+
+model_compare <- data.frame(Model = c('KNN',
+                                      'Decision Tree',
+                                      'Logistic Regression'),
+                            Accuracy = c((cm_knn$overall[1])*100,
+                                         (cm_dt$overall[1])*100,
+                                         (cm_lg$overall[1])*100))
+
+model_comp
+print(model_compare)
+
+ggplot(aes(x=Model, y=Accuracy), data=model_compare) +
+    geom_bar(stat='identity', fill = 'blue') +
+    ggtitle('Comparative Accuracy of Models on Cross-Validation Data') +
+    xlab('Models') +
+    ylab('Overall Accuracy')
 ```
 
