@@ -326,6 +326,16 @@ cor(df_spotify$popularity, df_spotify$acousticness)
 
 ```
 
+```{r}
+energy_anova = aov(energy~popularity, data=df_spotify)
+summary(energy_anova)
+
+loudness_anova = aov(loudness~popularity, data=df_spotify)
+summary(loudness_anova)
+
+acoustic_anova = aov(acousticness~popularity, data=df_spotify)
+summary(acoustic_anova)
+```
 
 
 # Feature Selection methods
