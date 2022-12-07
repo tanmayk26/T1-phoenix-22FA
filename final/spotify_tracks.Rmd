@@ -138,7 +138,7 @@ livenessSct<- ggplot(df_spotify, aes(x=popularity, y= liveness)) +
 livenessSct
 
 valenceHist <- ggplot(df_spotify, aes(x=valence)) + geom_histogram(color="black",fill="steelblue1", alpha=0.9, bins = 100)+
-  ggtitle("Histogram of instrumentalness")
+  ggtitle("Histogram of valence")
 valenceHist
 
 valenceSctr<- ggplot(df_spotify, aes(x=popularity, y= valence)) +
@@ -405,6 +405,53 @@ prc_test_labels <- test[,1]
 ```
 
 
+### Selecting the correct "k"
+How does "k" affect classification accuracy? Let's create a function to calculate classification accuracy based on the number of "k."
+```{r}
+chooseK = function(k, train_set, val_set, train_class, val_class){
+  
+  # Build knn with k neighbors considered.
+  set.seed(1)
+  class_knn = knn(train = train_set,    #<- training set cases
+                  test = val_set,       #<- test set cases
+                  cl = train_class,     #<- category for classification
+                  k = k) #,                #<- number of neighbors considered
+                  # use.all = TRUE)       #<- control ties between class assignments. If true, all distances equal to the k-th largest are included
+  
+  tab = table(class_knn, val_class)
+  
+  # Calculate the accuracy.
+  accu = sum(tab[row(tab) == col(tab)]) / sum(tab)                         
+  cbind(k = k, accuracy = accu)
+}
+
+# The sapply() function plugs in several values into our chooseK function.
+# function(x)[function] allows you to apply a series of numbers
+# to a function without running a for() loop.
+knn_different_k = sapply(seq(3, 15, by = 2),  #<- set k to be odd number from 1 to 21
+                         function(x) chooseK(x, 
+                                             train_set = train,
+                                             val_set = test,
+                                             train_class = prc_train_labels,
+                                             val_class = prc_test_labels))
+
+# Reformat the results to graph the results.
+str(knn_different_k)
+knn_different_k = data.frame(k = knn_different_k[1,],
+                             accuracy = knn_different_k[2,])
+
+# Plot accuracy vs. k.
+# install.packages("ggplot2")
+loadPkg("ggplot2")
+
+ggplot(knn_different_k,
+       aes(x = k, y = accuracy)) +
+  geom_line(color = "orange", size = 1.5) +
+  geom_point(size = 3) + 
+  labs(title = "accuracy vs k")
+
+```
+
 ```{r}
 prc_test_pred <- knn(train = train, test = test,cl = prc_train_labels, k=3)
 
@@ -412,7 +459,7 @@ prc_test_pred <- knn(train = train, test = test,cl = prc_train_labels, k=3)
 
 ```{r}
 cm_knn<-confusionMatrix(as.factor(prc_test_labels),as.factor(prc_test_pred))
-
+cm_knn
 ```
 
 # Decision Tree
@@ -431,9 +478,11 @@ table_mat <- table(test$popularity_t, predict_unseen)
 table_mat
 ```
 
-
 ```{r}
+accuracy_Test <- sum(diag(table_mat)) / sum(table_mat)
+print(paste('Accuracy for test', accuracy_Test))
 cm_dt<-confusionMatrix(as.factor(test$popularity_t),as.factor(predict_unseen))
+cm_dt
 ```
 
 
@@ -449,8 +498,9 @@ predict_test_value = ifelse((Predicr_value>0.5),1,0)
 Compare_values = cbind(predict_test_value,test[,1])
 Compare_values = data.frame(Compare_values)
 cm_lg<-caret::confusionMatrix(as.factor(Compare_values[,1]),as.factor(Compare_values[,2]))
-
+cm_lg
 ```
+
 ```{r}
 
 
@@ -461,7 +511,6 @@ model_compare <- data.frame(Model = c('KNN',
                                          (cm_dt$overall[1])*100,
                                          (cm_lg$overall[1])*100))
 
-model_comp
 print(model_compare)
 
 ggplot(aes(x=Model, y=Accuracy), data=model_compare) +
@@ -470,7 +519,5 @@ ggplot(aes(x=Model, y=Accuracy), data=model_compare) +
     xlab('Models') +
     ylab('Overall Accuracy')
 ```
-
-
 
 
