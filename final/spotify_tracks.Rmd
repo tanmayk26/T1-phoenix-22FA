@@ -414,10 +414,13 @@ prc_test_labels <- test[,1]
 
 ```{r}
 prc_test_pred <- knn(train = train, test = test,cl = prc_train_labels, k=3)
-acc <- 100 * sum(prc_test_labels == prc_test_pred)/NROW(prc_test_labels)
-acc
+
 ```
 
+```{r}
+confusionMatrix(as.factor(prc_test_labels),as.factor(prc_test_pred))
+
+```
 
 # Decision Tree
 
@@ -426,7 +429,7 @@ library(rpart)
 library(rpart.plot)
 
 fit <- rpart(popularity_t~., data = train, method = 'class')
-summary(fit)
+
 ```
 
 ```{r}
@@ -435,10 +438,9 @@ table_mat <- table(test$popularity_t, predict_unseen)
 table_mat
 ```
 
-```{r}
-accuracy_Test <- sum(diag(table_mat)) / sum(table_mat)
-print(paste('Accuracy for test', accuracy_Test))
 
+```{r}
+confusionMatrix(as.factor(test$popularity_t),as.factor(predict_unseen))
 ```
 
 
