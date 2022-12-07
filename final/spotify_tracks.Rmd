@@ -64,17 +64,19 @@ corrplot.mixed(cor(data_corr))
 
 ```{r Popularity Distribution Graph}
 ggplot(df_spotify, aes(x = popularity, fill=popularity)) +
-    geom_bar()
+    geom_bar()+labs(title="Popularity Distribution ", x="Popularity", y = "count")+
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 
 ```{r Danceability Distribution Graph}
 ggplot(df_spotify, aes(x = danceability, fill=danceability)) +
-    geom_bar()
+    geom_bar()+labs(title="ADanceability Distribution", x="Danceability", y = "count")+
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ```{r}
-acHist <- ggplot(df_spotify, aes(x=acousticness)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
+acHist <- ggplot(df_spotify, aes(x=acousticness)) + geom_histogram(fill="black", alpha=0.9, bins = 75)+
   ggtitle("Histogram of Acousticness")
 acHist
 
@@ -90,16 +92,16 @@ acSctr
 
 ```{r}
 # thought this violin plot will be better with other variables in violin plots
-acV <- ggplot(df_spotify, aes(x=acousticness, y=popularity,fill="#69b3a2")) + 
+acV <- ggplot(df_spotify, aes(x=acousticness, y=popularity,fill=acousticness)) + 
   geom_violin() +
-  ggtitle("Violinplot for Acousticness")
+  ggtitle("Violin plot for Acousticness")
 acV
 ```
 
 
 ```{r, results='hide'}
 # made basic histogram & scatterplot for every other variables that we didn't include to our SMART Q
-speechinessHist <- ggplot(df_spotify, aes(x=speechiness)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
+speechinessHist <- ggplot(df_spotify, aes(x=speechiness)) + geom_histogram(fill="black", alpha=0.9, bins = 75)+
   ggtitle("Histogram of speechiness")
 speechinessHist
 
@@ -108,7 +110,7 @@ speechinessSct<- ggplot(df_spotify, aes(x=popularity, y= speechiness)) +
   ggtitle("Scatterplot for speechiness")
 speechinessSct
 
-instrumentalnessHist <- ggplot(df_spotify, aes(x=instrumentalness)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
+instrumentalnessHist <- ggplot(df_spotify, aes(x=instrumentalness)) + geom_histogram(fill="black", alpha=0.9, bins = 75)+
   ggtitle("Histogram of instrumentalness")
 instrumentalnessHist
 
@@ -117,7 +119,7 @@ instrumentalnessSctr<- ggplot(df_spotify, aes(x=popularity, y= instrumentalness)
   ggtitle("Scatterplot for instrumentalness")
 instrumentalnessSctr
 
-livenessHist <- ggplot(df_spotify, aes(x=liveness)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
+livenessHist <- ggplot(df_spotify, aes(x=liveness)) + geom_histogram(fill="black", alpha=0.9, bins = 75)+
   ggtitle("Histogram of liveness")
 livenessHist
 
@@ -126,7 +128,7 @@ livenessSct<- ggplot(df_spotify, aes(x=popularity, y= liveness)) +
   ggtitle("Scatterplot for liveness")
 livenessSct
 
-valenceHist <- ggplot(df_spotify, aes(x=valence)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
+valenceHist <- ggplot(df_spotify, aes(x=valence)) + geom_histogram(fill="black", alpha=0.9, bins = 75)+
   ggtitle("Histogram of instrumentalness")
 valenceHist
 
@@ -135,7 +137,7 @@ valenceSctr<- ggplot(df_spotify, aes(x=popularity, y= valence)) +
   ggtitle("Scatterplot for valence")
 valenceSctr
 
-tempoHist <- ggplot(df_spotify, aes(x=tempo)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
+tempoHist <- ggplot(df_spotify, aes(x=tempo)) + geom_histogram(fill="black", alpha=0.9, bins = 75)+
   ggtitle("Histogram of tempo")
 tempoHist
 
