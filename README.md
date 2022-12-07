@@ -17,6 +17,8 @@ Our smart questions:
 
 For modeling, we will try to predict the popularity of the song based on the factors present in the dataset.
 
+Dataset used: https://www.kaggle.com/datasets/maharshipandya/-spotify-tracks-dataset
+
 ---------------------
 =====================
 ## Mid-Term Project
