@@ -58,23 +58,34 @@ First, let's check the percentage of NA's present in each columns of the dataset
 ```{r}
 data_corr<-df_spotify %>% select_if(is.numeric)   
 data_corr = subset(data_corr, select = -c(X) )
-corrplot.mixed(cor(data_corr))
+
+corrplot(cor(data_corr),
+         type = "upper",
+         t1.col = "white",
+         col = colorRampPalette(c("white", "deepskyblue", "blue4"))(100),
+         is.corr = TRUE,
+         order = "hclust",
+         tl.col = "black",
+         diag = TRUE)
 ```
 
 
+
 ```{r Popularity Distribution Graph}
-ggplot(df_spotify, aes(x = popularity, fill=popularity)) +
-    geom_bar()
+popHist <- ggplot(df_spotify, aes(x=popularity)) + geom_histogram(color="black", fill="steelblue1", alpha=0.9, bins = 101)+
+  ggtitle("Histogram of Popularity")
+popHist
 ```
 
 
 ```{r Danceability Distribution Graph}
-ggplot(df_spotify, aes(x = danceability, fill=danceability)) +
-    geom_bar()
+danceHist <- ggplot(df_spotify, aes(x=danceability)) + geom_histogram(color="black", fill="steelblue1", alpha=0.9, bins = 150)+
+  ggtitle("Histogram of Danceability")
+danceHist
 ```
 
 ```{r}
-acHist <- ggplot(df_spotify, aes(x=acousticness)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
+acHist <- ggplot(df_spotify, aes(x=acousticness)) + geom_histogram(color="black", fill="steelblue1", alpha=0.9, bins = 100)+
   ggtitle("Histogram of Acousticness")
 acHist
 
@@ -83,64 +94,64 @@ acHist
 ```{r}
 # scatter plot for acousticness & popularity
 acSctr<- ggplot(df_spotify, aes(x=popularity, y= acousticness)) +
-  geom_point(size = 0.1) +
+  geom_point(colour="steelblue1",size = 0.1) +
   ggtitle("Scatterplot for Acousticness")
 acSctr
 ```
 
 ```{r}
 # thought this violin plot will be better with other variables in violin plots
-acV <- ggplot(df_spotify, aes(x=acousticness, y=popularity,fill="#69b3a2")) + 
-  geom_violin() +
-  ggtitle("Violinplot for Acousticness")
+acV <- ggplot(df_spotify, aes(x=acousticness, y=popularity,fill=acousticness)) + 
+  geom_violin(colour="black",fill="steelblue1") +
+  ggtitle("Violin plot for Acousticness")
 acV
 ```
 
 
 ```{r, results='hide'}
 # made basic histogram & scatterplot for every other variables that we didn't include to our SMART Q
-speechinessHist <- ggplot(df_spotify, aes(x=speechiness)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
+speechinessHist <- ggplot(df_spotify, aes(x=speechiness)) + geom_histogram(color="black", fill="steelblue1", alpha=0.9, bins = 100)+
   ggtitle("Histogram of speechiness")
 speechinessHist
 
 speechinessSct<- ggplot(df_spotify, aes(x=popularity, y= speechiness)) +
-  geom_point(size = 0.1) +
+  geom_point(colour="steelblue1",size = 0.1) +
   ggtitle("Scatterplot for speechiness")
 speechinessSct
 
-instrumentalnessHist <- ggplot(df_spotify, aes(x=instrumentalness)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
+instrumentalnessHist <- ggplot(df_spotify, aes(x=instrumentalness)) + geom_histogram(color="black",fill="steelblue1", alpha=0.9, bins = 50)+
   ggtitle("Histogram of instrumentalness")
 instrumentalnessHist
 
 instrumentalnessSctr<- ggplot(df_spotify, aes(x=popularity, y= instrumentalness)) +
-  geom_point(size = 0.1) +
+  geom_point(colour="steelblue1",size = 0.1) +
   ggtitle("Scatterplot for instrumentalness")
 instrumentalnessSctr
 
-livenessHist <- ggplot(df_spotify, aes(x=liveness)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
+livenessHist <- ggplot(df_spotify, aes(x=liveness)) + geom_histogram(color="black",fill="steelblue1", alpha=0.9, bins = 100)+
   ggtitle("Histogram of liveness")
 livenessHist
 
 livenessSct<- ggplot(df_spotify, aes(x=popularity, y= liveness)) +
-  geom_point(size = 0.1) +
+  geom_point(colour="steelblue1",size = 0.1) +
   ggtitle("Scatterplot for liveness")
 livenessSct
 
-valenceHist <- ggplot(df_spotify, aes(x=valence)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
-  ggtitle("Histogram of instrumentalness")
+valenceHist <- ggplot(df_spotify, aes(x=valence)) + geom_histogram(color="black",fill="steelblue1", alpha=0.9, bins = 100)+
+  ggtitle("Histogram of valence")
 valenceHist
 
 valenceSctr<- ggplot(df_spotify, aes(x=popularity, y= valence)) +
-  geom_point(size = 0.1) +
+  geom_point(colour="steelblue1",size = 0.1) +
   ggtitle("Scatterplot for valence")
 valenceSctr
 
-tempoHist <- ggplot(df_spotify, aes(x=tempo)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
+tempoHist <- ggplot(df_spotify, aes(x=tempo)) + geom_histogram(color="black",fill="steelblue1", alpha=0.9, bins = 100)+
   ggtitle("Histogram of tempo")
 tempoHist
 
 tempoSctr<- ggplot(df_spotify, aes(x=popularity, y= tempo)) +
-  geom_point(size = 0.1) +
+  geom_point(colour="steelblue1",size = 0.1) +
   ggtitle("Scatterplot for tempo")
 tempoSctr
 ```
@@ -204,69 +215,69 @@ data_corr = subset(data_corr, select = -c(duration_ms) )
 valence <- ggplot(data_corr, aes(x=valence)) + 
     geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
                    binwidth=.5,
-                   colour="black", fill="white") +
-    geom_density(alpha=.2, fill="#FF6666")
+                   colour="steelblue1", fill="white") +
+    geom_density(alpha=.2, fill="steelblue1")
 
 tempo <- ggplot(data_corr, aes(x=tempo)) + 
     geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
                    binwidth=.5,
-                   colour="black", fill="white") +
-    geom_density(alpha=.2, fill="#FF6666")
+                   colour="steelblue1", fill="white") +
+    geom_density(alpha=.2, fill="steelblue1")
 
 acousticness <- ggplot(data_corr, aes(x=acousticness)) + 
     geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
                    binwidth=.5,
-                   colour="black", fill="white") +
-    geom_density(alpha=.2, fill="#FF6666")
+                   colour="steelblue1", fill="white") +
+    geom_density(alpha=.2, fill="steelblue1")
 
 danceability <- ggplot(data_corr, aes(x=danceability)) + 
     geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
                    binwidth=.5,
-                   colour="black", fill="white") +
-    geom_density(alpha=.2, fill="#FF6666")
+                   colour="steelblue1", fill="white") +
+    geom_density(alpha=.2, fill="steelblue1")
 
 speechiness <- ggplot(data_corr, aes(x=speechiness)) + 
     geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
                    binwidth=.5,
-                   colour="black", fill="white") +
-    geom_density(alpha=.2, fill="#FF6666")
+                   colour="steelblue1", fill="white") +
+    geom_density(alpha=.2, fill="steelblue1")
 
 mode <- ggplot(data_corr, aes(x=mode)) + 
     geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
                    binwidth=.5,
-                   colour="black", fill="white") +
-    geom_density(alpha=.2, fill="#FF6666")
+                   colour="steelblue1", fill="white") +
+    geom_density(alpha=.2, fill="steelblue1")
 
 liveness <- ggplot(data_corr, aes(x=liveness)) + 
     geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
                    binwidth=.5,
-                   colour="black", fill="white") +
-    geom_density(alpha=.2, fill="#FF6666")
+                   colour="steelblue1", fill="white") +
+    geom_density(alpha=.2, fill="steelblue1")
 
 loudness <- ggplot(data_corr, aes(x=loudness)) + 
     geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
                    binwidth=.5,
-                   colour="black", fill="white") +
-    geom_density(alpha=.2, fill="#FF6666")
+                   colour="steelblue1", fill="white") +
+    geom_density(alpha=.2, fill="steelblue1")
 
 popularity <- ggplot(data_corr, aes(x=popularity)) + 
     geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
                    binwidth=.5,
-                   colour="black", fill="white") +
-    geom_density(alpha=.2, fill="#FF6666")
+                   colour="steelblue1", fill="white") +
+    geom_density(alpha=.2, fill="steelblue1")
 
 energy <- ggplot(data_corr, aes(x=energy)) + 
     geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
                    binwidth=.5,
-                   colour="black", fill="white") +
-    geom_density(alpha=.2, fill="#FF6666")
+                   colour="steelblue1", fill="white") +
+    geom_density(alpha=.2, fill="steelblue1")
 
 
 key <- ggplot(data_corr, aes(x=key)) + 
     geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
                    binwidth=.5,
-                   colour="black", fill="white") +
-    geom_density(alpha=.2, fill="#FF6666")
+                   colour="steelblue1", fill="white") +
+    geom_density(alpha=.2, fill="steelblue1")
 
 ```
 
@@ -274,61 +285,43 @@ key <- ggplot(data_corr, aes(x=key)) +
 ```{r}
 library(ggpubr)
 figure <- ggarrange(valence, tempo, acousticness,speechiness, danceability,mode,liveness,loudness,popularity,energy, key, ncol = 3, nrow = 5)
-figure
+annotate_figure(figure, top = text_grob("Density Histogram for all variables", 
+               color = "black", face = "bold", size = 14))
 ```
 
 ```{r}
 data_corr<-df_spotify %>% select_if(is.numeric)   
 data_corr = subset(data_corr, select = -c(X) )
 data_corr
-
-corrplot(cor(data_corr))
+corrplot(cor(data_corr),
+         type = "upper",
+         col = colorRampPalette(c("white", "maroon1", "steelblue1"))(100),
+         is.corr = TRUE, 
+         tl.col = "black",
+         order = "hclust",
+         diag = TRUE)
 ```
 
 #From the distribution plot, we can observe that, columns such as energy, and valence has high variability where as liveness, danceability, tempo and loudness has relatively lower variability and concentrated in some ranges.
 
 
 ```{r}
-ggplot(data_corr, aes(x=energy, y=popularity)) + geom_point(col = "deeppink1") 
-ggplot(data_corr, aes(x=acousticness, y=popularity)) + geom_point(col = "deeppink1") 
-ggplot(data_corr, aes(x=loudness, y=popularity)) + geom_point(col = "deeppink1")
+ggplot(data_corr, aes(x=energy, y=popularity)) + geom_point(col = "steelblue1") 
+ggplot(data_corr, aes(x=acousticness, y=popularity)) + geom_point(col = "steelblue1") 
+ggplot(data_corr, aes(x=loudness, y=popularity)) + geom_point(col = "steelblue1")
 ```
-
-```{r}
-test_energy <- chisq.test(table(df_spotify$popularity, df_spotify$energy))
-test_energy
-
-test_loudness <- chisq.test(table(df_spotify$popularity, df_spotify$loudness))
-test_loudness
-
-test_acoustic <- chisq.test(table(df_spotify$popularity, df_spotify$acousticness))
-test_acoustic
-```
-
-```{r}
-cor(df_spotify$popularity, df_spotify$energy)
-
-cor(df_spotify$popularity, df_spotify$loudness)
-
-cor(df_spotify$popularity, df_spotify$acousticness)
-```
-
-```{r}
-energy_anova = aov(energy~popularity, data=df_spotify)
-summary(energy_anova)
-
-loudness_anova = aov(loudness~popularity, data=df_spotify)
-summary(loudness_anova)
-
-acoustic_anova = aov(acousticness~popularity, data=df_spotify)
-summary(acoustic_anova)
-```
-
 
 ```{r}
 data_corr <- data_corr %>% mutate(popularity_t = if_else(popularity > 50, 1, 0))
 data_corr
 ```
+```{r}
+ggplot(data_corr, aes(x = popularity_t, fill=popularity_t)) +
+    geom_bar(color="black",fill=c("indianred3", "olivedrab3"))+
+  ggtitle("Popularity_t Distribution")
+```
+
+
 
 
 ```{r t test on popularity_t with numeric variables}
@@ -461,17 +454,13 @@ ggplot(knn_different_k,
 
 ```{r}
 prc_test_pred <- knn(train = train, test = test,cl = prc_train_labels, k=3)
-acc <- 100 * sum(prc_test_labels == prc_test_pred)/NROW(prc_test_labels)
-acc
+
 ```
 
-<<<<<<< Updated upstream
-=======
 ```{r}
 cm_knn<-confusionMatrix(as.factor(prc_test_labels),as.factor(prc_test_pred))
 cm_knn
 ```
->>>>>>> Stashed changes
 
 # Decision Tree
 
@@ -480,7 +469,7 @@ library(rpart)
 library(rpart.plot)
 
 fit <- rpart(popularity_t~., data = train, method = 'class')
-summary(fit)
+
 ```
 
 ```{r}
@@ -490,14 +479,10 @@ table_mat
 ```
 
 ```{r}
-<<<<<<< Updated upstream
 accuracy_Test <- sum(diag(table_mat)) / sum(table_mat)
 print(paste('Accuracy for test', accuracy_Test))
-
-=======
 cm_dt<-confusionMatrix(as.factor(test$popularity_t),as.factor(predict_unseen))
 cm_dt
->>>>>>> Stashed changes
 ```
 
 
@@ -512,11 +497,6 @@ predict_test_value = ifelse((Predicr_value>0.5),1,0)
                            #See predict value and actual
 Compare_values = cbind(predict_test_value,test[,1])
 Compare_values = data.frame(Compare_values)
-<<<<<<< Updated upstream
-caret::confusionMatrix(as.factor(Compare_values[,1]),as.factor(Compare_values[,2]))
-
-```
-=======
 cm_lg<-caret::confusionMatrix(as.factor(Compare_values[,1]),as.factor(Compare_values[,2]))
 cm_lg
 ```
@@ -531,7 +511,6 @@ model_compare <- data.frame(Model = c('KNN',
                                          (cm_dt$overall[1])*100,
                                          (cm_lg$overall[1])*100))
 
-
 print(model_compare)
 
 ggplot(aes(x=Model, y=Accuracy), data=model_compare) +
@@ -541,7 +520,4 @@ ggplot(aes(x=Model, y=Accuracy), data=model_compare) +
     ylab('Overall Accuracy')
 ```
 
-
-
->>>>>>> Stashed changes
 
