@@ -158,7 +158,7 @@ library("ggpubr")
 histfig <- ggarrange(danceHist,acHist,energyHist, speechinessHist, instrumentalnessHist,livenessHist, valenceHist,tempoHist, ncol = 3, nrow = 2)
 histfig
 
-sctfig <- ggarrange(danceSct,energysct, acSct, speechinessSct, instrumentalnessSctr,livenessSct, valenceSctr,tempoSctr, ncol = 3, nrow = 2)
+sctfig <- ggarrange(danceSct, acSct,energySct, speechinessSct, instrumentalnessSctr,livenessSct, valenceSctr,tempoSctr, ncol = 3, nrow = 2)
 sctfig
 ```
 
