@@ -74,7 +74,7 @@ ggplot(df_spotify, aes(x = danceability, fill=danceability)) +
 ```
 
 ```{r}
-acHist <- ggplot(df_spotify, aes(x=acousticness)) + geom_histogram(fill="#69b3a2", color="#e9ecef", alpha=0.9, bins = 75)+
+acHist <- ggplot(df_spotify, aes(x=acousticness)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
   ggtitle("Histogram of Acousticness")
 acHist
 
@@ -82,7 +82,7 @@ acHist
 
 ```{r}
 # scatter plot for acousticness & popularity
-acSctr<- ggplot(df_spotify, aes(x=popularity, y= acousticness, color="#e9ecef")) +
+acSctr<- ggplot(df_spotify, aes(x=popularity, y= acousticness)) +
   geom_point(size = 0.1) +
   ggtitle("Scatterplot for Acousticness")
 acSctr
@@ -97,53 +97,62 @@ acV
 ```
 
 
-```{r}
+```{r, results='hide'}
 # made basic histogram & scatterplot for every other variables that we didn't include to our SMART Q
-speechinessHist <- ggplot(df_spotify, aes(x=speechiness)) + geom_histogram(fill="#69b3a2", color="#e9ecef", alpha=0.9, bins = 75)+
+speechinessHist <- ggplot(df_spotify, aes(x=speechiness)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
   ggtitle("Histogram of speechiness")
 speechinessHist
 
-speechinessSct<- ggplot(df_spotify, aes(x=popularity, y= speechiness, color="#e9ecef")) +
+speechinessSct<- ggplot(df_spotify, aes(x=popularity, y= speechiness)) +
   geom_point(size = 0.1) +
   ggtitle("Scatterplot for speechiness")
 speechinessSct
 
-instrumentalnessHist <- ggplot(df_spotify, aes(x=instrumentalness)) + geom_histogram(fill="#69b3a2", color="#e9ecef", alpha=0.9, bins = 75)+
+instrumentalnessHist <- ggplot(df_spotify, aes(x=instrumentalness)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
   ggtitle("Histogram of instrumentalness")
 instrumentalnessHist
 
-instrumentalnessSctr<- ggplot(df_spotify, aes(x=popularity, y= instrumentalness, color="#e9ecef")) +
+instrumentalnessSctr<- ggplot(df_spotify, aes(x=popularity, y= instrumentalness)) +
   geom_point(size = 0.1) +
   ggtitle("Scatterplot for instrumentalness")
 instrumentalnessSctr
 
-livenessHist <- ggplot(df_spotify, aes(x=liveness)) + geom_histogram(fill="#69b3a2", color="#e9ecef", alpha=0.9, bins = 75)+
+livenessHist <- ggplot(df_spotify, aes(x=liveness)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
   ggtitle("Histogram of liveness")
 livenessHist
 
-livenessSct<- ggplot(df_spotify, aes(x=popularity, y= liveness, color="#e9ecef")) +
+livenessSct<- ggplot(df_spotify, aes(x=popularity, y= liveness)) +
   geom_point(size = 0.1) +
   ggtitle("Scatterplot for liveness")
 livenessSct
 
-valenceHist <- ggplot(df_spotify, aes(x=valence)) + geom_histogram(fill="#69b3a2", color="#e9ecef", alpha=0.9, bins = 75)+
+valenceHist <- ggplot(df_spotify, aes(x=valence)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
   ggtitle("Histogram of instrumentalness")
 valenceHist
 
-valenceSctr<- ggplot(df_spotify, aes(x=popularity, y= valence, color="#e9ecef")) +
+valenceSctr<- ggplot(df_spotify, aes(x=popularity, y= valence)) +
   geom_point(size = 0.1) +
   ggtitle("Scatterplot for valence")
 valenceSctr
 
-tempoHist <- ggplot(df_spotify, aes(x=tempo)) + geom_histogram(fill="#69b3a2", color="#e9ecef", alpha=0.9, bins = 75)+
+tempoHist <- ggplot(df_spotify, aes(x=tempo)) + geom_histogram(fill="#69b3a2", alpha=0.9, bins = 75)+
   ggtitle("Histogram of tempo")
 tempoHist
 
-tempoSctr<- ggplot(df_spotify, aes(x=popularity, y= tempo, color="#e9ecef")) +
+tempoSctr<- ggplot(df_spotify, aes(x=popularity, y= tempo)) +
   geom_point(size = 0.1) +
   ggtitle("Scatterplot for tempo")
 tempoSctr
 ```
+
+```{r}
+histfig <- ggarrange(acHist, speechinessHist, instrumentalnessHist,livenessHist, valenceHist,tempoHist, ncol = 3, nrow = 2)
+histfig
+
+sctfig <- ggarrange(acSctr, speechinessSct, instrumentalnessSctr,livenessSct, valenceSctr,tempoSctr, ncol = 3, nrow = 2)
+sctfig
+```
+
 
 #DATA Preprocessing
 ```{r}
@@ -276,6 +285,7 @@ figure
 ```
 
 ```{r}
+
 data_corr<-df_spotify %>% select_if(is.numeric)   
 data_corr = subset(data_corr, select = -c(X) )
 data_corr
@@ -429,6 +439,61 @@ acc
 
 ```{r}
 data_corr <- data_corr %>% mutate(popularity_t = if_else(popularity > 56, 1, 0))
+data_corr
+```
+```{r t test on popularity_t with numeric variables}
+pop1 <- subset(data_corr, popularity_t == 1)
+pop2 <- subset(data_corr, popularity_t == 0)
+str(pop1)
+str(pop2)
+
+ttest_dance <- t.test(pop1$danceability, pop2$danceability)
+ttest_dance
+ttest_energy <- t.test(pop1$energy, pop2$energy)
+ttest_energy
+ttest_loudness <- t.test(pop1$loudness, pop2$loudness)
+ttest_loudness
+ttest_speechiness <- t.test(pop1$speechiness, pop2$speechiness)
+ttest_speechiness
+ttest_acousticness <- t.test(pop1$acousticness, pop2$acousticness)
+ttest_acousticness
+ttest_instrumentalness <- t.test(pop1$instrumentalness, pop2$instrumentalness)
+ttest_instrumentalness
+ttest_liveness <- t.test(pop1$liveness, pop2$liveness)
+ttest_liveness
+ttest_valence <- t.test(pop1$valence, pop2$valence)
+ttest_valence
+ttest_tempo <- t.test(pop1$tempo, pop2$tempo)
+ttest_tempo
+ttest_duration_min <- t.test(pop1$duration_min, pop2$duration_min)
+ttest_duration_min
+
+```
+```{r chisq on pop_t and categorical}
+
+chi_key <- chisq.test(table(data_corr$popularity_t, data_corr$key))
+chi_key
+chi_mode <- chisq.test(table(data_corr$popularity_t, data_corr$mode))
+chi_mode
+chi_time_signature <- chisq.test(table(data_corr$popularity_t, data_corr$time_signature))
+chi_time_signature
+
+```
+```{r t test and ANOVA on popularity by categorical variables}
+unique(pop1$key)
+unique(pop1$mode)
+unique(pop1$time_signature)
+mode1 <- subset(data_corr, mode == 1)
+mode0 <- subset(data_corr, mode == 0)
+str(mode1)
+str(mode0)
+
+ttest_mode <- t.test(mode1$popularity, mode0$popularity)
+ttest_mode
+
+aovtime_signature <- aov(popularity ~ time_signature, data = data_corr)
+summary(aovtime_signature)
+
 ```
 
 
