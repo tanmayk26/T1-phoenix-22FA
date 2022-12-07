@@ -315,6 +315,16 @@ test_acoustic
 
 
 ```
+```{r}
+
+cor(df_spotify$popularity, df_spotify$energy)
+
+cor(df_spotify$popularity, df_spotify$loudness)
+
+cor(df_spotify$popularity, df_spotify$acousticness)
+
+
+```
 
 
 
