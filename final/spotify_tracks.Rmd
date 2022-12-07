@@ -303,47 +303,195 @@ ggplot(data_corr, aes(x=acousticness, y=popularity)) + geom_point(col = "deeppin
 ggplot(data_corr, aes(x=loudness, y=popularity)) + geom_point(col = "deeppink1") 
 ```
 
-# Feature Selection methods
-
 ```{r}
-library("leaps")
-reg2.best <- regsubsets(popularity~. , data = data_corr, nvmax = 12, nbest = 3, method = "exhaustive") 
-plot(reg2.best, scale = "adjr2", main = "Adjusted R^2")
-plot(reg2.best, scale = "r2", main = "R^2")
-plot(reg2.best, scale = "bic", main = "BIC")
-plot(reg2.best, scale = "Cp", main = "Cp")
-summary(reg2.best)
+test_energy <- chisq.test(table(df_spotify$popularity, df_spotify$energy))
+test_energy
+
+test_loudness <- chisq.test(table(df_spotify$popularity, df_spotify$loudness))
+test_loudness
+
+test_acoustic <- chisq.test(table(df_spotify$popularity, df_spotify$acousticness))
+test_acoustic
+
+
 ```
 
-# Linear Model
+```{r}
 
+cor(df_spotify$popularity, df_spotify$energy)
+
+cor(df_spotify$popularity, df_spotify$loudness)
+
+cor(df_spotify$popularity, df_spotify$acousticness)
+
+
+```
+
+```{r}
+energy_anova = aov(energy~popularity, data=df_spotify)
+summary(energy_anova)
+
+loudness_anova = aov(loudness~popularity, data=df_spotify)
+summary(loudness_anova)
+
+acoustic_anova = aov(acousticness~popularity, data=df_spotify)
+summary(acoustic_anova)
+```
+
+# Data 
 
 ```{r}
 set.seed(123)
 dat.d <- sample(1:nrow(data_corr),size=nrow(data_corr)*0.8,replace = FALSE) #random selection of 70% data.
+
+data_corr.a = subset(data_corr, select = c(popularity_t,acousticness,danceability,duration_ms,energy,instrumentalness,key
+                                           ,liveness,mode,speechiness,tempo,time_signature,valence) )
  
-train <- data_corr[dat.d,] # 80% training data
-test <- data_corr[-dat.d,] # remaining 20% test data
-
-model_lm <- lm(popularity~danceability+mode+speechiness+instrumentalness+valence+tempo+time_signature,data=train)
-summary(model_lm)
-```
-
-```{r}
-pop_pred=predict(model_lm,newdata = test)
-pop_pred1=data.frame(pop_pred)
-head(pop_pred1)
-```
-
-```{r}
-compare <- cbind (actual=test$popularity, pop_pred)  # combine actual and predicted
-mean (apply(compare, 1, min)/apply(compare, 1, max))
+train <- data_corr.a[dat.d,] # 80% training data
+test <- data_corr.a[-dat.d,] # remaining 20% test data
 ```
 
 
 ```{r}
-plot(model_lm)
+prc_train_labels <- train[,1]
+prc_test_labels <- test[,1]
+
+```
+
+```{r}
+library(class)
 ```
 
 
+```{r}
+prc_test_pred <- knn(train = train, test = test,cl = prc_train_labels, k=3)
+
+```
+
+```{r}
+acc <- 100 * sum(prc_test_labels == prc_test_pred)/NROW(prc_test_labels)
+acc
+
+```
+
+```{r}
+data_corr <- data_corr %>% mutate(popularity_t = if_else(popularity > 50, 1, 0))
+data_corr
+```
+
+
+```{r t test on popularity_t with numeric variables}
+pop1 <- subset(data_corr, popularity_t == 1)
+pop2 <- subset(data_corr, popularity_t == 0)
+str(pop1)
+str(pop2)
+
+ttest_dance <- t.test(pop1$danceability, pop2$danceability)
+ttest_dance
+ttest_energy <- t.test(pop1$energy, pop2$energy)
+ttest_energy
+ttest_loudness <- t.test(pop1$loudness, pop2$loudness)
+ttest_loudness
+ttest_speechiness <- t.test(pop1$speechiness, pop2$speechiness)
+ttest_speechiness
+ttest_acousticness <- t.test(pop1$acousticness, pop2$acousticness)
+ttest_acousticness
+ttest_instrumentalness <- t.test(pop1$instrumentalness, pop2$instrumentalness)
+ttest_instrumentalness
+ttest_liveness <- t.test(pop1$liveness, pop2$liveness)
+ttest_liveness
+ttest_valence <- t.test(pop1$valence, pop2$valence)
+ttest_valence
+ttest_tempo <- t.test(pop1$tempo, pop2$tempo)
+ttest_tempo
+ttest_duration_min <- t.test(pop1$duration_min, pop2$duration_min)
+ttest_duration_min
+
+```
+```{r chisq on pop_t and categorical}
+
+chi_key <- chisq.test(table(data_corr$popularity_t, data_corr$key))
+chi_key
+chi_mode <- chisq.test(table(data_corr$popularity_t, data_corr$mode))
+chi_mode
+chi_time_signature <- chisq.test(table(data_corr$popularity_t, data_corr$time_signature))
+chi_time_signature
+
+```
+```{r t test and ANOVA on popularity by categorical variables}
+unique(pop1$key)
+unique(pop1$mode)
+unique(pop1$time_signature)
+mode1 <- subset(data_corr, mode == 1)
+mode0 <- subset(data_corr, mode == 0)
+str(mode1)
+str(mode0)
+
+ttest_mode <- t.test(mode1$popularity, mode0$popularity)
+ttest_mode
+
+aovtime_signature <- aov(popularity ~ time_signature, data = data_corr)
+summary(aovtime_signature)
+
+```
+
+
+```{r}
+library(rpart)
+library(rpart.plot)
+
+fit <- rpart(popularity_t~., data = train, method = 'class')
+```
+
+```{r}
+summary(fit)
+```
+
+```{r}
+predict_unseen <-predict(fit, test, type = 'class')
+```
+
+
+```{r}
+table_mat <- table(test$popularity_t, predict_unseen)
+table_mat
+```
+
+```{r}
+accuracy_Test <- sum(diag(table_mat)) / sum(table_mat)
+print(paste('Accuracy for test', accuracy_Test))
+
+```
+
+```{r}
+library(randomForest)
+
+iris.rf <- randomForest(popularity_t~., 
+                        data = train, 
+                        importance = TRUE,
+                        proximity = TRUE)
+```
+```{r}
+head(data_corr)
+```
+
+
+```{r}
+model = glm(popularity_t~.,data=train )
+
+Predicr_value = predict(model,test)                          #predict test value purchased
+
+predict_test_value = ifelse((Predicr_value>0.5),1,0)
+
+                           #See predict value and actual
+Compare_values = cbind(predict_test_value,test[,1])
+Compare_values
+```
+
+```{r}
+Compare_values = data.frame(Compare_values)
+head(Compare_values)
+class(Compare_values)
+caret::confusionMatrix(as.factor(Compare_values[,1]),as.factor(Compare_values[,2]))
+```
 
