@@ -61,7 +61,6 @@ data_corr = subset(data_corr, select = -c(X) )
 
 corrplot(cor(data_corr),
          type = "upper",
-         t1.col = "white",
          col = colorRampPalette(c("white", "deepskyblue", "blue4"))(100),
          is.corr = TRUE,
          order = "hclust",
@@ -78,38 +77,36 @@ popHist
 ```
 
 
-```{r Danceability Distribution Graph}
+```{r, results='hide'}
+# made basic histogram & scatterplot for every other variables that we didn't include to our SMART Q
+
 danceHist <- ggplot(df_spotify, aes(x=danceability)) + geom_histogram(color="black", fill="steelblue1", alpha=0.9, bins = 150)+
   ggtitle("Histogram of Danceability")
 danceHist
-```
 
-```{r}
+danceSct<- ggplot(df_spotify, aes(x=popularity, y= danceability)) +
+  geom_point(colour="steelblue1",size = 0.1) +
+  ggtitle("Scatterplot for Danceability")
+danceSct
+
 acHist <- ggplot(df_spotify, aes(x=acousticness)) + geom_histogram(color="black", fill="steelblue1", alpha=0.9, bins = 100)+
   ggtitle("Histogram of Acousticness")
 acHist
 
-```
-
-```{r}
-# scatter plot for acousticness & popularity
-acSctr<- ggplot(df_spotify, aes(x=popularity, y= acousticness)) +
+acSct<- ggplot(df_spotify, aes(x=popularity, y= acousticness)) +
   geom_point(colour="steelblue1",size = 0.1) +
   ggtitle("Scatterplot for Acousticness")
-acSctr
-```
+acSct
 
-```{r}
-# thought this violin plot will be better with other variables in violin plots
-acV <- ggplot(df_spotify, aes(x=acousticness, y=popularity,fill=acousticness)) + 
-  geom_violin(colour="black",fill="steelblue1") +
-  ggtitle("Violin plot for Acousticness")
-acV
-```
+energyHist <- ggplot(df_spotify, aes(x=energy)) + geom_histogram(color="black", fill="steelblue1", alpha=0.9, bins = 100)+
+  ggtitle("Histogram of Energy")
+energyHist
 
+energySct<- ggplot(df_spotify, aes(x=popularity, y= energy)) +
+  geom_point(colour="steelblue1",size = 0.1) +
+  ggtitle("Scatterplot for Energy")
+energySct
 
-```{r, results='hide'}
-# made basic histogram & scatterplot for every other variables that we didn't include to our SMART Q
 speechinessHist <- ggplot(df_spotify, aes(x=speechiness)) + geom_histogram(color="black", fill="steelblue1", alpha=0.9, bins = 100)+
   ggtitle("Histogram of speechiness")
 speechinessHist
@@ -158,10 +155,10 @@ tempoSctr
 
 ```{r}
 library("ggpubr")
-histfig <- ggarrange(acHist, speechinessHist, instrumentalnessHist,livenessHist, valenceHist,tempoHist, ncol = 3, nrow = 2)
+histfig <- ggarrange(danceHist,acHist,energyHist, speechinessHist, instrumentalnessHist,livenessHist, valenceHist,tempoHist, ncol = 3, nrow = 2)
 histfig
 
-sctfig <- ggarrange(acSctr, speechinessSct, instrumentalnessSctr,livenessSct, valenceSctr,tempoSctr, ncol = 3, nrow = 2)
+sctfig <- ggarrange(danceSct,energysct, acSct, speechinessSct, instrumentalnessSctr,livenessSct, valenceSctr,tempoSctr, ncol = 3, nrow = 2)
 sctfig
 ```
 
@@ -317,7 +314,7 @@ data_corr
 ```
 ```{r}
 ggplot(data_corr, aes(x = popularity_t, fill=popularity_t)) +
-    geom_bar(color="black",fill=c("indianred3", "olivedrab3"))+
+    geom_bar(color="black",fill=c("steelblue3", "blue4"))+
   ggtitle("Popularity_t Distribution")
 ```
 
