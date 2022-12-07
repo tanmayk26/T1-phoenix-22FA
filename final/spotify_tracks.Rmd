@@ -58,8 +58,17 @@ First, let's check the percentage of NA's present in each columns of the dataset
 ```{r}
 data_corr<-df_spotify %>% select_if(is.numeric)   
 data_corr = subset(data_corr, select = -c(X) )
-corrplot.mixed(cor(data_corr))
+
+corrplot(cor(data_corr),
+         type = "upper",
+         t1.col = "white",
+         col = colorRampPalette(c("white", "deepskyblue", "blue4"))(100),
+         is.corr = TRUE,
+         order = "hclust",
+         tl.col = "black",
+         diag = TRUE)
 ```
+
 
 
 ```{r Popularity Distribution Graph}
