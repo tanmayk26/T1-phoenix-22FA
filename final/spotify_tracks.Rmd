@@ -286,19 +286,6 @@ annotate_figure(figure, top = text_grob("Density Histogram for all variables",
                color = "black", face = "bold", size = 14))
 ```
 
-```{r}
-data_corr<-df_spotify %>% select_if(is.numeric)   
-data_corr = subset(data_corr, select = -c(X) )
-data_corr
-corrplot(cor(data_corr),
-         type = "upper",
-         col = colorRampPalette(c("white", "maroon1", "steelblue1"))(100),
-         is.corr = TRUE, 
-         tl.col = "black",
-         order = "hclust",
-         diag = TRUE)
-```
-
 #From the distribution plot, we can observe that, columns such as energy, and valence has high variability where as liveness, danceability, tempo and loudness has relatively lower variability and concentrated in some ranges.
 
 
@@ -443,7 +430,7 @@ loadPkg("ggplot2")
 
 ggplot(knn_different_k,
        aes(x = k, y = accuracy)) +
-  geom_line(color = "orange", size = 1.5) +
+  geom_line(color = "steelblue1", size = 1.5) +
   geom_point(size = 3) + 
   labs(title = "accuracy vs k")
 
