@@ -306,6 +306,13 @@ ggplot(data_corr, aes(x=loudness, y=popularity)) + geom_point(col = "steelblue1"
 data_corr <- data_corr %>% mutate(popularity_t = if_else(popularity > 50, 1, 0))
 data_corr
 ```
+```{r}
+ggplot(data_corr, aes(x = popularity_t, fill=popularity_t)) +
+    geom_bar(color="black",fill=c("indianred3", "olivedrab3"))+
+  ggtitle("Popularity_t Distribution")
+```
+
+
 
 
 ```{r t test on popularity_t with numeric variables}
@@ -454,4 +461,7 @@ ggplot(aes(x=Model, y=Accuracy), data=model_compare) +
     xlab('Models') +
     ylab('Overall Accuracy')
 ```
+
+
+
 
