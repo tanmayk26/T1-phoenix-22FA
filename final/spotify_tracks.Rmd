@@ -195,18 +195,29 @@ head(df_spotify)
 
 # removing columns track_id and X as they are not required.
 
+
 ```{r}
-data_corr = subset(df_spotify, select = -c(track_id,X) )
+df_spotify<-df_spotify %>%
+ mutate(duration_min = duration_ms/60000)
+
+df_spotify$duration_min <- round(df_spotify$duration_min ,digit=2)
+head(df_spotify)
 ```
 
 
-```{r}
-data_corr<-data_corr[!duplicated(data_corr),]
-```
 
 ```{r}
-data_corr = subset(data_corr, select = -c(duration_ms) )
+data_corr<-df_spotify[!duplicated(df_spotify),]
 ```
+
+
+
+
+```{r}
+data_corr = subset(data_corr, select = -c(track_id,X,artists,album_name,track_name,explicit,track_genre,duration_ms) )
+```
+
+
 
 ```{r}
 valence <- ggplot(data_corr, aes(x=valence)) + 
@@ -420,14 +431,34 @@ summary(aovtime_signature)
 ```
 
 
+
+
+
+
+#feautre Selection
+
+```{r}
+library("leaps")
+reg2.best <- regsubsets(popularity_t~. , data = data_corr, nvmax = 12, nbest = 3, method = "exhaustive") 
+plot(reg2.best, scale = "Cp", main = "Cp")
+```
+
+
+
+# Model Building
 # Spliting the data
+
+
+
+
 
 ```{r}
 set.seed(123)
 dat.d <- sample(1:nrow(data_corr),size=nrow(data_corr)*0.8,replace = FALSE) #random selection of 70% data.
 
-data_corr.a = subset(data_corr, select = c(popularity_t,acousticness,danceability,duration_ms,energy,instrumentalness,key
-                                           ,liveness,mode,speechiness,tempo,time_signature,valence) )
+data_corr.a = subset(data_corr, select = c(popularity_t,acousticness,danceability,duration_min,energy,instrumentalness
+                                           ,liveness,mode,loudness,tempo,valence,key) )
+ 
  
 train <- data_corr.a[dat.d,] # 80% training data
 test <- data_corr.a[-dat.d,] # remaining 20% test data
@@ -439,7 +470,7 @@ test <- data_corr.a[-dat.d,] # remaining 20% test data
 ```{r}
 library(class)
 prc_train_labels <- train[,1]
-prc_test_labels <- test[,1]
+prc_test_labels<- test[,1]
 ```
 
 
@@ -492,7 +523,6 @@ ggplot(knn_different_k,
 
 ```{r}
 prc_test_pred <- knn(train = train, test = test,cl = prc_train_labels, k=3)
-
 ```
 
 ```{r}
@@ -508,7 +538,11 @@ library(rpart.plot)
 
 fit <- rpart(popularity_t~., data = train, method = 'class')
 
+summary(fit)
+
 ```
+
+
 
 ```{r}
 predict_unseen <-predict(fit, test, type = 'class')
@@ -525,8 +559,17 @@ cm_dt
 
 
 # Logistic Regression Model
+
+
+# Model 1 with all the feautres
+
 ```{r}
 model = glm(popularity_t~.,data=train )
+
+summary(model)
+```
+
+```{r}
 
 Predicr_value = predict(model,test)                          #predict test value purchased
 
