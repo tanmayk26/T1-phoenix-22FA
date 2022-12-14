@@ -111,7 +111,13 @@ corrplot(cor(data_corr),
 
 We haven’t dropped any observations since there are no NA values. The columns ‘track id’ and ‘X’ were dropped since they did not have any useful information. 
 
-##DATA Preprocessing
+# 4. DATA Preprocessing
+
+In the Data Preprocessing step, We are performing the following operations
+
+1. Checking if there are any missing values.
+2. Converting the column duration_ms into duration_min. 
+3. We are replacing all the unwanted symbols in artists column by blank.
 ```{r}
 options(dplyr.summarise.inform = FALSE)
 missing.values <- df_spotify %>%
@@ -141,7 +147,7 @@ df_spotify$artists[df_spotify$artists == "'"]<- ''
 head(df_spotify)
 ```
 
-# 3. EDA
+# 5. EDA
 
 ```{r Popularity Distribution Graph}
 popHist <- ggplot(df_spotify, aes(x=popularity)) + geom_histogram(color="black", fill="steelblue1", alpha=0.9, bins = 101)+
@@ -240,12 +246,14 @@ sctfig
 ```
 
 
+
+
+Here you can see the correlation plot for the features of a song. As we can see in the plot, a lot of features are correlated to each other. For example, energy and loudness, danceability and valence etc. Coming to target variable popularity, it doesn’t really have a strong relation with any of the other features, nonetheless, there is some relationship there. For instance, instrumentalness, danceability, valence etc. We will try to understand these relations in dept in the slides ahead.
+
 ```{r}
 data_corr<-df_spotify[!duplicated(df_spotify),]
 data_corr = subset(data_corr, select = -c(track_id,X,artists,album_name,track_name,explicit,track_genre) )
 ```
-
-Here you can see the correlation plot for the features of a song. As we can see in the plot, a lot of features are correlated to each other. For example, energy and loudness, danceability and valence etc. Coming to target variable popularity, it doesn’t really have a strong relation with any of the other features, nonetheless, there is some relationship there. For instance, instrumentalness, danceability, valence etc. We will try to understand these relations in dept in the slides ahead.
 
 
 ```{r}
@@ -527,7 +535,7 @@ For both, p-value is small enough to reject the null hypothesis.
  
 
 
-# Feature Selection
+## 6. Feature Selection
 
 ```{r}
 library("leaps")
@@ -537,28 +545,41 @@ plot(reg2.best, scale = "Cp", main = "Cp")
 
 
 
-# Model Building
-# Spliting the data
+# 7. Model Building
 
 
+## Spliting the data
 
 
+To Prepare your data for training We are Splitting the data into train and testing dataset.We are Separating features and target label.Our target label is popularity_t and features are all other parameters available in the dataset. 
 
 ```{r}
 set.seed(123)
 dat.d <- sample(1:nrow(data_corr),size=nrow(data_corr)*0.8,replace = FALSE) #random selection of 70% data.
 
-data_corr.a = subset(data_corr, select = c(popularity_t,acousticness,danceability,duration_min,energy,instrumentalness
-                                           ,liveness,mode,loudness,tempo,valence,key) )
+data_corr.a = subset(data_corr, select = c(-popularity,duration_ms) )
  
  
 train <- data_corr.a[dat.d,] # 80% training data
 test <- data_corr.a[-dat.d,] # remaining 20% test data
 ```
 
-# KNN
 
-# Labels for knn
+
+## Which Model to use?
+
+This is a classification problem where we need to detect if song will be popular(1) or not popular (0). There are multiple algorithms for classification problems We are going to apply the below algorithms.
+
+1. Logistic Regression
+2. KNN Algorithm
+3. Decision Trees
+
+
+
+## KNN
+
+
+
 ```{r}
 library(class)
 prc_train_labels <- train[,1]
@@ -613,50 +634,38 @@ ggplot(knn_different_k,
 
 ```
 
+
+From the above results we can observe that for value k=3, we are getting the maximum accuracy. We shall go forward and evaluate the model performance by plotting the confusion matrix of the model.
+
+
 ```{r}
 prc_test_pred <- knn(train = train, test = test,cl = prc_train_labels, k=3)
 ```
+
+### Confusion Matrix
 
 ```{r}
 cm_knn<-confusionMatrix(as.factor(prc_test_labels),as.factor(prc_test_pred))
 cm_knn
 ```
 
-# Decision Tree
-
-```{r}
-library(rpart)
-library(rpart.plot)
-
-fit <- rpart(popularity_t~., data = train, method = 'class')
-
-summary(fit)
-
-```
+This model's overall accuracy, which compares favorably to the other two models, is 92.55%. Here, we can see that 16757 songs were correctly projected as unpopular, while 4345 songs were successfully forecasted as popular. In contrast, 478 songs were incorrectly predicted as unpopular, while 1220 songs were incorrectly predicted as popular.
 
 
 
-```{r}
-predict_unseen <-predict(fit, test, type = 'class')
-table_mat <- table(test$popularity_t, predict_unseen)
-table_mat
-```
 
-```{r}
-accuracy_Test <- sum(diag(table_mat)) / sum(table_mat)
-print(paste('Accuracy for test', accuracy_Test))
-cm_dt<-confusionMatrix(as.factor(test$popularity_t),as.factor(predict_unseen))
-cm_dt
-```
+## Logistic Regression Model
 
 
-# Logistic Regression Model
 
 ```{r}
 model = glm(popularity_t~.,data=train )
 
-summary(model)
+
 ```
+
+
+### Confusion Matrix
 
 ```{r}
 
@@ -670,6 +679,46 @@ Compare_values = data.frame(Compare_values)
 cm_lg<-caret::confusionMatrix(as.factor(Compare_values[,1]),as.factor(Compare_values[,2]))
 cm_lg
 ```
+
+
+As you can see, there are certain instances where disliked music have been mistakenly categorized as popular. The classification prediction accuracy is good, coming in at roughly 75.59%. 24.4% of classification errors are misclassified. Here, the summary shows that, with the exception of the key variable, all other variables have a significant impact on popularity.
+
+## Decision Tree
+
+
+
+```{r}
+library(rpart)
+library(rpart.plot)
+
+fit <- rpart(popularity_t~., data = train, method = 'class')
+
+
+
+```
+
+
+
+
+```{r}
+predict_unseen <-predict(fit, test, type = 'class')
+table_mat <- table(test$popularity_t, predict_unseen)
+
+```
+
+
+### Confusion Matrix
+```{r}
+accuracy_Test <- sum(diag(table_mat)) / sum(table_mat)
+print(paste('Accuracy for test', accuracy_Test))
+cm_dt<-confusionMatrix(as.factor(test$popularity_t),as.factor(predict_unseen))
+cm_dt
+```
+
+
+As you can see, there are several instances where songs that are considered to be popular but are actually considered unpopular. For a straightforward decision tree classifier, the model's overall accuracy of 75.59%, which is comparable to logistic regression, is more than acceptable.
+
+## Comparing all the models
 
 ```{r}
 
@@ -690,6 +739,8 @@ ggplot(aes(x=Model, y=Accuracy), data=model_compare) +
     ylab('Overall Accuracy')
 ```
 
+
+Comparing all the three models we can conclude that KNN is the best algorithm to classify popular and unpopular songs having 92.55% accuracy
 
 # 5. Conclusion
 
