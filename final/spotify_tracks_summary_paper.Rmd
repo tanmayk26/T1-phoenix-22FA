@@ -510,9 +510,9 @@ For both, p-value is small enough to reject the null hypothesis.
 
 
 
-# 6. Model Building
+# 5. Model Building
 
-## 6.1 Feature Selection
+## 5.1 Feature Selection
 
 We made an effort to decide which features should be present before developing a model. As a result, we tried to see the Mallow's Cp statistic and performed feature selection. In contrast, when we chose our features based on the lowest Cp value, we obtained an excessively high accuracy score, indicating that the model was over-fitted. Therefore, we made the decision to construct a complete model with all the features.
 
@@ -523,7 +523,7 @@ plot(reg2.best, scale = "Cp", main = "Cp")
 ```
 
 
-## 6.2 Spliting the data
+## 5.2 Spliting the data
 
 
 To Prepare your data for training We are Splitting the data into train and testing dataset.We are Separating features and target label.Our target label is popularity_t and features are all other parameters available in the dataset. 
@@ -540,7 +540,7 @@ test <- data_corr.a[-dat.d,] # remaining 20% test data
 
 
 
-## 6.3 Which Model to use?
+## 5.3 Which Model to use?
 
 This is a classification problem where we need to detect if song will be popular(1) or not popular (0). There are multiple algorithms for classification problems We are going to apply the below algorithms.
 
@@ -550,7 +550,7 @@ This is a classification problem where we need to detect if song will be popular
 
 To answer our SMART question, "Can we recommend certain songs to users who like to listen popular songs?", we are using above classfication models to classify the popular and unpopular songs based on the features that we analyzed. The model with the highest accuracy will be adopted. 
 
-## 6.4 KNN
+## 5.4 KNN
 The first model we tried to build is KNN.
 
 ```{r}
@@ -561,7 +561,7 @@ prc_test_labels<- test[,14]
 
 
 
-### 6.4.1. Selecting the correct "k"
+### 5.4.1. Selecting the correct "k"
 How does "k" affect classification accuracy? Let's create a function to calculate classification accuracy based on the number of "k."
 ```{r, results='markup'}
 chooseK = function(k, train_set, val_set, train_class, val_class){
@@ -614,7 +614,7 @@ From the above results we can observe that for value k=3, we are getting the max
 prc_test_pred <- knn(train = train, test = test,cl = prc_train_labels, k=3)
 ```
 
-###6.4.2 Confusion Matrix
+###5.4.2 Confusion Matrix
 
 ```{r, results='markup'}
 cm_knn<-confusionMatrix(as.factor(prc_test_labels),as.factor(prc_test_pred))
@@ -623,7 +623,7 @@ cm_knn
 
 This model's overall accuracy, which compares favorably to the other two models, is 92.55%. Here, we can see that 16757 songs were correctly projected as unpopular, while 4345 songs were successfully forecasted as popular. In contrast, 478 songs were incorrectly predicted as unpopular, while 1220 songs were incorrectly predicted as popular.
 
-## 6.5 Logistic Regression Model
+## 5.5 Logistic Regression Model
 
 Next, we are building the logistic regression model. 
 
@@ -631,7 +631,7 @@ Next, we are building the logistic regression model.
 model = glm(popularity_t~.,data=train )
 ```
 
-### 6.5.1 Confusion Matrix
+### 5.5.1 Confusion Matrix
 
 ```{r, results='markup'}
 
@@ -648,7 +648,7 @@ cm_lg
 
 As you can see, there are certain instances where disliked music have been mistakenly categorized as popular. The classification prediction accuracy is good, coming in at roughly 75.59%. 24.4% of classification errors are misclassified. Here, the summary shows that, with the exception of the key variable, all other variables have a significant impact on popularity.
 
-## 6.6 Decision Tree
+## 5.6 Decision Tree
 
 Lastly, we tried to build a decision tree model. 
 
@@ -659,7 +659,7 @@ library(rpart.plot)
 fit <- rpart(popularity_t~., data = train, method = 'class')
 ```
 
-### 6.6.1 Confusion Matrix
+### 5.6.1 Confusion Matrix
 ```{r}
 predict_unseen <-predict(fit, test, type = 'class')
 table_mat <- table(test$popularity_t, predict_unseen)
@@ -697,7 +697,7 @@ ggplot(aes(x=Model, y=Accuracy), data=model_compare) +
 
 Comparing all the three models we can conclude that KNN is the best algorithm to classify popular and unpopular songs having 92.55% accuracy. Therefore, it would be better to use KNN to answer our SMART question for the conclusion. 
 
-# 5. Conclusion
+# 6. Conclusion
 
 The main question we are trying to answer with all the models is "Can we recommend certain songs to users who like to listen popular songs?". According to our analysis, the answer will be "YES". By using KNN model that we built, we can classify popular and unpopular song. Thus we can use this prediction model to recommend a certain song to users on Spotify who like to listen only popular songs.  
 Through the exploratory data analysis, we can identify audio features which affect the popularity of songs to answer the first question. All the numerical variables such as danceability, energy, loudness, speechiness, acousticness, instrumentalness, liveness, valence, and tempo affect the popularity of songs since they have relationship with popularity statistically. For categorical variables, such as key, mode, and time signature, they are also dependent to popularity from the results of chi-squared tests.  
