@@ -383,67 +383,67 @@ poptfactor <- data_corr
 poptfactor$popularity_t <- as.factor(data_corr$popularity_t)
 
 boxt <- ggplot(poptfactor, aes(x=popularity_t, y=tempo,fill=popularity_t)) + 
-  geom_boxplot() +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for tempo")
 
 boxdu <-ggplot(poptfactor, aes(x=popularity_t, y=duration_ms,fill=popularity_t)) + 
-  geom_boxplot() +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for duration_ms")
 
 boxv <-ggplot(poptfactor, aes(x=popularity_t, y=valence,fill=popularity_t)) + 
-  geom_boxplot() +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for valence")
 
 boxi <-ggplot(poptfactor, aes(x=popularity_t, y=instrumentalness,fill=popularity_t)) + 
-  geom_boxplot() +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for instrumentalness")
 
 boxa <-ggplot(poptfactor, aes(x=popularity_t, y=acousticness,fill=popularity_t)) + 
-  geom_boxplot() +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for acousticness")
 
 boxda <-ggplot(poptfactor, aes(x=popularity_t, y=danceability,fill=popularity_t)) + 
-  geom_boxplot() +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for danceability")
 
 boxe <-ggplot(poptfactor, aes(x=popularity_t, y=energy,fill=popularity_t)) + 
-  geom_boxplot() +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for energy")
 
 boxlo <-ggplot(poptfactor, aes(x=popularity_t, y=loudness,fill=popularity_t)) + 
-  geom_boxplot() +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for loudness")
 
 boxv <-ggplot(poptfactor, aes(x=popularity_t, y=valence,fill=popularity_t)) + 
-  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for valence")
 
 boxi <-ggplot(poptfactor, aes(x=popularity_t, y=instrumentalness,fill=popularity_t)) + 
-  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  geom_boxplot( fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for instrumentalness")
 
 boxa <-ggplot(poptfactor, aes(x=popularity_t, y=acousticness,fill=popularity_t)) + 
-  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for acousticness")
 
 boxda <-ggplot(poptfactor, aes(x=popularity_t, y=danceability,fill=popularity_t)) + 
-  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for danceability")
 
 boxe <-ggplot(poptfactor, aes(x=popularity_t, y=energy,fill=popularity_t)) + 
-  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for energy")
 
 boxlo <-ggplot(poptfactor, aes(x=popularity_t, y=loudness,fill=popularity_t)) + 
-  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for loudness")
 
 boxs <-ggplot(poptfactor, aes(x=popularity_t, y=speechiness,fill=popularity_t)) + 
-  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  geom_boxplot( fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for speechiness")
 
 boxli <-ggplot(poptfactor, aes(x=popularity_t, y=liveness,fill=popularity_t)) + 
-  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  geom_boxplot(fill=c("steelblue1","blue4")) +
   ggtitle("boxplot for liveness")
 
 ```
@@ -456,18 +456,6 @@ boxforvar <- ggarrange(boxt, boxv,boxi,boxa,boxda,boxe,boxlo,boxs, boxli, ncol =
 boxforvar
 ```
 
-```{r, results='hide'}
-boxt
-boxv
-boxi
-boxa
-boxda
-boxe
-boxlo
-boxs
-boxli
-# boxplots
-```
 
 ```{r, results='markup'}
 
@@ -481,10 +469,7 @@ boxli <-ggplot(poptfactor, aes(x=popularity_t, y=liveness,fill=popularity_t)) +
 
 ```
 
-```{r, results='markup'}
-boxforvar <- ggarrange(boxt, boxdu, boxv,boxi,boxa,boxda,boxe,boxlo,boxs, boxli, ncol = 3, nrow = 4)
-boxforvar
-```
+
 
 ```{r chisq on pop_t and categorical, results='markup'}
 chi_key <- chisq.test(table(data_corr$popularity_t, data_corr$key))
