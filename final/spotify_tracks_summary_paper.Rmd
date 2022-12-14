@@ -35,9 +35,9 @@ library(caret)
 
 # 1. Introduction
 
-Music is something everyone loves. The music industry is one of the biggest industries in the world, the estimated value of it is over $50 billion. Then what makes a song popular? Identifying the factors that affect the popularity of song and predicting it can provide us with a better understanding of the music industry and valuable business insights. Our project is focused on building machine learning models to predict the popularity of song on spotify, by answering two smart questions. The first question is "Which features make a song popular?", and we will determine audio features in a song that affect the popularity. The second question is "Can we recommend a certain song to users who like to listen popular songs?" 
+Music is something everyone loves. The music industry is one of the biggest industries in the world, the estimated value of it is over $50 billion. Then what makes a song popular? Identifying the factors that affect the popularity of a song and predicting it can provide us with a better understanding of the music industry and valuable business insights. Our project is focused on building machine learning models to predict the popularity of songs on Spotify, by answering two smart questions. The first question is “Which features make a song popular?”, and we will determine audio features in a song that affect the popularity. The second question is “Can we recommend a certain song to users who like to listen to popular songs?”
 
-This summary paper is organized as follow:
+This summary paper is organized as follows:
 1. Introduction
 2. Description of Data
 3. Data Pre-Processing
@@ -46,7 +46,7 @@ This summary paper is organized as follow:
 6. Conclusion
 
 # 2. Description of Data
-As we were looking for songs dataset, we thought of checking if Spotify which is one of the best music app across the market, provides any data. Thus, initially we attempted to retrieve data using Spotify API. But due to time constraint, we were unable to work through the data. Fortunately, we were able to get the Spotify dataset from Kaggle.  
+As we were looking for songs dataset, we thought of checking if Spotify which is one of the best music apps across the market, provides any data. Thus, we attempted to retrieve data using Spotify API initially. But due to time constraints, we were unable to work through the data. Fortunately, we were able to get the Spotify dataset from Kaggle.
 Let us pull the dataset from the file `spotify_dataset.csv` into a dataframe `df_spotify`. As this file is huge in size, we cannot upload it on GitHub. Thus, we are storing the file in a folder called `spotify_dataset` that is located in one folder above the project folder.
 
 ```{r Pulling the Data, results='markup'}
@@ -78,7 +78,7 @@ track_genre: genre of track
 speechiness: ranges from 0 to 1  
 acousticness: ranges from 0 to 1  
 
-The target variable for us is "Popularity". It has a range from 0 to 100 and type of integer. The popularity is determined by an algorithm and primarily depends on how recently and how many times the track has been played overall. In general, songs that are played often currently will be more popular than songs that were frequently performed in the past.
+The target variable for us is “Popularity”. It has a range from 0 to 100 and a type of integer. The popularity is determined by an algorithm and primarily depends on how recently and how many times the track has been played overall. In general, songs that are played often currently will be more popular than songs that were frequently performed in the past.
 
 
 ```{r, results='markup'}
@@ -674,7 +674,7 @@ cm_dt
 
 As you can see, there are several instances where songs that are considered to be popular but are actually considered unpopular. For a straightforward decision tree classifier, the model's overall accuracy of 75.59%, which is comparable to logistic regression, is more than acceptable.
 
-## Comparing all the models
+## 5.7 Comparing all the models
 
 ```{r, results='markup'}
 
@@ -695,11 +695,13 @@ ggplot(aes(x=Model, y=Accuracy), data=model_compare) +
     ylab('Overall Accuracy')
 ```
 
-Comparing all the three models we can conclude that KNN is the best algorithm to classify popular and unpopular songs having 92.55% accuracy. Therefore, it would be better to use KNN to answer our SMART question for the conclusion. 
+Comparing all three models we can conclude that KNN is the best algorithm to classify popular and unpopular songs having 92.55% accuracy. Therefore, it would be better to use KNN to answer our SMART question for the conclusion.
 
 # 6. Conclusion
 
-The main question we are trying to answer with all the models is "Can we recommend certain songs to users who like to listen popular songs?". According to our analysis, the answer will be "YES". By using KNN model that we built, we can classify popular and unpopular song. Thus we can use this prediction model to recommend a certain song to users on Spotify who like to listen only popular songs.  
-Through the exploratory data analysis, we can identify audio features which affect the popularity of songs to answer the first question. All the numerical variables such as danceability, energy, loudness, speechiness, acousticness, instrumentalness, liveness, valence, and tempo affect the popularity of songs since they have relationship with popularity statistically. For categorical variables, such as key, mode, and time signature, they are also dependent to popularity from the results of chi-squared tests.  
-In a future project, we would like to include other features that we couldn't explore this time like artist name or genre that heavily influence the popularity of a song in our analysis to acquire different insights.
+The main question we are trying to answer with all the models is “Can we recommend certain songs to users who like to listen to popular songs?”. According to our analysis, the answer will be “YES”. By using the KNN model that we built, we can classify popular and unpopular songs. Thus we can use this prediction model to recommend a certain song to users on Spotify who like to listen to only popular songs.  
+
+Through the exploratory data analysis, we can identify audio features which affect the popularity of songs to answer the first question. All the numerical variables such as danceability, energy, loudness, speechiness, acousticness, instrumentalness, liveness, valence, and tempo affect the popularity of songs since they have a relationship with popularity statistically. Categorical variables, such as key, mode, and time signature, are also dependent on popularity from the results of chi-squared tests.  
+
+In a future project, we would like to include other features that we couldn’t explore this time like the artist name or genre that heavily influences the popularity of a song in our analysis to acquire different insights.
 
