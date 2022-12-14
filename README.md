@@ -8,9 +8,9 @@ This is a repository for Team 1 for 6101 Introduction to Data Science class Mid-
 
 ### Song Popularity Prediction
 
-Our main focus question: What features affect Popularity of the song on Spotify?
+Our main focus question: What features affect the Popularity of the song on Spotify?
 
-Our smart questions:
+## Our smart questions:
 1) How energy affects popularity?
 2) How does loudness affect popularity?
 3) How does acousticness affect popularity?
