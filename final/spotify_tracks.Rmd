@@ -526,7 +526,7 @@ Also, these are results of statistical test that performed with the original pop
 For mode, since it has two value, we performed the t-test. The null hypothesis here is the means from different modes have same values. The alternate hypothesis is they have different values by modes.
 For time signature, we took ANOVA test since it has 5 different categories. The null hypothesis here is the means from different time signature have same values. The alternate hypothesis is they have different values by time signature.
 For both, p-value is small enough to reject the null hypothesis.
-
+ 
 
 
 #feautre Selection
