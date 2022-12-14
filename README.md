@@ -28,7 +28,7 @@ Dataset used: https://www.kaggle.com/datasets/maharshipandya/-spotify-tracks-dat
 
 Our main focus question: What factors affect the severity of traffic due to accidents in the US?
 
-Our smart questions:
+## Our smart questions:
 1) Does weather affect the severity of traffic?
 2) Do Nearby Road Elements affect the severity of traffic?
 3) Does the occurrence of the accident during a particular time of day or year affect the severity of the accident?
