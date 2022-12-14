@@ -33,6 +33,16 @@ library(lattice)
 library(caret)
 ```
 
+# Introduction
+
+1. Introduction
+2. Data Pre-Processing
+3. EDA
+4. Models
+5. Conclusion
+
+
+
 Let us pull the dataset from the file `spotify_dataset.csv` into a dataframe `df_spotify`. As this file is huge in size, we cannot upload it on GitHub. Thus, we are storing the file in a folder called `spotify_dataset` that is located in one folder above the project folder.
 
 ```{r Pulling the Data}
@@ -348,17 +358,23 @@ ttest_duration_ms
 
 ```
 
+<<<<<<< Updated upstream
 After created the popularity_t column, we split data into two based on the popularity_t. We would like to see the differences on means of numerical variables between two groups. 
 H0: The means of numerical variables will be same between different Popularity levels.
 H1: The means of numerical variables will NOT be same between different Popularity levels.
 Except for the valence and energy, the means of other variables from the popular songs and less popular song were different since the p-values are small enough. Therefore we can conclude that numerical variables except for valence and energy affect the popularity. 
 
 ```{r boxplots for variables}
+=======
+```{r boxplots for variables}
+str(data_corr)
+>>>>>>> Stashed changes
 unique(data_corr$popularity_t)
 poptfactor <- data_corr
 poptfactor$popularity_t <- as.factor(data_corr$popularity_t)
 
 boxt <- ggplot(poptfactor, aes(x=popularity_t, y=tempo,fill=popularity_t)) + 
+<<<<<<< Updated upstream
   geom_boxplot() +
   ggtitle("boxplot for tempo")
 
@@ -389,6 +405,68 @@ boxe <-ggplot(poptfactor, aes(x=popularity_t, y=energy,fill=popularity_t)) +
 boxlo <-ggplot(poptfactor, aes(x=popularity_t, y=loudness,fill=popularity_t)) + 
   geom_boxplot() +
   ggtitle("boxplot for loudness")
+=======
+  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  ggtitle("boxplot for tempo")
+
+#boxdu <-ggplot(poptfactor, aes(x=popularity_t, y=duration_ms,fill=popularity_t)) + 
+#  geom_boxplot() +
+#  ggtitle("boxplot for duration_ms")
+
+boxv <-ggplot(poptfactor, aes(x=popularity_t, y=valence,fill=popularity_t)) + 
+  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  ggtitle("boxplot for valence")
+
+boxi <-ggplot(poptfactor, aes(x=popularity_t, y=instrumentalness,fill=popularity_t)) + 
+  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  ggtitle("boxplot for instrumentalness")
+
+boxa <-ggplot(poptfactor, aes(x=popularity_t, y=acousticness,fill=popularity_t)) + 
+  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  ggtitle("boxplot for acousticness")
+
+boxda <-ggplot(poptfactor, aes(x=popularity_t, y=danceability,fill=popularity_t)) + 
+  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  ggtitle("boxplot for danceability")
+
+boxe <-ggplot(poptfactor, aes(x=popularity_t, y=energy,fill=popularity_t)) + 
+  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  ggtitle("boxplot for energy")
+
+boxlo <-ggplot(poptfactor, aes(x=popularity_t, y=loudness,fill=popularity_t)) + 
+  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  ggtitle("boxplot for loudness")
+
+boxs <-ggplot(poptfactor, aes(x=popularity_t, y=speechiness,fill=popularity_t)) + 
+  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  ggtitle("boxplot for speechiness")
+
+boxli <-ggplot(poptfactor, aes(x=popularity_t, y=liveness,fill=popularity_t)) + 
+  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
+  ggtitle("boxplot for liveness")
+
+```
+
+```{r}
+library("ggpubr")
+boxforvar <- ggarrange(boxt, boxv,boxi,boxa,boxda,boxe,boxlo,boxs, boxli, ncol = 3, nrow = 4)
+boxforvar
+```
+```{r}
+boxt
+boxv
+boxi
+boxa
+boxda
+boxe
+boxlo
+boxs
+boxli
+# boxplots
+```
+
+```{r chisq on pop_t and categorical}
+>>>>>>> Stashed changes
 
 boxs <-ggplot(poptfactor, aes(x=popularity_t, y=speechiness,fill=popularity_t)) + 
   geom_boxplot() +
