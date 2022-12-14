@@ -37,7 +37,7 @@ library(caret)
 
 Music is something everyone loves. The music industry is one of the biggest industries in the world, the estimated value of it is over $50 billion. Then what makes a song popular? Identifying the factors that affect the popularity of song and predicting it can provide us with a better understanding of the music industry and valuable business insights. Our project is focused on building machine learning models to predict the popularity of song on spotify, by answering two smart questions. The first question is "Which features make a song popular?", and we will determine audio features in a song that affect the popularity. The second question is "Can we recommend a certain song to users who like to listen popular songs?"
 
-This summary paper is organized as follow:
+This code is organized as follow:
 1. Introduction
 2. Description of Data
 3. EDA
@@ -46,6 +46,7 @@ This summary paper is organized as follow:
 
 # 2. Description of Data
 As we were looking for songs dataset, we thought of checking if Spotify which is one of the best music app across the market, provides any data. Thus, initially we attempted to retrieve data using Spotify API. But due to time constraint, we were unable to work through the data. Fortunately, we were able to get the Spotify dataset from Kaggle.  
+
 Let us pull the dataset from the file `spotify_dataset.csv` into a dataframe `df_spotify`. As this file is huge in size, we cannot upload it on GitHub. Thus, we are storing the file in a folder called `spotify_dataset` that is located in one folder above the project folder.
 
 ```{r Pulling the Data}
@@ -241,8 +242,10 @@ sctfig
 
 
 ```{r}
+data_corr = subset(df_spotify, select = -c(track_id,X) )
 data_corr<-df_spotify[!duplicated(df_spotify),]
-data_corr = subset(data_corr, select = -c(track_id,X,artists,album_name,track_name,explicit,track_genre,duration_ms) )
+data_corr = subset(data_corr, select = -c(track_id,X,artists,album_name,track_name,explicit,track_genre) )
+
 ```
 
 Here you can see the correlation plot for the features of a song. As we can see in the plot, a lot of features are correlated to each other. For example, energy and loudness, danceability and valence etc. Coming to target variable popularity, it doesn’t really have a strong relation with any of the other features, nonetheless, there is some relationship there. For instance, instrumentalness, danceability, valence etc. We will try to understand these relations in dept in the slides ahead.
@@ -337,7 +340,7 @@ ggplot(data_corr, aes(x=loudness, y=popularity)) + geom_point(col = "steelblue1"
 
 ```{r}
 data_corr <- data_corr %>% mutate(popularity_t = if_else(popularity > 50, 1, 0))
-data_corr
+head(data_corr)
 ```
 We have added a new column called popularity_t which is based on popularity feature to have a clear answer for our SMART questions. The top 25% of the popular songs will have 1 value and the rest will have 0.
 
@@ -372,12 +375,14 @@ ttest_valence <- t.test(pop1$valence, pop2$valence)
 ttest_valence
 ttest_tempo <- t.test(pop1$tempo, pop2$tempo)
 ttest_tempo
+ttest_duration_min <- t.test(pop1$duration_min, pop2$duration_min)
+ttest_duration_min
 ttest_duration_ms <- t.test(pop1$duration_ms, pop2$duration_ms)
 ttest_duration_ms
 
 ```
 
-After created the popularity_t column, we split data into two based on the popularity_t. We would like to see the differences on means of numerical variables between two groups, so we decided to do hypothesis testing on the variables.
+After creating the popularity_t column, we split data into two based on the popularity_t. We would like to see the differences on means of numerical variables between two groups, so we decided to do hypothesis testing on the variables.
 H0: The means of numerical variables will be same between different Popularity levels.
 H1: The means of numerical variables will NOT be same between different Popularity levels.
 For every numerical variables, means from the popular songs and less popular song were different since the p-values are small enough. Therefore we can conclude that numerical variables except for valence and energy affect the popularity. 
@@ -419,8 +424,6 @@ boxe <-ggplot(poptfactor, aes(x=popularity_t, y=energy,fill=popularity_t)) +
 boxlo <-ggplot(poptfactor, aes(x=popularity_t, y=loudness,fill=popularity_t)) + 
   geom_boxplot() +
   ggtitle("boxplot for loudness")
-  geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
-  ggtitle("boxplot for tempo")
 
 boxv <-ggplot(poptfactor, aes(x=popularity_t, y=valence,fill=popularity_t)) + 
   geom_boxplot(col="black", fill=c("steelblue1","blue4")) +
@@ -464,6 +467,7 @@ boxforvar <- ggarrange(boxt, boxv,boxi,boxa,boxda,boxe,boxlo,boxs, boxli, ncol =
 boxforvar
 ```
 ```{r}
+# boxplots
 boxt
 boxv
 boxi
@@ -473,20 +477,8 @@ boxe
 boxlo
 boxs
 boxli
-# boxplots
 ```
 
-```{r chisq on pop_t and categorical}
-
-boxs <-ggplot(poptfactor, aes(x=popularity_t, y=speechiness,fill=popularity_t)) + 
-  geom_boxplot() +
-  ggtitle("boxplot for speechiness")
-
-boxli <-ggplot(poptfactor, aes(x=popularity_t, y=liveness,fill=popularity_t)) + 
-  geom_boxplot() +
-  ggtitle("boxplot for liveness")
-
-```
 
 ```{r}
 boxforvar <- ggarrange(boxt, boxdu, boxv,boxi,boxa,boxda,boxe,boxlo,boxs, boxli, ncol = 3, nrow = 4)
@@ -529,7 +521,7 @@ For both, p-value is small enough to reject the null hypothesis.
  
 
 
-#feautre Selection
+#feature Selection
 
 ```{r}
 library("leaps")
@@ -653,10 +645,6 @@ cm_dt
 
 
 # Logistic Regression Model
-
-
-# Model 1 with all the feautres
-
 ```{r}
 model = glm(popularity_t~.,data=train )
 
