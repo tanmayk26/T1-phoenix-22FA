@@ -542,8 +542,7 @@ plot(reg2.best, scale = "Cp", main = "Cp")
 set.seed(123)
 dat.d <- sample(1:nrow(data_corr),size=nrow(data_corr)*0.8,replace = FALSE) #random selection of 70% data.
 
-data_corr.a = subset(data_corr, select = c(popularity_t,acousticness,danceability,duration_min,energy,instrumentalness
-                                           ,liveness,mode,loudness,tempo,valence,key) )
+data_corr.a = subset(data_corr, select = c(-popularity) )
  
  
 train <- data_corr.a[dat.d,] # 80% training data
@@ -555,8 +554,8 @@ test <- data_corr.a[-dat.d,] # remaining 20% test data
 # Labels for knn
 ```{r}
 library(class)
-prc_train_labels <- train[,1]
-prc_test_labels<- test[,1]
+prc_train_labels <- train[,14]
+prc_test_labels<- test[,14]
 ```
 
 
@@ -609,6 +608,7 @@ ggplot(knn_different_k,
 
 ```{r}
 prc_test_pred <- knn(train = train, test = test,cl = prc_train_labels, k=3)
+summary(prc_test_pred)
 ```
 
 ```{r}
@@ -678,7 +678,7 @@ print(model_compare)
 
 ggplot(aes(x=Model, y=Accuracy), data=model_compare) +
     geom_bar(stat='identity', fill = 'steelblue1') +
-    ggtitle('Comparative Accuracy of Models on Cross-Validation Data') +
+    ggtitle('Comparative Accuracy of Models') +
     xlab('Models') +
     ylab('Overall Accuracy')
 ```
